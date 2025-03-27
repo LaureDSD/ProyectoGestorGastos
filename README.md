@@ -28,9 +28,4 @@
 
 - **Almacenamiento**:
   - **Almacenamiento interno**: Los tickets y facturas escaneados se almacenan internamente en el servidor para su gestión y posterior acceso.
-
----
-
-### Notas:
-- Los objetivos y tecnologías mencionadas en este archivo README reflejan la visión inicial del proyecto "GesThor".
-- Se recomienda ir ajustando los detalles según avances en el desarrollo y las necesidades específicas del proyecto.
+  - **Posibilidad de expansion a almacenaminto y seguridad en la nube.
