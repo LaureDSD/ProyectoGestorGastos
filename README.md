@@ -29,3 +29,6 @@
 - **Almacenamiento**:
   - **Almacenamiento interno**: Los tickets y facturas escaneados se almacenan internamente en el servidor para su gestión y posterior acceso.
   - **Posibilidad de expansion a almacenaminto y seguridad en la nube.
+    
+- **Control de versions**:
+  - ** GitHub
