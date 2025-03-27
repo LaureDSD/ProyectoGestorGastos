@@ -31,4 +31,4 @@
   - **Posibilidad de expansion a almacenaminto y seguridad en la nube.
     
 - **Control de versions**:
-  - ** GitHub
+  - **GitHub
