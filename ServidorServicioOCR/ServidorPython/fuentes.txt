@@ -1,0 +1,7 @@
+https://fastapi.tiangolo.com/
+https://fastapi.tiangolo.com/deployment/
+https://www.uvicorn.org/settings/
+
+https://pyimagesearch.com/2018/09/17/opencv-ocr-and-text-recognition-with-tesseract/
+https://github.com/tesseract-ocr/tesseract
+https://pypi.org/project/pytesseract/
