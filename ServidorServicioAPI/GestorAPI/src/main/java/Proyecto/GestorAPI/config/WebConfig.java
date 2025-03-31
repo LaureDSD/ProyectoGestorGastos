@@ -9,11 +9,6 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 public class WebConfig implements org.springframework.web.servlet.config.annotation.WebMvcConfigurer {
 
     @Override
-    public void addFormatters(FormatterRegistry registry) {
-        registry.addFormatter(new DateFormatter("yyyy-MM-dd'T'HH:mm"));
-    }
-
-    @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:4200") // Asegúrate de que tu frontend esté en esta URL

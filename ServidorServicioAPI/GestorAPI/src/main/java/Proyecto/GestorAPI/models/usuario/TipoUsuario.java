@@ -6,13 +6,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public enum TipoUsuario {
 
     @Schema(description = "Usuario con acceso básico al juego")
-    USUARIO("Usuario", "Acceso básico al juego"),
+    ROLE_USUARIO("Usuario", "Acceso básico al juego"),
 
     @Schema(description = "Soporte técnico con permisos adicionales")
-    SOPORTE("Soporte", "Soporte técnico con permisos adicionales"),
+    ROLE_SOPORTE("Soporte", "Soporte técnico con permisos adicionales"),
 
     @Schema(description = "Administrador con control total del sistema")
-    ADMINISTRADOR("Administrador", "Control total del sistema");
+    ROLE_ADMINISTRADOR("Administrador", "Control total del sistema");
 
     private final String nombre;
     private final String descripcion;

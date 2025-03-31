@@ -46,20 +46,13 @@
                     <small class="form-text text-muted">Opcional. Ejemplo: https://ejemplo.com/imagen.jpg</small>
                 </div>
 
-                <!-- Campo: Límite de Personajes -->
-                <div class="form-group">
-                    <label for="limite_personajes">Límite de Personajes</label>
-                    <input type="number" class="form-control" id="limite_personajes" name="limite_personajes" value="3" readonly>
-                    <small class="form-text text-muted">Este valor es fijo por el momento.</small>
-                </div>
 
                 <!-- Campo: Tipo de Usuario -->
                 <div class="form-group">
                     <label for="tipoUsuario">Tipo de Usuario</label>
                      <select class="form-control" id="tipoUsuario" name="tipoUsuario" required>
-                         <option value="1">Usuario Normal</option>
-                         <option value="2">Test NO VISIBLE - Moderador </option>
-                         <option value="3">Test NO VISIBLE _ Administrador</option>
+                         <option value="ROLE_USUARIO">Usuario Normal</option>
+                         <option value="ROLE_ADMINISTRADOR">Usuario Admin</option>
                      </select>
                     <small class="form-text text-muted">Selecciona el tipo de usuario.</small>
                 </div>

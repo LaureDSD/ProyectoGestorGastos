@@ -15,6 +15,7 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+
     public List<Usuario> getAll(){
         return  usuarioRepository.findAll();
     }
@@ -32,7 +33,7 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-    public List<Usuario> getByTipoUsuario(TipoUsuario tipo) {
-        return usuarioRepository.getByTipoUsuario(tipo);
+    public List<Usuario> getByTipoUsuario(TipoUsuario tu) {
+        return usuarioRepository.getByTipoUsuario(tu);
     }
 }

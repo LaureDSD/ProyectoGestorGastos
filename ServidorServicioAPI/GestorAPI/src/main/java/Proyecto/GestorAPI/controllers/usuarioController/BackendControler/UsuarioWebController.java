@@ -9,8 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -26,7 +26,7 @@ public class UsuarioWebController {
     @GetMapping
     public String showUsuariosList(Model model) {
         try {
-            List<TipoUsuario> tipoUsuarioList = Arrays.asList(TipoUsuario.values()); // Obtener valores del enum
+            List<TipoUsuario> tipoUsuarioList = Arrays.asList(TipoUsuario.values());
             List<Usuario> usuarios = usuarioService.getAll();
 
             model.addAttribute("usuarios", usuarios);
@@ -46,7 +46,7 @@ public class UsuarioWebController {
     public String editarUsuario(@PathVariable("id") Long id, Model model) {
         try {
             Usuario usuario = (id != null) ? usuarioService.getByID(id) : new Usuario();
-            List<TipoUsuario> tipoUsuarioList = Arrays.asList(TipoUsuario.values()); // Obtener valores del enum
+            List<TipoUsuario> tipoUsuarioList = Arrays.asList(TipoUsuario.values());
 
             model.addAttribute("tipoUsuarioList", tipoUsuarioList);
             model.addAttribute("usuario", usuario);
@@ -63,7 +63,7 @@ public class UsuarioWebController {
     @PostMapping("/save")
     public String guardarUsuario(@ModelAttribute("usuario") Usuario usuario, Model model) throws IOException {
         try {
-            usuario.setUltima_conexion(new Date());
+            usuario.setUltima_conexion(LocalDateTime.now());
             usuarioService.setItem(usuario);
             return "redirect:"+rutaHTML;
         } catch (Exception e) {

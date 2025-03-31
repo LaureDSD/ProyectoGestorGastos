@@ -27,11 +27,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("Usuario no encontrado");
         }
         Usuario usuario = optionalUsuario.get();
-
-        // Obtener el nombre del enum como autoridad
         GrantedAuthority authority = new SimpleGrantedAuthority(usuario.getTipoUsuario().name());
-
         return new User(
-                usuario.getCorreo(), usuario.getContraseña(), List.of(authority));
+                usuario.getCorreo(),
+                usuario.getContraseña(),
+                List.of(authority));
     }
 }
