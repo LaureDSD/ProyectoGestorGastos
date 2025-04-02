@@ -1,1 +1,3 @@
 De momento, usare MySQL, gran posibilidad de usar Posgress
+
+Tras horas de implementación , consejo registro y tokens, esta funcionado tras perder toda una tarde, falta modelo ticket, y sus conexiones.

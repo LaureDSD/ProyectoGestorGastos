@@ -1,3 +1,21 @@
+"""
+Servicio OCR GesThor
+====================
+
+Este módulo implementa unha API REST utilizando FastAPI para ofrecer servizos de OCR,
+procesando arquivos de entrada (PDFs ou imaxes) e extraendo texto mediante Tesseract OCR.
+
+Tecnoloxías empregadas:
+- **FastAPI**: Framework para crear APIs REST de alto rendemento.
+- **Tesseract OCR**: Extrae texto de imaxes de tickets e facturas.
+- **pdf2image**: Converte arquivos PDF a imaxes para o procesamento OCR.
+- **OpenCV**: Mellora e procesa imaxes para optimizar a extracción de datos.
+- **NumPy**: Facilita o procesado de datos numéricos e imaxes.
+- **Requests**: (Non usado directamente neste módulo, pero dispoñible para chamadas HTTP futuras.)
+- **re**: Identifica e valida patróns de texto extraídos.
+- **Sphinx**: Documenta a API REST a partir dos docstrings (para xeración automática de documentación).
+"""
+
 from fastapi import FastAPI, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -6,10 +24,13 @@ import pytesseract
 import pdf2image
 import cv2
 import numpy as np
-import boto3
 import re
 from datetime import datetime
 import uvicorn
+
+# Configuracións globais
+IDIOMA_OCR = "spa"
+IVA_POR_DEFECTO = 0.21
 
 app = FastAPI(title="Servicio OCR GesThor")
 
@@ -21,6 +42,19 @@ app.add_middleware(
 )
 
 class FacturaResponse(BaseModel):
+    """
+    Modelo de resposta para o procesamento de facturas.
+
+    :param proveedor: Nome do proveedor.
+    :param nif: Número de identificación fiscal (opcional).
+    :param fecha: Data da factura.
+    :param numero: Número da factura.
+    :param base: Valor base da factura.
+    :param iva: Valor do IVA aplicado.
+    :param total: Total da factura.
+    :param lineas: Lista de liñas (detalles) da factura.
+    :param confianza: Nivel de confianza na extracción do texto.
+    """
     proveedor: str
     nif: Optional[str]
     fecha: str
@@ -32,6 +66,16 @@ class FacturaResponse(BaseModel):
     confianza: float
 
 class TicketResponse(BaseModel):
+    """
+    Modelo de resposta para o procesamento de tickets.
+
+    :param establecimiento: Nome do establecemento.
+    :param fecha: Data do ticket (opcional).
+    :param hora: Hora do ticket (opcional).
+    :param total: Total do ticket.
+    :param articulos: Lista de articulos do ticket.
+    :param confianza: Nivel de confianza na extracción do texto.
+    """
     establecimiento: str
     fecha: Optional[str]
     hora: Optional[str]
@@ -39,13 +83,16 @@ class TicketResponse(BaseModel):
     articulos: List[Dict[str, str]]
     confianza: float
 
-def subir_s3(contenido: bytes, nombre: str, bucket: str, prefijo: str, aws_key: str, aws_secret: str) -> str:
-    s3 = boto3.client('s3', aws_access_key_id=aws_key, aws_secret_access_key=aws_secret)
-    clave = f"{prefijo}{datetime.now().strftime('%Y%m%d')}/{nombre}"
-    s3.put_object(Bucket=bucket, Key=clave, Body=contenido)
-    return f"https://{bucket}.s3.amazonaws.com/{clave}"
+async def extraer_texto(contenido: bytes, tipo: str, idioma: str = IDIOMA_OCR) -> str:
+    """
+    Extrae texto dun arquivo utilizando OCR.
 
-async def extraer_texto(contenido: bytes, tipo: str, idioma: str = "spa") -> str:
+    :param contenido: Contido do arquivo en bytes.
+    :param tipo: Tipo MIME do arquivo (ex.: 'application/pdf' ou outro tipo de imaxe).
+    :param idioma: Idioma para o OCR (por defecto "spa").
+    :return: Texto extraído do arquivo.
+    :raises HTTPException: Se a imaxe non pode ser decodificada.
+    """
     if tipo == 'application/pdf':
         imagenes = pdf2image.convert_from_bytes(contenido)
         return "\n".join(pytesseract.image_to_string(img, lang=idioma) for img in imagenes)
@@ -57,15 +104,22 @@ async def extraer_texto(contenido: bytes, tipo: str, idioma: str = "spa") -> str
         _, thresh = cv2.threshold(gris, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
         return pytesseract.image_to_string(thresh, lang=idioma)
 
-def procesar_factura(texto: str, iva: float = 0.21) -> Optional[Dict]:
+def procesar_factura(texto: str, iva: float = IVA_POR_DEFECTO) -> Optional[Dict]:
+    """
+    Procesa o texto dunha factura para extraer datos básicos.
+
+    :param texto: Texto extraído do documento.
+    :param iva: Porcentaxe de IVA a aplicar (por defecto 0.21).
+    :return: Diccionario cos datos da factura ou None se non se detecta o total.
+    """
     total_match = re.search(r"(?i)total\s*[:=]?\s*(\d+,\d{2})", texto)
     if not total_match:
         return None
-    
+
     total = float(total_match.group(1).replace(',', '.'))
     iva_val = total * iva
     base = total - iva_val
-    
+
     return {
         "proveedor": "Proveedor no identificado",
         "nif": None,
@@ -79,10 +133,16 @@ def procesar_factura(texto: str, iva: float = 0.21) -> Optional[Dict]:
     }
 
 def procesar_ticket(texto: str) -> Optional[Dict]:
+    """
+    Procesa o texto dun ticket para extraer datos básicos.
+
+    :param texto: Texto extraído do documento.
+    :return: Diccionario cos datos do ticket ou None se non se detecta o total.
+    """
     total_match = re.search(r"(?i)total\s*[:=]?\s*(\d+,\d{2})", texto)
     if not total_match:
         return None
-    
+
     return {
         "establecimiento": "Establecimiento no identificado",
         "fecha": None,
@@ -95,12 +155,17 @@ def procesar_ticket(texto: str) -> Optional[Dict]:
 @app.post("/procesar")
 async def procesar(
     archivo: UploadFile,
-    es_factura: bool = Form(False),
-    bucket: str = Form("gesthor-ocr"),
-    prefijo: str = Form("procesados/"),
-    aws_key: str = Form("tu_key"),
-    aws_secret: str = Form("tu_secret")
+    es_factura: bool = Form(False)
 ):
+    """
+    Endpoint para procesar un arquivo cargado (factura ou ticket), extraer o texto mediante OCR
+    e retornar os datos procesados.
+
+    :param archivo: Arquivo cargado polo usuario.
+    :param es_factura: Indica se o arquivo é unha factura (True) ou un ticket (False).
+    :return: Diccionario con o resultado da operación e os datos extraídos.
+    :raises HTTPException: Se ocorre un erro durante o proceso ou se o documento non é válido.
+    """
     try:
         contenido = await archivo.read()
         texto = await extraer_texto(contenido, archivo.content_type)
@@ -108,31 +173,26 @@ async def procesar(
         if es_factura:
             datos = procesar_factura(texto)
             if not datos:
-                raise HTTPException(400, "No es una factura válida")
+                raise HTTPException(400, "Non es unha factura válida")
             respuesta = FacturaResponse(**datos)
         else:
             datos = procesar_ticket(texto)
             if not datos:
-                raise HTTPException(400, "No es un ticket válido")
+                raise HTTPException(400, "Non es un ticket válido")
             respuesta = TicketResponse(**datos)
-        
-        url = subir_s3(contenido, archivo.filename, bucket, prefijo, aws_key, aws_secret)
         
         return {
             "exito": True,
-            "datos": respuesta,
-            "url_archivo": url
+            "datos": respuesta
         }
         
     except Exception as e:
         raise HTTPException(500, f"Error: {str(e)}")
 
 if __name__ == "__main__":
-    # Configuración principal
+    """
+    Execución principal do servidor FastAPI.
+    """
     puerto = 8000
     host = "0.0.0.0"
-    debug = True
-    idioma_ocr = "spa"
-    iva_por_defecto = 0.21
-    
     uvicorn.run(app, host=host, port=puerto)
