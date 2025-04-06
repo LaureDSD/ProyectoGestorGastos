@@ -15,12 +15,12 @@ public class PublicController {
     private final UserService userService;
     private final TicketService ticketService;
 
-    @GetMapping("/numberOfUsers")
+    @GetMapping("/Usuarios")
     public Integer getNumberOfUsers() {
         return userService.getUsers().size();
     }
 
-    @GetMapping("/numberOfTickets")
+    @GetMapping("/Tickets")
     public Integer getNumberOfTickets() {
         return ticketService.getTickets().size();
     }

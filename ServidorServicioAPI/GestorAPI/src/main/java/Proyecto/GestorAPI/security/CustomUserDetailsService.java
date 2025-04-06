@@ -2,6 +2,7 @@ package Proyecto.GestorAPI.security;
 
 
 import Proyecto.GestorAPI.models.User;
+
 import Proyecto.GestorAPI.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

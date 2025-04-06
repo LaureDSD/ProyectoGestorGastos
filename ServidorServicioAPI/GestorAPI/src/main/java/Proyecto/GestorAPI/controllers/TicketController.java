@@ -5,44 +5,86 @@ import Proyecto.GestorAPI.modelsDTO.TicketDto;
 import Proyecto.GestorAPI.services.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME;
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/tickets")
+@Tag(name = "Ticket Management", description = "Operaciones sobre tickets")
 public class TicketController {
 
     private final TicketService ticketService;
 
-    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
-    @GetMapping
-    public List<Object> getTickets(@RequestParam(value = "clienteId", required = false) Long clienteId) {
-        List<Ticket> tickets = null; //(clienteId == null) ? ticketService.getTickets() : ticketService.getTicketsByClienteId(clienteId);
-        return tickets.stream()
+    @GetMapping("/")
+    @Operation(
+            security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)},
+            summary = "Obtener todos los tickets filtrados por clienteId (opcional)"
+    )
+    public ResponseEntity<List<TicketDto>> getTickets(
+            @RequestParam(value = "clienteId", required = false) Long clienteId) {
+
+        List<Ticket> tickets = (clienteId != null)
+                ? ticketService.getTicketsByClienteId(clienteId).stream().toList()
+                : ticketService.getTickets();
+
+        List<TicketDto> dtos = tickets.stream()
                 .map(TicketDto::from)
                 .collect(Collectors.toList());
+
+        return dtos.isEmpty()
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.ok(dtos);
     }
 
-    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
-    public TicketDto createTicket(@Valid @RequestBody Ticket ticket) {
-        return TicketDto.from(ticketService.saveTicket(ticket));
+
+    @PostMapping("/")
+    @Operation(
+            security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)},
+            summary = "Crear un nuevo ticket"
+    )
+    public ResponseEntity<TicketDto> createTicket(@Valid @RequestBody Ticket ticket) {
+        Ticket createdTicket = ticketService.saveTicket(ticket);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(TicketDto.from(createdTicket));
     }
 
-    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @DeleteMapping("/{ticketId}")
-    public TicketDto deleteTicket(@PathVariable Long ticketId) {
-        Ticket ticket = ticketService.validateAndGetTicket(ticketId);
-        ticketService.deleteTicket(ticket);
-        return TicketDto.from(ticket);
+    @Operation(
+            security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)},
+            summary = "Eliminar un ticket por ID"
+    )
+    public ResponseEntity<Void> deleteTicket(@PathVariable Long ticketId) {
+        if (!ticketService.existsById(ticketId)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        ticketService.deleteTicketById(ticketId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{ticketId}")
+    @Operation(
+            security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)},
+            summary = "Actualizar un ticket por ID"
+    )
+    public ResponseEntity<TicketDto> updateTicket(
+            @PathVariable Long ticketId,
+            @Valid @RequestBody Ticket ticket) {
+
+        if (ticket.getId() == null || !ticket.getId().equals(ticketId)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Ticket updatedTicket = ticketService.saveTicket(ticket);
+        return ResponseEntity.ok(TicketDto.from(updatedTicket));
     }
 }

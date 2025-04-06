@@ -1,4 +1,4 @@
-package Proyecto.GestorAPI.controllers;
+package Proyecto.GestorAPI.controllers.securityController;
 
 public class CensorController {
 

@@ -1,7 +1,6 @@
 
 package Proyecto.GestorAPI.services;
 
-import Proyecto.GestorAPI.exceptions.TicketNotFoundException;
 import Proyecto.GestorAPI.repositories.TicketRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,14 +22,8 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<Ticket> getTicketsContainingText(String text) {
-        return ticketRepository.findByProductosContaining(text);
-    }
-
-    @Override
-    public Ticket validateAndGetTicket(Long ticketId) {
-        return ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new TicketNotFoundException(String.format("Ticket with clienteId %s not found", ticketId)));
+    public Optional<Ticket> getByID(Long id) {
+        return ticketRepository.findById(id);
     }
 
     @Override
@@ -39,11 +32,25 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public void deleteTicket(Ticket ticket) {
-        ticketRepository.delete(ticket);
+    public boolean existsById(Long id) {
+        return ticketRepository.existsById(id);
     }
 
+    @Override
+    public void saveAll(List<Ticket> tickets) {
+        ticketRepository.saveAll(tickets);
+    }
+
+
+    @Override
+    public void deleteTicketById(Long ticketId) {
+        ticketRepository.deleteById(ticketId);
+    }
+
+    @Override
     public Optional<Ticket> getTicketsByClienteId(Long clienteId) {
         return ticketRepository.findById(clienteId);
     }
+
+
 }

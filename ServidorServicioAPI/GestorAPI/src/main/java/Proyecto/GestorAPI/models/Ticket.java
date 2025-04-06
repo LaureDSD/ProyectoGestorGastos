@@ -21,20 +21,30 @@ public class Ticket {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
+
     private Instant fechaCompra;
 
-    @ManyToMany
-    @JoinTable(
-            name = "ticket_productos",
-            joinColumns = @JoinColumn(name = "ticket_id"),
-            inverseJoinColumns = @JoinColumn(name = "producto_id")
-    )
-    private List<Producto> productos;
+    private Double total;
 
     private LocalDateTime createdAt;
+
+    // V2
+    @Column(columnDefinition = "JSON")
+    private String productosJSON; //nombre,categoria,cantidad,precio
 
     @PrePersist
     public void onPrePersist() {
         this.createdAt = LocalDateTime.now();
+    }
+
+    public Ticket(User user, Categoria categoria, Double total, Instant fechaCompra, String productosJSON) {
+        this.user = user;
+        this.categoria = categoria;
+        this.total = total;
+        this.fechaCompra = fechaCompra;
+        this.productosJSON = productosJSON;
     }
 }
