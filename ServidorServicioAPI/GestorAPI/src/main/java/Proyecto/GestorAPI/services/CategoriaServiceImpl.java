@@ -20,4 +20,9 @@ public class CategoriaServiceImpl implements CategoriaService{
     public void saveCategoria(Categoria categoria) {
         categoriaRepository.save(categoria);
     }
+
+    @Override
+    public Categoria getCategoriaById(Long catId) {
+        return categoriaRepository.findById(catId).orElse(null);
+    }
 }

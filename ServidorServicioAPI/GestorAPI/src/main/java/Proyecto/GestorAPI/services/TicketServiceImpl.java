@@ -48,8 +48,8 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public Optional<Ticket> getTicketsByClienteId(Long clienteId) {
-        return ticketRepository.findById(clienteId);
+    public List<Ticket> getTicketsByClienteId(Long clienteId) {
+        return ticketRepository.findByUserId(clienteId);
     }
 
 

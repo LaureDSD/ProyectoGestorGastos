@@ -2,15 +2,17 @@ package Proyecto.GestorAPI.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "tickets")
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Ticket {
     @Id
@@ -25,22 +27,19 @@ public class Ticket {
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
-    private Instant fechaCompra;
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime fechaCompra;
 
     private Double total;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
     // V2
     @Column(columnDefinition = "JSON")
     private String productosJSON; //nombre,categoria,cantidad,precio
 
-    @PrePersist
-    public void onPrePersist() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    public Ticket(User user, Categoria categoria, Double total, Instant fechaCompra, String productosJSON) {
+    public Ticket(User user, Categoria categoria, Double total, LocalDateTime fechaCompra, String productosJSON) {
         this.user = user;
         this.categoria = categoria;
         this.total = total;
