@@ -1,5 +1,6 @@
 package Proyecto.GestorAPI.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -31,11 +32,23 @@ public class Ticket {
 
     private Double total;
 
-    private LocalDateTime createdAt;
-
-    // V2
     @Column(columnDefinition = "JSON")
     private String productosJSON; //nombre,categoria,cantidad,precio
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
     public Ticket(User user, Category categoria, Double total, LocalDateTime fechaCompra, String productosJSON) {
         this.user = user;

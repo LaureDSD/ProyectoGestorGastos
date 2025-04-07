@@ -31,6 +31,9 @@ public class TicketController {
     private final UserService userService;
     private final CategoryService categoriaService;
 
+
+
+
     @GetMapping("/")
     @Operation(
             security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),

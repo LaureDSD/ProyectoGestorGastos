@@ -1,12 +1,12 @@
 package Proyecto.GestorAPI.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,10 +25,17 @@ public class Subscription {
     private User user;
 
     @Column(nullable = false)
-    private LocalDate fechaInicio;
+    private LocalDateTime fechaInicio;
 
     @Column(nullable = false)
-    private LocalDate fechaExpiracion;
+    private LocalDateTime fechaExpiracion;
+
+    @Column(nullable = false)
+    private double precio;
+
+    private int diasRenovacion;
+
+    private boolean activa;
 
     private LocalDateTime createdAt;
 
