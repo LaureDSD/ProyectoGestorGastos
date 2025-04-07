@@ -1,7 +1,8 @@
 
-package Proyecto.GestorAPI.services;
+package Proyecto.GestorAPI.servicesimpl;
 
 import Proyecto.GestorAPI.repositories.TicketRepository;
+import Proyecto.GestorAPI.services.TicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import Proyecto.GestorAPI.models.Ticket;

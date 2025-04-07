@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public record CreateTicketRequest(
         @NotNull Long userId,
         @NotNull Long categoriaId,
-        @NotNull Instant fechaCompra,
+        @NotNull LocalDateTime fechaCompra,
         @Positive double total,
         String productosJSON
 ) {}

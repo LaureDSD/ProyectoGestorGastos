@@ -10,12 +10,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "suscripciones")
+@Table(name = "subscriptions")
 @Data
 @Getter
 @Setter
 @NoArgsConstructor
-public class Suscripcion {
+public class Subscription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,13 +30,9 @@ public class Suscripcion {
     @Column(nullable = false)
     private LocalDate fechaExpiracion;
 
-
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updatedAt;
-
 
     @PrePersist
     protected void onCreate() {

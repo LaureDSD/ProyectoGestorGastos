@@ -1,11 +1,10 @@
 package Proyecto.GestorAPI.controllers;
 
-import Proyecto.GestorAPI.models.Categoria;
 import Proyecto.GestorAPI.models.Ticket;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.modelsDTO.CreateTicketRequest;
 import Proyecto.GestorAPI.modelsDTO.TicketDto;
-import Proyecto.GestorAPI.services.CategoriaService;
+import Proyecto.GestorAPI.services.CategoryService;
 import Proyecto.GestorAPI.services.TicketService;
 import Proyecto.GestorAPI.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +29,7 @@ public class TicketController {
 
     private final TicketService ticketService;
     private final UserService userService;
-    private final CategoriaService categoriaService;
+    private final CategoryService categoriaService;
 
     @GetMapping("/")
     @Operation(
@@ -65,12 +63,12 @@ public class TicketController {
 
         // Crear el ticket con referencias por ID
         Ticket ticket = new Ticket();
-        ticket.setUser(userService.getUserById(request.userId()));
+        ticket.setUser(userService.getUserById(request.userId()).orElse(new User()));
         ticket.setCategoria(categoriaService.getCategoriaById(request.categoriaId()));
         ticket.setFechaCompra(request.fechaCompra());
         ticket.setTotal(request.total());
         ticket.setProductosJSON(request.productosJSON());
-        ticket.setCreatedAt(Instant.now());
+        ticket.setCreatedAt(LocalDateTime.now());
 
         Ticket createdTicket = ticketService.saveTicket(ticket);
         return ResponseEntity.status(HttpStatus.CREATED)

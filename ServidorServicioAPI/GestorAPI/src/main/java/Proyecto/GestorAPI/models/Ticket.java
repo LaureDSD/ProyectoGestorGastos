@@ -9,11 +9,11 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tickets")
 @Data
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "tickets")
 public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,21 +25,19 @@ public class Ticket {
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")
-    private Categoria categoria;
+    private Category categoria;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime fechaCompra;
 
     private Double total;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
     // V2
     @Column(columnDefinition = "JSON")
     private String productosJSON; //nombre,categoria,cantidad,precio
 
-    public Ticket(User user, Categoria categoria, Double total, LocalDateTime fechaCompra, String productosJSON) {
+    public Ticket(User user, Category categoria, Double total, LocalDateTime fechaCompra, String productosJSON) {
         this.user = user;
         this.categoria = categoria;
         this.total = total;

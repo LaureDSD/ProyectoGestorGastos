@@ -1,7 +1,6 @@
 package Proyecto.GestorAPI.services;
 
 import Proyecto.GestorAPI.models.User;
-import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,9 +19,11 @@ public interface UserService {
 
     User validateAndGetUserByUsername(String username);
 
+    User validateAndGetUserByUsermail(String email);
+
     User saveUser(User user);
 
     void deleteUser(User user);
 
-    User getUserById(@NotNull Long aLong);
+    Optional<User> getUserById(Long id);
 }

@@ -1,8 +1,9 @@
-package Proyecto.GestorAPI.services;
+package Proyecto.GestorAPI.servicesimpl;
 
 import Proyecto.GestorAPI.exceptions.UserNotFoundException;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.repositories.UserRepository;
+import Proyecto.GestorAPI.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> getUserById(Long userId) {
+        return userRepository.findById(userId);
+    }
+
+    @Override
     public Optional<User> getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
@@ -28,6 +34,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(User user) {
+        userRepository.delete(user);
     }
 
     @Override
@@ -47,17 +63,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(User user) {
-        return userRepository.save(user);
+    public User validateAndGetUserByUsermail(String email) {
+        return getUserByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with email %s not found", email)));
     }
 
-    @Override
-    public void deleteUser(User user) {
-        userRepository.delete(user);
-    }
-
-    @Override
-    public User getUserById(Long userId) {
-        return userRepository.findById(userId).orElse(null);
-    }
 }

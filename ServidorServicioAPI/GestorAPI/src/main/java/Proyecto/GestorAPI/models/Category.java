@@ -13,7 +13,8 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Categoria implements Serializable {
+@Table(name = "category")
+public class Category implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,7 +22,7 @@ public class Categoria implements Serializable {
     private String nombre;
     private String descripcion;
 
-    public Categoria(String nombre,String descripcion) {
+    public Category(String nombre, String descripcion) {
         this.descripcion = descripcion;
         this.nombre = nombre;
     }
