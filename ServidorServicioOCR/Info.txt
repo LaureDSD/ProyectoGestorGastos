@@ -1,1 +1,20 @@
 Funcional e veces, hay que reparar algunas cosas .
+
+http://localhost:5000/docs#/default/procesar_procesar_post
+
+
+python -m pip install --upgrade pip setuptools wheel
+
+
+pip install pytesseract opencv-python pdf2image numpy
+
+pip install pillow
+
+
+pip install fastapi uvicorn pytesseract pdf2image opencv-python numpy
+
+
+https://github.com/UB-Mannheim/tesseract/wiki
+
+pip install spacy
+python -m spacy download es_core_news_sm

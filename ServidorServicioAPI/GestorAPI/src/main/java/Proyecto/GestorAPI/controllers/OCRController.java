@@ -5,6 +5,8 @@ import Proyecto.GestorAPI.services.PythonService;
 import Proyecto.GestorAPI.services.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,19 +22,25 @@ import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME
 public class OCRController {
 
     private final TicketService ticketService;
-    private final PythonService pythonService; // Servicio que comunica con el servidor Python
+    private final PythonService pythonService;
 
     public OCRController(TicketService ticketService, PythonService pythonService) {
         this.ticketService = ticketService;
         this.pythonService = pythonService;
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/ticket")
     @Operation(
             security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
-            summary = "Subir archivo para crear ticket temporal con OCR"
+            summary = "Subir archivo para procesar ticket con OCR",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(
+                            mediaType = "multipart/form-data",
+                            schema = @Schema(type = "string", format = "binary")
+                    )
+            )
     )
-    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> processTicket(@RequestParam("archivo") MultipartFile file) { // Cambié "file" a "archivo"
         try {
             // 1. Guarda el archivo de manera temporal en el servidor
             File tempFile = saveFile(file);
@@ -42,7 +50,7 @@ public class OCRController {
 
             // 3. Crear un ticket temporal con el resultado del OCR
             Ticket ticket = new Ticket();
-            ticket.setProductosJSON(ocrResultJson); // Asumimos que el JSON recibido es el resultado del OCR
+            ticket.setProductsJSON(ocrResultJson); // Asumimos que el JSON recibido es el resultado del OCR
             ticket.setCreatedAt(LocalDateTime.now()); // Fecha de creación
 
             // 4. Guardar el ticket en la base de datos (o mantenerlo temporal)
@@ -59,6 +67,7 @@ public class OCRController {
             return ResponseEntity.status(500).body("Error al procesar el OCR: " + e.getMessage());
         }
     }
+
 
     private File saveFile(MultipartFile file) throws IOException {
         // Guarda el archivo temporalmente en el servidor

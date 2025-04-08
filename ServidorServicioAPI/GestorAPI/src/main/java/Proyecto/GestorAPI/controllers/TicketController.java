@@ -32,8 +32,6 @@ public class TicketController {
     private final CategoryService categoriaService;
 
 
-
-
     @GetMapping("/")
     @Operation(
             security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
@@ -68,9 +66,9 @@ public class TicketController {
         Ticket ticket = new Ticket();
         ticket.setUser(userService.getUserById(request.userId()).orElse(new User()));
         ticket.setCategoria(categoriaService.getCategoriaById(request.categoriaId()));
-        ticket.setFechaCompra(request.fechaCompra());
+        ticket.setPurchaseDate(request.fechaCompra());
         ticket.setTotal(request.total());
-        ticket.setProductosJSON(request.productosJSON());
+        ticket.setProductsJSON(request.productosJSON());
         ticket.setCreatedAt(LocalDateTime.now());
 
         Ticket createdTicket = ticketService.saveTicket(ticket);

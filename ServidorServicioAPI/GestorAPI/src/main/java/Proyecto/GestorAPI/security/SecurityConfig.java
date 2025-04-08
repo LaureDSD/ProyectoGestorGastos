@@ -57,7 +57,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/tickets", "/api/tickets/**").hasAuthority(ADMIN)
                         .requestMatchers("/api/users", "/api/users/**").hasAuthority(ADMIN)
                         .requestMatchers("/public/**", "/auth/**", "/oauth2/**").permitAll()
-                        .requestMatchers("/", "/error", "/csrf", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/", "/error", "/csrf", "/swagger-ui/**", "/v3/api-docs/**","api/ocr/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOauth2UserService))

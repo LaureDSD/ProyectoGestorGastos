@@ -10,8 +10,8 @@ public record TicketDto(Long clienteId, String fechaCompra, String productos) {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         return new TicketDto(
                 ticket.getUser().getId(),
-                formatter.format(ticket.getFechaCompra()),
-                ticket.getProductosJSON()
+                formatter.format(ticket.getPurchaseDate()),
+                ticket.getProductsJSON()
         );
     }
 }

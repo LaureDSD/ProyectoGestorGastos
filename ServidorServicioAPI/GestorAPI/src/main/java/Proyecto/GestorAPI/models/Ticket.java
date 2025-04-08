@@ -1,6 +1,5 @@
 package Proyecto.GestorAPI.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -19,6 +18,13 @@ public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private LocalDateTime purchaseDate;
+    private Category category;
+    private Double total;
+    private String store;
+    private double confidence;
+    @Column(columnDefinition = "JSON")
+    private String productsJSON; //nombre,categoria,cantidad,precio
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -27,13 +33,6 @@ public class Ticket {
     @ManyToOne
     @JoinColumn(name = "categoria_id")
     private Category categoria;
-
-    private LocalDateTime fechaCompra;
-
-    private Double total;
-
-    @Column(columnDefinition = "JSON")
-    private String productosJSON; //nombre,categoria,cantidad,precio
 
     private LocalDateTime createdAt;
 
@@ -54,7 +53,7 @@ public class Ticket {
         this.user = user;
         this.categoria = categoria;
         this.total = total;
-        this.fechaCompra = fechaCompra;
-        this.productosJSON = productosJSON;
+        this.purchaseDate = fechaCompra;
+        this.productsJSON = productosJSON;
     }
 }

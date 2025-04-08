@@ -9,6 +9,7 @@ from datetime import datetime
 import os
 
 # Configuracións globais
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 IDIOMA_OCR = "spa"
 IVA_POR_DEFECTO = 0.21
 
