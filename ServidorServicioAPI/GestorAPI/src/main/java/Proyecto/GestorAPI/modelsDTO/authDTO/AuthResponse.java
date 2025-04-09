@@ -1,4 +1,4 @@
-package Proyecto.GestorAPI.modelsDTO;
+package Proyecto.GestorAPI.modelsDTO.authDTO;
 
 /**
  * Clase de respuesta de autenticación.

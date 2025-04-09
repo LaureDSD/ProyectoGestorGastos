@@ -95,7 +95,7 @@ public class TicketServiceImpl implements TicketService {
      * @return Una lista de tickets asociados al cliente especificado.
      */
     @Override
-    public List<Ticket> getTicketsByClienteId(Long id) {
+    public List<Ticket> getTicketsByUserId(Long id) {
         return repository.findByUserId(id);
     }
 }

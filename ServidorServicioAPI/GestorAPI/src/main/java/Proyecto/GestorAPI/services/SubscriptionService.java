@@ -58,4 +58,6 @@ public interface SubscriptionService {
      * @return `true` si la suscripción existe, `false` si no existe.
      */
     boolean existsById(Long id);
+
+    List<Subscription> getSubscriptionsByUserId(Long clienteId);
 }

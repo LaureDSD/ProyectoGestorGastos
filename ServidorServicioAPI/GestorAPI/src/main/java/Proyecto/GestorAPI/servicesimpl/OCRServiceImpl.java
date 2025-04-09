@@ -1,6 +1,6 @@
 package Proyecto.GestorAPI.servicesimpl;
 
-import Proyecto.GestorAPI.services.PythonService;
+import Proyecto.GestorAPI.services.OCRService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -12,20 +12,20 @@ import java.io.File;
 import java.io.IOException;
 
 @Service // Anotación para que Spring registre la clase como un bean
-public class PythonServiceImpl implements PythonService {
+public class OCRServiceImpl implements OCRService {
 
     @Value("${python.server.url}")
     private String pythonServerUrl; // URL del servidor Python que procesa OCR
 
     private final RestTemplate restTemplate;
 
-    public PythonServiceImpl(RestTemplate restTemplate) {
+    public OCRServiceImpl(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     @Override
     public String sendFileForOCR(File file) throws IOException {
-        // Crea un archivo Multipart para enviarlo al servidor Python
+        // Crea un archivo Multipart para enviarlo al servidor Python.
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("file", file);
 

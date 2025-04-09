@@ -82,4 +82,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public boolean existsById(Long id) {
         return repository.existsById(id);
     }
+
+    @Override
+    public List<Subscription> getSubscriptionsByUserId(Long id) {
+        return repository.getByUserId(id);
+    }
 }

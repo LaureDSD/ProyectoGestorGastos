@@ -57,4 +57,6 @@ public interface SpentService {
      * @return `true` si el gasto existe, `false` si no existe.
      */
     boolean existsById(Long id);
+
+    List<Spent> getSpentsByUserId(Long clienteId);
 }

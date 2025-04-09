@@ -2,6 +2,7 @@ package Proyecto.GestorAPI.controllers;
 
 import Proyecto.GestorAPI.services.TicketService;
 import Proyecto.GestorAPI.services.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/public")
+@Tag(name = "Estadisticas Publicas", description = "Informacion adicional publica del servidor")
 public class PublicController {
 
     private final UserService userService;

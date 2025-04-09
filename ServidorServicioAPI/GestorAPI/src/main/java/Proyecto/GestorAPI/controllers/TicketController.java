@@ -41,7 +41,7 @@ public class TicketController {
             @RequestParam(value = "clienteId", required = false) Long clienteId) {
 
         List<Ticket> tickets = (clienteId != null)
-                ? ticketService.getTicketsByClienteId(clienteId)
+                ? ticketService.getTicketsByUserId(clienteId)
                 : ticketService.getAll();
 
         if (tickets.isEmpty()) {

@@ -3,7 +3,7 @@ package Proyecto.GestorAPI.services;
 import java.io.File;
 import java.io.IOException;
 
-public interface PythonService {
+public interface OCRService {
 
     /**
      * Envía un archivo al servicio de Python para realizar el proceso de OCR (Reconocimiento Óptico de Caracteres).
@@ -17,4 +17,5 @@ public interface PythonService {
      * @throws IOException Si ocurre un error durante la lectura del archivo o al comunicarse con el servicio de Python.
      */
     String sendFileForOCR(File tempFile) throws IOException;
+
 }

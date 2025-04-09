@@ -67,5 +67,5 @@ public interface TicketService {
      * @param clienteId El ID del cliente cuyos tickets se desean obtener.
      * @return Una lista de objetos `Ticket` asociados al cliente indicado.
      */
-    List<Ticket> getTicketsByClienteId(Long clienteId);
+    List<Ticket> getTicketsByUserId(Long clienteId);
 }

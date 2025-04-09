@@ -7,6 +7,7 @@ import Proyecto.GestorAPI.security.CustomUserDetails;
 import Proyecto.GestorAPI.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,6 +30,7 @@ import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/users")
+@Tag(name = "User Management (Admin only)", description = "Gestion de usuarios")
 public class UserController {
 
     // Servicio que gestiona las operaciones de usuarios.

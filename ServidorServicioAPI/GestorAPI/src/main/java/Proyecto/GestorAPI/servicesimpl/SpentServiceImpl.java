@@ -82,4 +82,9 @@ public class SpentServiceImpl implements SpentService {
     public boolean existsById(Long id) {
         return repository.existsById(id);
     }
+
+    @Override
+    public List<Spent> getSpentsByUserId(Long id) {
+        return  repository.getByUserId(id);
+    }
 }

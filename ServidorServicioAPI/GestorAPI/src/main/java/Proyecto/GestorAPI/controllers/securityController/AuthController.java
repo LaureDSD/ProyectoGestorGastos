@@ -3,9 +3,9 @@ package Proyecto.GestorAPI.controllers.securityController;
 import Proyecto.GestorAPI.exceptions.DuplicatedUserInfoException;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.security.RoleServer;
-import Proyecto.GestorAPI.modelsDTO.AuthResponse;
-import Proyecto.GestorAPI.modelsDTO.LoginRequest;
-import Proyecto.GestorAPI.modelsDTO.SignUpRequest;
+import Proyecto.GestorAPI.modelsDTO.authDTO.AuthResponse;
+import Proyecto.GestorAPI.modelsDTO.authDTO.LoginRequest;
+import Proyecto.GestorAPI.modelsDTO.authDTO.SignUpRequest;
 import Proyecto.GestorAPI.security.TokenProvider;
 import Proyecto.GestorAPI.security.oauth2.OAuth2Provider;
 import Proyecto.GestorAPI.services.UserService;
@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Register and Login", description = "Crea cuenta o identifcate")
 public class AuthController {
 
     private final UserService userService;

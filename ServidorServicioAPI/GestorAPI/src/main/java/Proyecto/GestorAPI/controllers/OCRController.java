@@ -1,12 +1,13 @@
 package Proyecto.GestorAPI.controllers;
 
 import Proyecto.GestorAPI.models.Ticket;
-import Proyecto.GestorAPI.services.PythonService;
+import Proyecto.GestorAPI.services.OCRService;
 import Proyecto.GestorAPI.services.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,12 +20,13 @@ import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME
 
 @RestController
 @RequestMapping("/api/ocr")
+@Tag(name = "OCR Service", description = "Operaciones OCR")
 public class OCRController {
 
     private final TicketService ticketService;
-    private final PythonService pythonService;
+    private final OCRService pythonService;
 
-    public OCRController(TicketService ticketService, PythonService pythonService) {
+    public OCRController(TicketService ticketService, OCRService pythonService) {
         this.ticketService = ticketService;
         this.pythonService = pythonService;
     }
@@ -42,7 +44,7 @@ public class OCRController {
     )
     public ResponseEntity<?> processTicket(@RequestParam("archivo") MultipartFile file) { // Cambié "file" a "archivo"
         try {
-            // 1. Guarda el archivo de manera temporal en el servidor
+            // 1. Guarda el archivo de manera temporal en el servidor.
             File tempFile = saveFile(file);
 
             // 2. Enviar el archivo al servidor Python para realizar el OCR

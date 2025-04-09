@@ -1,6 +1,5 @@
-package Proyecto.GestorAPI.modelsDTO;
+package Proyecto.GestorAPI.models;
 
-import Proyecto.GestorAPI.models.CategoryExpense;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
