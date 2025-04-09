@@ -3,10 +3,10 @@ package Proyecto.GestorAPI.controllers.securityController;
 
 import Proyecto.GestorAPI.exceptions.DuplicatedUserInfoException;
 import Proyecto.GestorAPI.models.User;
+import Proyecto.GestorAPI.security.RoleServer;
 import Proyecto.GestorAPI.modelsDTO.AuthResponse;
 import Proyecto.GestorAPI.modelsDTO.LoginRequest;
 import Proyecto.GestorAPI.modelsDTO.SignUpRequest;
-import Proyecto.GestorAPI.security.SecurityConfig;
 import Proyecto.GestorAPI.security.TokenProvider;
 import Proyecto.GestorAPI.security.oauth2.OAuth2Provider;
 import Proyecto.GestorAPI.services.UserService;
@@ -66,7 +66,7 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(signUpRequest.password()));
         user.setName(signUpRequest.name());
         user.setEmail(signUpRequest.email());
-        user.setRole(SecurityConfig.USER);
+        user.setRole(RoleServer.USER);
         user.setProvider(OAuth2Provider.LOCAL);
         return user;
     }

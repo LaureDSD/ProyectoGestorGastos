@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) {
         User user = userService.getUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("Username %s not found", username)));
-        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole()));
+        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name()));
         return mapUserToCustomUserDetails(user, authorities);
     }
 

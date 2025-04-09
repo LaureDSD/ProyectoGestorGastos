@@ -1,25 +1,19 @@
 package Proyecto.GestorAPI.models;
 
-
+import Proyecto.GestorAPI.security.RoleServer;
 import Proyecto.GestorAPI.security.oauth2.OAuth2Provider;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
-@Getter
-@Setter
 @Entity
-@Table(name = "users", uniqueConstraints = {
+@Table(name = "usuarios", uniqueConstraints = {
         @UniqueConstraint(columnNames = "username"),
         @UniqueConstraint(columnNames = "email")
 })
@@ -29,27 +23,49 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //Nombre de usuario identificador
     private String username;
+
+    //Contrasena
     private String password;
+
+    //Nombre del usuario
     private String name;
+
+    //Correo
     private String email;
-    private String role;
+
+    //Rol del usuario
+    private RoleServer role;
+
+    //Imagende perfil
     private String imageUrl;
 
-    private double saldo;
-    private double ahorrado;
-    private double metaAhorro;
+    //Aviso de gasto mensual
+    private double noticeExpense;
 
+    //Posible control de evolucion con clase
+    private double budgetMonthly;
+
+    //Estado de la cuenta
+    private boolean active;
+
+    //Lista de gastos borrable al borrar usuario
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Ticket> tickets;
+    @JsonIgnore
+    private List<Spent> spentList;
 
+    //Procdedencia creacion del usaurio
     @Enumerated(EnumType.STRING)
     private OAuth2Provider provider;
 
+    //Identificador del proveedor
     private String providerId;
 
+    //Fecha creacion
     private LocalDateTime createdAt;
 
+    //Fecha de ultima modificacion
     private LocalDateTime updatedAt;
 
     @PrePersist
@@ -63,7 +79,7 @@ public class User {
         updatedAt = LocalDateTime.now();
     }
 
-    public User(String username, String password, String name, String email, String role, String imageUrl, OAuth2Provider provider, String providerId) {
+    public User(String username, String password, String name, String email, RoleServer role, String imageUrl, OAuth2Provider provider, String providerId) {
         this.username = username;
         this.password = password;
         this.name = name;
@@ -72,5 +88,9 @@ public class User {
         this.imageUrl = imageUrl;
         this.provider = provider;
         this.providerId = providerId;
+        this.active = true;
+        this.budgetMonthly = 500;
+        this.noticeExpense = 100;
     }
+
 }

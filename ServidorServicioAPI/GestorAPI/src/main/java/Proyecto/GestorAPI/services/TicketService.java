@@ -8,18 +8,17 @@ import java.util.Optional;
 
 public interface TicketService {
 
-    List<Ticket> getTickets();
 
-    Ticket saveTicket(Ticket ticket);
-
-    List<Ticket> getTicketsByClienteId(Long clienteId);
-
-    void deleteTicketById(Long ticketId);
+    List<Ticket> getAll();
 
     Optional<Ticket> getByID(Long id);
 
-    boolean existsById(Long ticketId);
+    Ticket setItem(Ticket o);
 
-    void saveAll(List<Ticket> tickets);
+    void deleteByID(Long id);
+
+    boolean existsById(Long id);
+
+    List<Ticket> getTicketsByClienteId(Long clienteId);
 }
 

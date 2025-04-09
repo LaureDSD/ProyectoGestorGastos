@@ -27,6 +27,11 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class TokenProvider {
+
+    public static final String TOKEN_TYPE = "JWT";
+    public static final String TOKEN_ISSUER = "order-api";
+    public static final String TOKEN_AUDIENCE = "order-app";
+
     private final UserDetailsService userDetailsService;
 
     @Value("${app.jwt.secret}")
@@ -89,7 +94,5 @@ public class TokenProvider {
         return Optional.empty();
     }
 
-    public static final String TOKEN_TYPE = "JWT";
-    public static final String TOKEN_ISSUER = "order-api";
-    public static final String TOKEN_AUDIENCE = "order-app";
+
 }

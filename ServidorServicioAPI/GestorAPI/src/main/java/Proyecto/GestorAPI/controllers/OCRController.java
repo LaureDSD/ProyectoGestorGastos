@@ -54,7 +54,7 @@ public class OCRController {
             ticket.setCreatedAt(LocalDateTime.now()); // Fecha de creación
 
             // 4. Guardar el ticket en la base de datos (o mantenerlo temporal)
-            Ticket savedTicket = ticketService.saveTicket(ticket);
+            Ticket savedTicket = ticketService.setItem(ticket);
 
             // 5. Eliminar archivo temporal
             tempFile.delete();

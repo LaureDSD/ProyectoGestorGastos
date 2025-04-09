@@ -11,7 +11,7 @@ public record UserDto(Long id, String username, String name, String email, Strin
                 user.getUsername(),
                 user.getName(),
                 user.getEmail(),
-                user.getRole()
+                user.getRole().name()
         );
     }
 }

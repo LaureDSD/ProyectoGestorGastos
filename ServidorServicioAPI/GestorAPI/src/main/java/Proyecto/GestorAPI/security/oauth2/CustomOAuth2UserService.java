@@ -2,7 +2,7 @@ package Proyecto.GestorAPI.security.oauth2;
 
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.security.CustomUserDetails;
-import Proyecto.GestorAPI.security.SecurityConfig;
+import Proyecto.GestorAPI.security.RoleServer;
 import Proyecto.GestorAPI.services.UserService;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -51,7 +51,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             user.setEmail(customUserDetails.getEmail());
             user.setImageUrl(customUserDetails.getAvatarUrl());
             user.setProvider(customUserDetails.getProvider());
-            user.setRole(SecurityConfig.USER);
+            user.setRole(RoleServer.USER);
         } else {
             user = userOptional.get();
             user.setEmail(customUserDetails.getEmail());

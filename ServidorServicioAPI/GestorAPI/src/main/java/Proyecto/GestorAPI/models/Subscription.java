@@ -1,54 +1,35 @@
 package Proyecto.GestorAPI.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "subscriptions")
+@Table(name = "subscripciones")
 @Data
 @Getter
 @Setter
 @NoArgsConstructor
-public class Subscription {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Subscription extends Spent {
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
+    //Inicio de la subscripcion
     @Column(nullable = false)
-    private LocalDateTime fechaInicio;
+    private LocalDateTime start;
 
-    @Column(nullable = false)
-    private LocalDateTime fechaExpiracion;
+    //Final de la subscripcion, vacio indifinido
+    private LocalDateTime end;
 
-    @Column(nullable = false)
-    private double precio;
+    //En base a fecha de inicio,intervalo y dia ,calcular el precio acumulado actual,
+    private double accumulate;
 
-    private int diasRenovacion;
+    //Que dia se renueva
+    private int restartDay;
 
+    //Cada cuanto tiempo se reneuva
+    private int intervalTime;
+
+    //Indicar si esta activada o no
     private boolean activa;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
 }

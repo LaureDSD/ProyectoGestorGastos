@@ -4,7 +4,7 @@ import Proyecto.GestorAPI.models.Ticket;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.modelsDTO.CreateTicketRequest;
 import Proyecto.GestorAPI.modelsDTO.TicketDto;
-import Proyecto.GestorAPI.services.CategoryService;
+import Proyecto.GestorAPI.services.CategoryExpenseService;
 import Proyecto.GestorAPI.services.TicketService;
 import Proyecto.GestorAPI.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +29,7 @@ public class TicketController {
 
     private final TicketService ticketService;
     private final UserService userService;
-    private final CategoryService categoriaService;
+    private final CategoryExpenseService categoriaService;
 
 
     @GetMapping("/")
@@ -42,7 +42,7 @@ public class TicketController {
 
         List<Ticket> tickets = (clienteId != null)
                 ? ticketService.getTicketsByClienteId(clienteId)
-                : ticketService.getTickets();
+                : ticketService.getAll();
 
         if (tickets.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -65,13 +65,13 @@ public class TicketController {
         // Crear el ticket con referencias por ID
         Ticket ticket = new Ticket();
         ticket.setUser(userService.getUserById(request.userId()).orElse(new User()));
-        ticket.setCategoria(categoriaService.getCategoriaById(request.categoriaId()));
-        ticket.setPurchaseDate(request.fechaCompra());
+        ticket.setCategory(categoriaService.getByID(request.categoriaId()).orElse(null));
+        ticket.setExpenseDate(request.fechaCompra());
         ticket.setTotal(request.total());
         ticket.setProductsJSON(request.productosJSON());
         ticket.setCreatedAt(LocalDateTime.now());
 
-        Ticket createdTicket = ticketService.saveTicket(ticket);
+        Ticket createdTicket = ticketService.setItem(ticket);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(TicketDto.from(createdTicket));
     }
@@ -85,8 +85,7 @@ public class TicketController {
         if (!ticketService.existsById(ticketId)) {
             return ResponseEntity.notFound().build();
         }
-
-        ticketService.deleteTicketById(ticketId);
+        ticketService.deleteByID(ticketId);
         return ResponseEntity.noContent().build();
     }
 
@@ -99,11 +98,11 @@ public class TicketController {
             @PathVariable Long ticketId,
             @Valid @RequestBody Ticket ticket) {
 
-        if (ticket.getId() == null || !ticket.getId().equals(ticketId)) {
+        if (ticket.getSpent_id() == null || !ticket.getSpent_id().equals(ticketId)) {
             return ResponseEntity.badRequest().build();
         }
 
-        Ticket updatedTicket = ticketService.saveTicket(ticket);
+        Ticket updatedTicket = ticketService.setItem(ticket);
         return ResponseEntity.ok(TicketDto.from(updatedTicket));
     }
 }

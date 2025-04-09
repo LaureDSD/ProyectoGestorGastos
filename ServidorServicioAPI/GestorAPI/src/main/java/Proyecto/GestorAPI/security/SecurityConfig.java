@@ -2,7 +2,6 @@ package Proyecto.GestorAPI.security;
 
 import Proyecto.GestorAPI.security.oauth2.CustomAuthenticationSuccessHandler;
 import Proyecto.GestorAPI.security.oauth2.CustomOAuth2UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,6 +20,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 public class SecurityConfig {
+
+    public static final String ADMIN = RoleServer.ADMIN.name();
+    public static final String USER = RoleServer.USER.name();
 
     private final CustomOAuth2UserService customOauth2UserService;
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
@@ -76,6 +78,4 @@ public class SecurityConfig {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-    public static final String ADMIN = "ADMIN";
-    public static final String USER = "USER";
 }

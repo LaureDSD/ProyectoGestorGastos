@@ -1,6 +1,6 @@
 package Proyecto.GestorAPI.modelsDTO;
 
-import Proyecto.GestorAPI.models.Category;
+import Proyecto.GestorAPI.models.categoryExpense;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,5 +16,5 @@ public class ProductJSON {
     private String name;
     private String quantity;
     private String price;
-    private List<Category> category;
+    private List<categoryExpense> category;
 }

@@ -22,7 +22,7 @@ public class PublicController {
 
     @GetMapping("/Tickets")
     public Integer getNumberOfTickets() {
-        return ticketService.getTickets().size();
+        return ticketService.getAll().size();
     }
 
 }

@@ -1,36 +1,32 @@
-
 package Proyecto.GestorAPI.servicesimpl;
 
-import Proyecto.GestorAPI.repositories.TicketRepository;
-import Proyecto.GestorAPI.services.TicketService;
-import lombok.RequiredArgsConstructor;
+import Proyecto.GestorAPI.models.Spent;
+import Proyecto.GestorAPI.repositories.SpentRepository;
+import Proyecto.GestorAPI.services.SpentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import Proyecto.GestorAPI.models.Ticket;
-
 
 import java.util.List;
 import java.util.Optional;
 
-@RequiredArgsConstructor
 @Service
-public class TicketServiceImpl implements TicketService {
+public class SpentServiceImpl implements SpentService{
 
     @Autowired
-    private TicketRepository repository;
+    private SpentRepository repository;
 
     @Override
-    public List<Ticket> getAll() {
+    public List<Spent> getAll() {
         return repository.findAll();
     }
 
     @Override
-    public Optional<Ticket> getByID(Long id) {
+    public Optional<Spent> getByID(Long id) {
         return repository.findById(id);
     }
 
     @Override
-    public Ticket setItem(Ticket o) {
+    public Spent setItem(Spent o) {
         return repository.save(o);
     }
 
@@ -43,11 +39,5 @@ public class TicketServiceImpl implements TicketService {
     public boolean existsById(Long id) {
         return repository.existsById(id);
     }
-
-    @Override
-    public List<Ticket> getTicketsByClienteId(Long id) {
-        return repository.findByUserId(id);
-    }
-
 
 }
