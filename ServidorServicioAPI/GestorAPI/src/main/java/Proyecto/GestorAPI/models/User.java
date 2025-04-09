@@ -10,6 +10,12 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Entidad que representa a un usuario del sistema.
+ *
+ * Contiene información relevante para la autenticación, autorización
+ * y configuración de perfil, además de la relación con los gastos realizados.
+ */
 @Data
 @NoArgsConstructor
 @Entity
@@ -19,67 +25,92 @@ import java.util.List;
 })
 public class User {
 
+    /** Identificador único del usuario (PK). */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //Nombre de usuario identificador
+    /** Nombre de usuario utilizado para autenticación. */
     private String username;
 
-    //Contrasena
+    /** Contraseña cifrada del usuario. */
     private String password;
 
-    //Nombre del usuario
+    /** Nombre completo del usuario. */
     private String name;
 
-    //Correo
+    /** Correo electrónico del usuario. */
     private String email;
 
-    //Rol del usuario
+    /** Rol del usuario dentro del sistema (admin, user). */
     private RoleServer role;
 
-    //Imagende perfil
+    /** URL de la imagen de perfil del usuario. */
     private String imageUrl;
 
-    //Aviso de gasto mensual
+    /** Umbral de aviso para gastos mensuales (notificaciones). */
     private double noticeExpense;
 
-    //Posible control de evolucion con clase
+    /** Presupuesto mensual asignado al usuario. */
     private double budgetMonthly;
 
-    //Estado de la cuenta
+    /** Indica si la cuenta del usuario está activa. */
     private boolean active;
 
-    //Lista de gastos borrable al borrar usuario
+    /**
+     * Lista de gastos asociados al usuario.
+     * Se eliminan en cascada si el usuario es eliminado.
+     */
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Spent> spentList;
 
-    //Procdedencia creacion del usaurio
+    /** Proveedor externo de autenticación (Google, GitHub, etc.). */
     @Enumerated(EnumType.STRING)
     private OAuth2Provider provider;
 
-    //Identificador del proveedor
+    /** ID único proporcionado por el proveedor externo (OAuth2). */
     private String providerId;
 
-    //Fecha creacion
+    /** Fecha de creación del usuario. */
     private LocalDateTime createdAt;
 
-    //Fecha de ultima modificacion
+    /** Fecha de la última modificación del usuario. */
     private LocalDateTime updatedAt;
 
+    /**
+     * Método de callback ejecutado antes de persistir la entidad.
+     * Inicializa las fechas de creación y modificación.
+     */
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 
+    /**
+     * Método de callback ejecutado antes de actualizar la entidad.
+     * Actualiza la fecha de modificación.
+     */
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
 
-    public User(String username, String password, String name, String email, RoleServer role, String imageUrl, OAuth2Provider provider, String providerId) {
+    /**
+     * Constructor completo para inicialización de un nuevo usuario.
+     *
+     * @param username    Nombre de usuario
+     * @param password    Contraseña cifrada
+     * @param name        Nombre del usuario
+     * @param email       Correo electrónico
+     * @param role        Rol asignado
+     * @param imageUrl    URL de la imagen de perfil
+     * @param provider    Proveedor externo (OAuth2)
+     * @param providerId  ID proporcionado por el proveedor
+     */
+    public User(String username, String password, String name, String email, RoleServer role,
+                String imageUrl, OAuth2Provider provider, String providerId) {
         this.username = username;
         this.password = password;
         this.name = name;
@@ -89,8 +120,7 @@ public class User {
         this.provider = provider;
         this.providerId = providerId;
         this.active = true;
-        this.budgetMonthly = 500;
-        this.noticeExpense = 100;
+        this.budgetMonthly = 500; // Presupuesto inicial por defecto
+        this.noticeExpense = 100; // Aviso de gasto inicial por defecto
     }
-
 }

@@ -9,23 +9,36 @@ import org.springframework.context.annotation.Configuration;
 
 import java.text.SimpleDateFormat;
 
+/**
+ * Configuración personalizada del ObjectMapper de Jackson para la aplicación.
+ *
+ * Este bean se utiliza en toda la aplicación para serializar y deserializar objetos JSON
+ * con soporte para fechas en formato legible, compatibilidad con la API de fechas de Java 8
+ * y una mayor tolerancia a cambios en las clases del modelo (por ejemplo, al ignorar propiedades desconocidas).
+ */
 @Configuration
 public class ObjectMapperConfig {
 
+    /**
+     * Bean de configuración global del ObjectMapper para personalizar el comportamiento
+     * de la conversión JSON <-> Java.
+     *
+     * @return instancia de ObjectMapper personalizada.
+     */
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
 
-        // Configura el mapper para ignorar propiedades desconocidas
+        // Ignora propiedades desconocidas al deserializar, evitando errores si cambian los modelos
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        // Registra el módulo para manejar Java 8 Time API
+        // Añade soporte para la API de fechas de Java 8 (LocalDateTime, LocalDate, etc.)
         mapper.registerModule(new JavaTimeModule());
 
-        // Deshabilita la serialización de fechas como timestamps
+        // Deshabilita la escritura de fechas como timestamps numéricos
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
-        // Configura el formato global para fechas
+        // Define el formato estándar para la serialización/deserialización de fechas
         mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 
         return mapper;

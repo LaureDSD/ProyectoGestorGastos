@@ -1,6 +1,8 @@
 package Proyecto.GestorAPI.controllers.securityController;
 
-public class CensorController {
+import java.util.regex.Pattern;
+
+public class MySecurityrController {
 
     /**
      * Oculta todos los dígitos de un número, excepto los últimos 'mostrar' dígitos.
@@ -37,4 +39,23 @@ public class CensorController {
 
         return "*".repeat(username.length() - mostrar) + username.substring(username.length() - mostrar) + domain;
     }
+
+    /**
+     * Valida si el string proporcionado tiene el formato de un correo electrónico válido.
+     *
+     * Este método utiliza una expresión regular para comprobar si el string cumple con el formato estándar de un correo electrónico.
+     * La expresión regular valida caracteres alfanuméricos y algunos caracteres especiales permitidos antes de la "@" y el dominio después de ella.
+     *
+     * @param user El string que se desea verificar si es un correo electrónico.
+     * @return `true` si el string tiene el formato de un correo electrónico válido, `false` en caso contrario.
+     */
+    public static boolean isEmail(String user) {
+        // Expresión regular para validar un correo electrónico
+        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        Pattern emailPattern = Pattern.compile(emailRegex);
+
+        // Verifica si el 'user' coincide con el formato de correo electrónico utilizando la expresión regular
+        return emailPattern.matcher(user).matches();
+    }
+
 }

@@ -9,6 +9,13 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+/**
+ * Entidad que representa un gasto registrado por un usuario.
+ *
+ * Los gastos pueden pertenecer a diferentes tipos como tickets, facturas, suscripciones o transferencias.
+ * Cada gasto está relacionado con un usuario y opcionalmente con una categoría.
+ * Se permite la herencia para extender tipos de gasto especializados.
+ */
 @Entity
 @Table(name = "gastos")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -18,61 +25,93 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Spent {
 
-    //ID del gasto
+    /**
+     * Identificador único del gasto.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long spent_id;
 
-    // Nombre del gasto
+    /**
+     * Nombre o título del gasto.
+     */
     private String name;
 
-    //Descripcion del gasto
+    /**
+     * Descripción adicional del gasto.
+     */
     private String description;
 
-    //Icono del gasto
+    /**
+     * Icono representativo del gasto (puede ser una clase CSS, nombre de imagen, etc.).
+     */
     private String icon;
 
-    //Fecha del gasto
+    /**
+     * Fecha en la que se realizó el gasto.
+     */
     private LocalDateTime expenseDate;
 
-    //Total base del gasto
+    /**
+     * Importe total del gasto (sin IVA incluido).
+     */
     private double total;
 
-    //Iva aplicado opcional, default 21 o categoria asignada.
+    /**
+     * Porcentaje de IVA aplicado al gasto.
+     * Si no se especifica, se puede tomar el valor por defecto o el de la categoría asignada.
+     */
     private double iva;
 
-    //Usuario
+    /**
+     * Usuario al que pertenece este gasto.
+     */
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    //Categoria generica del gasto
+    /**
+     * Categoría opcional a la que pertenece el gasto.
+     */
     @ManyToOne
     @JoinColumn(name = "categoria_id")
-    private categoryExpense category;
+    private CategoryExpense category;
 
-    //Fecha de creacion
+    /**
+     * Fecha y hora en que se creó el registro.
+     * Se establece automáticamente al persistir.
+     */
     private LocalDateTime createdAt;
 
-    //Fecha de modificacion
+    /**
+     * Fecha y hora de la última modificación del registro.
+     * Se actualiza automáticamente antes de cada modificación.
+     */
     private LocalDateTime updatedAt;
 
-    //Tipo e gasto (Generico o Sub clase (Factura,Ticket,Subscripcion,Transferencia))
+    /**
+     * Tipo de gasto: puede ser un gasto genérico o una subclase especializada como Ticket, Factura, etc.
+     */
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo", nullable = false)
     private ExpenseClass typeExpense;
 
-    //Inicializa fechas
+    /**
+     * Callback de JPA que se ejecuta automáticamente antes de insertar un nuevo gasto.
+     * Establece las fechas de creación y modificación.
+     */
     @PrePersist
     public void prePersist() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 
-    //Acualiza fecha de modificacion
+    /**
+     * Callback de JPA que se ejecuta automáticamente antes de actualizar un gasto existente.
+     * Actualiza la fecha de modificación.
+     */
     @PreUpdate
     public void preUpdate() {
         updatedAt = LocalDateTime.now();
     }
-
 }

@@ -5,6 +5,12 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * Representa un gasto del tipo subscripción.
+ *
+ * Extiende la clase base {@link Spent} e incluye atributos específicos
+ * como fecha de inicio, renovación, estado de actividad y cálculo de acumulado.
+ */
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "subscripciones")
@@ -14,22 +20,37 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Subscription extends Spent {
 
-    //Inicio de la subscripcion
+    /**
+     * Fecha de inicio de la subscripción. Campo obligatorio.
+     */
     @Column(nullable = false)
     private LocalDateTime start;
 
-    //Final de la subscripcion, vacio indifinido
+    /**
+     * Fecha de finalización de la subscripción.
+     * Si es null, se considera una subscripción indefinida.
+     */
     private LocalDateTime end;
 
-    //En base a fecha de inicio,intervalo y dia ,calcular el precio acumulado actual,
+    /**
+     * Monto acumulado calculado desde el inicio según el intervalo y frecuencia de renovación.
+     */
     private double accumulate;
 
-    //Que dia se renueva
+    /**
+     * Día del mes en el que se renueva la subscripción.
+     * Por ejemplo: 1 = día 1 de cada mes.
+     */
     private int restartDay;
 
-    //Cada cuanto tiempo se reneuva
+    /**
+     * Intervalo de tiempo (en días, semanas o meses según lógica externa)
+     * que define la frecuencia de renovación.
+     */
     private int intervalTime;
 
-    //Indicar si esta activada o no
+    /**
+     * Indica si la subscripción está actualmente activa.
+     */
     private boolean activa;
 }
