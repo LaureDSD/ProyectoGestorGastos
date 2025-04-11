@@ -1,0 +1,24 @@
+@startuml
+start
+
+:Usuario ingresa credenciales;
+:Spring recibe las credenciales;
+
+partition Autenticación {
+  :Spring valida credenciales;
+
+  if (Válidas?) then (sí)
+    :Spring genera token JWT;
+    :Spring almacena token en Redis;
+    :Spring establece cookie segura;
+    :Devuelve respuesta exitosa (200 OK);
+    stop
+  else (no)
+    :Registra intento fallido;
+    :Incrementa contador de intentos;
+    :Devuelve error 401 Unauthorized;
+    stop
+  endif
+}
+
+@enduml

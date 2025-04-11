@@ -1,6 +1,8 @@
 package Proyecto.GestorAPI.controllers.securityController;
 
 import Proyecto.GestorAPI.exceptions.DuplicatedUserInfoException;
+import Proyecto.GestorAPI.exceptions.UserBlockedException;
+import Proyecto.GestorAPI.exceptions.UserNoFoundException;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.security.RoleServer;
 import Proyecto.GestorAPI.modelsDTO.authDTO.AuthResponse;
@@ -9,6 +11,7 @@ import Proyecto.GestorAPI.modelsDTO.authDTO.SignUpRequest;
 import Proyecto.GestorAPI.security.TokenProvider;
 import Proyecto.GestorAPI.security.oauth2.OAuth2Provider;
 import Proyecto.GestorAPI.services.UserService;
+import Proyecto.GestorAPI.servicesimpl.LoginAttemptServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,6 +53,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
+    private final LoginAttemptServiceImpl loginAttemptService;
 
     /**
      * Endpoint para la autenticación de usuarios.
@@ -68,9 +73,23 @@ public class AuthController {
             })
     @PostMapping("/authenticate")
     public AuthResponse login(@Valid @RequestBody LoginRequest loginRequest) {
-        // Autentica al usuario y obtiene el token
-        String token = authenticateAndGetToken(loginRequest.user(), loginRequest.password());
-        return new AuthResponse(token);
+
+        // Primero, verifica si el usuario está bloqueado
+        if (loginAttemptService.isBlocked(loginRequest.user())) {
+            throw new UserBlockedException("Cuenta bloqueada temporalmente. Intente nuevamente en 30 minutos");
+        }
+
+        try {
+            String token = authenticateAndGetToken(loginRequest.user(), loginRequest.password());
+            // Registra el intento exitoso (podrías limpiar los registros de fallos para ese usuario si se desea)
+            loginAttemptService.registerLoginAttempt(loginRequest.user(), true);
+            return new AuthResponse(token);
+        } catch (AuthenticationException ex) {
+            // Registra el intento fallido
+            loginAttemptService.registerLoginAttempt(loginRequest.user(), false);
+            throw ex;
+        }
+
     }
 
     /**
@@ -133,7 +152,7 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(existingUser.getUsername(), password));
             return tokenProvider.generate(authentication);
         } else {
-            throw new RuntimeException("User not found");
+            throw new UserNoFoundException("User not found");
         }
     }
 

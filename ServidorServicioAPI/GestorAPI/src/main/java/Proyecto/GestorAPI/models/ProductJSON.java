@@ -15,5 +15,5 @@ public class ProductJSON {
     private String name;
     private String quantity;
     private String price;
-    private List<CategoryExpense> category;
+    private List<String> category;
 }

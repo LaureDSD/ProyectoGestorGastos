@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotBlank;
 public record LoginRequest(
         @Schema(example = "user")  // Esta anotación de Swagger proporciona un ejemplo de valor para la documentación de la API
         @NotBlank  // Valida que el campo no esté vacío
-        String user,             // Nombre de usuario para el inicio de sesión
+        String user,             // Nombre de usuario para el inicio de sesión o email
 
         @Schema(example = "user")   // Ejemplo de contraseña en la documentación de la API
         @NotBlank                    // El campo no debe estar vacío
