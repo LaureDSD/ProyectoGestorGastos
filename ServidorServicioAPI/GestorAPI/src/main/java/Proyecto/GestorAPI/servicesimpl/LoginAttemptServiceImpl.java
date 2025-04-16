@@ -64,7 +64,7 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
     public Duration timeUntilUnlock(String username) {
         Instant now = Instant.now();
         Instant cutoff = now.minus(Duration.ofMinutes(blockDuration));
-        List<LoginAttempt> failedAttempts = loginAttemptRepository.findFailedAttempts(username, cutoff);
+        List<LoginAttempt> failedAttempts = loginAttemptRepository.findByUsernameAndSuccessIsFalseAndAttemptTimeAfter(username, cutoff);
 
         if (failedAttempts.size() < maxFailedAttempts) {
             return Duration.ZERO;

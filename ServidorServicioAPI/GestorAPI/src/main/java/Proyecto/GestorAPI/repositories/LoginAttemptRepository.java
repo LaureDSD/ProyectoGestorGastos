@@ -21,5 +21,6 @@ public interface LoginAttemptRepository extends JpaRepository<LoginAttempt, Long
     @Query("DELETE FROM LoginAttempt la WHERE la.attemptTime < :olderThan")
     void deleteOlderThan(@Param("olderThan") Instant olderThan);
 
-    List<LoginAttempt> findFailedAttempts(String username, Instant cutoff);
+    List<LoginAttempt> findByUsernameAndSuccessIsFalseAndAttemptTimeAfter(String username, Instant cutoff);
+
 }
