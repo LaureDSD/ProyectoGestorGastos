@@ -1,8 +1,12 @@
 package Proyecto.GestorAPI.controllers;
 
+import Proyecto.GestorAPI.models.Spent;
 import Proyecto.GestorAPI.models.Subscription;
+import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.modelsDTO.CreateSubscriptionRequest;
 import Proyecto.GestorAPI.modelsDTO.SubscriptionDto;
+import Proyecto.GestorAPI.security.CustomUserDetails;
+import Proyecto.GestorAPI.security.RoleServer;
 import Proyecto.GestorAPI.services.SubscriptionService;
 import Proyecto.GestorAPI.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,8 +16,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +28,7 @@ import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/subscriptions")
-@Tag(name = "Subscription Management", description = "Operaciones sobre suscripciones")
+@Tag(name = "Subscription Management (Only users , verify)", description = "Operaciones sobre suscripciones")
 public class SubscriptionController {
 
     private final SubscriptionService subscriptionService;
@@ -31,14 +37,23 @@ public class SubscriptionController {
     @GetMapping("/")
     @Operation(
             security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
-            summary = "Obtener todas las suscripciones filtradas por clienteId (opcional)"
+            summary = "Obtener todas las suscripciones filtradas por clienteId (opcional para admins)"
     )
     public ResponseEntity<List<SubscriptionDto>> getSubscriptions(
-            @RequestParam(value = "clienteId", required = false) Long clienteId) {
+            @RequestParam(value = "clienteId", required = false) Long clienteId,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+        List<Subscription> subscriptions = new ArrayList<>();
 
-        List<Subscription> subscriptions = (clienteId != null)
-                ? subscriptionService.getSubscriptionsByUserId(clienteId)
-                : subscriptionService.getAll();
+        if(user.getRole() != RoleServer.ADMIN){
+            //si no es admin
+            subscriptions = subscriptionService.getSubscriptionsByUserId(user.getId());
+        }else{
+            //si es admin
+            subscriptions = (clienteId != null)
+                    ? subscriptionService.getSubscriptionsByUserId(clienteId)
+                    : subscriptionService.getAll();
+        }
 
         if (subscriptions.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -56,7 +71,9 @@ public class SubscriptionController {
             summary = "Crear una nueva suscripción"
     )
     public ResponseEntity<SubscriptionDto> createSubscription(
-            @Valid @RequestBody CreateSubscriptionRequest request) {
+            @Valid @RequestBody CreateSubscriptionRequest request,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
 
         // Crear la suscripción con referencias por ID
         Subscription subscription = new Subscription();
@@ -84,7 +101,11 @@ public class SubscriptionController {
             security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)},
             summary = "Eliminar una suscripción por ID"
     )
-    public ResponseEntity<Void> deleteSubscription(@PathVariable Long subscriptionId) {
+    public ResponseEntity<Void> deleteSubscription(
+            @PathVariable Long subscriptionId,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+
         if (!subscriptionService.existsById(subscriptionId)) {
             return ResponseEntity.notFound().build();
         }
@@ -99,7 +120,9 @@ public class SubscriptionController {
     )
     public ResponseEntity<SubscriptionDto> updateSubscription(
             @PathVariable Long subscriptionId,
-            @Valid @RequestBody Subscription subscription) {
+            @Valid @RequestBody Subscription subscription,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
 
         if (subscription.getSpent_id() == null || !subscription.getSpent_id().equals(subscriptionId)) {
             return ResponseEntity.badRequest().build();

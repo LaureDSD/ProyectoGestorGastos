@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/public")
-@Tag(name = "Estadisticas Publicas", description = "Informacion adicional publica del servidor")
+@Tag(name = "Estadisticas Publicas (Public access)", description = "Informacion adicional publica del servidor")
 public class PublicController {
 
     private final UserService userService;
@@ -49,4 +49,20 @@ public class PublicController {
 
     // Futuro: Endpoint para ver las suscripciones más populares,
     // tiendas más visitadas y productos más comprados.
+
+    @GetMapping("/subscripcionesTop")
+    public String getTopSubscription() {
+        return "Amazon";
+    }
+
+    @GetMapping("/tiendasTop")
+    public String getTopShops() {
+        return "Amazon";
+    }
+
+    @GetMapping("/productosTop")
+    public String getTopProducts() {
+        return "Tempo";
+    }
+
 }

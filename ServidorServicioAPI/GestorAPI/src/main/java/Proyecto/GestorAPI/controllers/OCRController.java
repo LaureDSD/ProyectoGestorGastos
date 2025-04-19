@@ -20,7 +20,7 @@ import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME
 
 @RestController
 @RequestMapping("/api/ocr")
-@Tag(name = "OCR Service", description = "Operaciones OCR")
+@Tag(name = "OCR Service (Modulo funcional)", description = "Operaciones OCR")
 public class OCRController {
 
     private final TicketService ticketService;

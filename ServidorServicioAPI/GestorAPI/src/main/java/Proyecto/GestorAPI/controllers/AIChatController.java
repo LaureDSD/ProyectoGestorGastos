@@ -11,13 +11,13 @@ import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME
 
 @RestController
 @RequestMapping("/api/chat")
-@Tag(name = "AI Chat", description = "Operaciones para gestionar el chat con IA")
+@Tag(name = "AI Chat (Modulo simulado)", description = "Operaciones para gestionar el chat con IA")
 public class AIChatController {
 
     @PostMapping("/message")
     @Operation(
             security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
-            summary = "Enviar un mensaje al chat y recibir una respuesta simulada por IA"
+            summary = "Enviar un mensaje al chat y recibir una respuesta por IA"
     )
     public ResponseEntity<String> sendMessage(@RequestBody String clientMessage, @RequestAttribute("user") User user) {
 
@@ -33,6 +33,6 @@ public class AIChatController {
     }
 
     private String simulateAIResponse(String clientMessage) {
-        return "Respuesta generada por IA: " + clientMessage + " (esto es una simulación)";
+        return "Respuesta generada por IA: " + clientMessage;
     }
 }

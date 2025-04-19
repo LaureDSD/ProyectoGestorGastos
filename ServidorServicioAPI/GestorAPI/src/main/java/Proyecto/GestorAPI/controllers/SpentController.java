@@ -4,6 +4,8 @@ import Proyecto.GestorAPI.models.Spent;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.modelsDTO.CreateSpentRequest;
 import Proyecto.GestorAPI.modelsDTO.SpentDto;
+import Proyecto.GestorAPI.security.CustomUserDetails;
+import Proyecto.GestorAPI.security.RoleServer;
 import Proyecto.GestorAPI.services.CategoryExpenseService;
 import Proyecto.GestorAPI.services.SpentService;
 import Proyecto.GestorAPI.services.UserService;
@@ -14,9 +16,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +29,7 @@ import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/gastos")
-@Tag(name = "Gasto Management", description = "Operaciones sobre los gastos registrados")
+@Tag(name = "Gasto Management (Only users , verify) ", description = "Operaciones sobre los gastos registrados")
 public class SpentController {
 
     private final SpentService spentService;
@@ -35,14 +39,23 @@ public class SpentController {
     @GetMapping("/")
     @Operation(
             security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
-            summary = "Obtener todos los gastos filtrados por clienteId (opcional)"
+            summary = "Obtener todos los gastos filtrados por clienteId (opcional para admins)"
     )
     public ResponseEntity<List<SpentDto>> getSpents(
-            @RequestParam(value = "clienteId", required = false) Long clienteId) {
+            @RequestParam(value = "clienteId", required = false) Long clienteId,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+        List<Spent> spents = new ArrayList<>();
 
-        List<Spent> spents = (clienteId != null)
-                ? spentService.getSpentsByUserId(clienteId)
-                : spentService.getAll();
+        if(user.getRole() != RoleServer.ADMIN){
+            //si no es admin
+           spents = spentService.getSpentsByUserId(user.getId());
+        }else{
+            //si es admin
+            spents = (clienteId != null)
+                    ? spentService.getSpentsByUserId(clienteId)
+                    : spentService.getAll();
+        }
 
         if (spents.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -59,7 +72,9 @@ public class SpentController {
             summary = "Crear un nuevo gasto"
     )
     public ResponseEntity<SpentDto> createSpent(
-            @Valid @RequestBody CreateSpentRequest request) {
+            @Valid @RequestBody CreateSpentRequest request,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
 
         // Crear el gasto con referencias por ID
         Spent spent = new Spent();
@@ -83,7 +98,11 @@ public class SpentController {
             security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)},
             summary = "Eliminar un gasto por ID"
     )
-    public ResponseEntity<Void> deleteSpent(@PathVariable Long spentId) {
+    public ResponseEntity<Void> deleteSpent(
+            @PathVariable Long spentId,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+
         if (!spentService.existsById(spentId)) {
             return ResponseEntity.notFound().build();
         }
@@ -98,7 +117,9 @@ public class SpentController {
     )
     public ResponseEntity<SpentDto> updateSpent(
             @PathVariable Long spentId,
-            @Valid @RequestBody Spent spent) {
+            @Valid @RequestBody Spent spent,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
 
         if (spent.getSpent_id() == null || !spent.getSpent_id().equals(spentId)) {
             return ResponseEntity.badRequest().build();
@@ -107,4 +128,5 @@ public class SpentController {
         Spent updatedSpent = spentService.setItem(spent);
         return ResponseEntity.ok(SpentDto.from(updatedSpent));
     }
+
 }

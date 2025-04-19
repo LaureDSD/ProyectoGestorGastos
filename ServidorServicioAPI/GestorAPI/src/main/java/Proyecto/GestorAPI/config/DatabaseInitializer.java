@@ -77,4 +77,28 @@ public class DatabaseInitializer implements CommandLineRunner {
             new CategoryExpense("Varios", "Productos que no encajan en otras categorías.")
     );
 
+    /*
+    *
+    *
+    *
+        INSERT INTO gestor_bd.gastos
+        ( created_at, description, expense_date, icon, iva, name, total, tipo, updated_at, categoria_id, user_id)
+        VALUES
+        -- Gastos para user_id = 1 (Ejemplos variados)
+        ( NOW(), 'Compra en supermercado', '2025-01-15 10:30:00', '🛒', 10.5, 'Mercadona', 75.99, 'FACTURA', NOW(), 3, 1),
+        ( NOW(), 'Gasolina', '2025-01-20 14:15:00', '⛽', 21.0, 'Repsol', 45.50, 'TICKET', NOW(), 2, 1),
+        ( NOW(), 'Netflix', '2025-02-01 00:00:00', '📺', 21.0, 'Suscripción Netflix', 12.99, 'SUBSCRIPCION', NOW(), 5, 1),
+        ( NOW(), 'Regalo cumpleaños', '2025-02-10 18:00:00', '🎁', 0.0, 'Amazon', 29.99, 'GASTO_GENERICO', NOW(), 4, 1),
+        ( NOW(), 'Transferencia a hermano', '2025-02-15 09:45:00', '💸', 0.0, 'Transferencia', 100.00, 'TRANSFERENCIA', NOW(), NULL, 1),
+
+        -- Gastos para user_id = 2 (Ejemplos adicionales)
+        ( NOW(), 'Cena restaurante', '2025-01-18 21:30:00', '🍽️', 10.0, 'Restaurante La Pasta', 32.75, 'FACTURA', NOW(), 1, 2),
+        ( NOW(), 'Autobús urbano', '2025-01-22 08:10:00', '🚌', 0.0, 'Billete transporte', 1.50, 'TICKET', NOW(), 6, 2),
+        ( NOW(), 'Spotify Premium', '2025-02-01 00:00:00', '🎵', 21.0, 'Suscripción Spotify', 9.99, 'SUBSCRIPCION', NOW(), 5, 2),
+        ( NOW(), 'Material oficina', '2025-02-05 11:20:00', '📎', 21.0, 'Toner impresora', 89.99, 'GASTO_GENERICO', NOW(), 7, 2),
+        ( NOW(), 'Devolución deuda', '2025-02-12 16:30:00', '↩️', 0.0, 'Transferencia a María', 50.00, 'TRANSFERENCIA', NOW(), NULL, 2);
+    *
+    *
+    * */
+
 }
