@@ -29,7 +29,7 @@ import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/subscriptions")
-@Tag(name = "Subscription Management (Only users , verify)", description = "Operaciones sobre suscripciones")
+@Tag(name = "Subscription Management (Verify control)", description = "Operaciones sobre suscripciones")
 public class SubscriptionController {
 
     private final SubscriptionService subscriptionService;

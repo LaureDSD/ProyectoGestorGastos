@@ -46,7 +46,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/auth")
-@Tag(name = "Register and Login", description = "Crea cuenta o identifcate")
+@Tag(name = "Register and Login (Open)", description = "Crea cuenta o identifcate")
 public class AuthController {
 
     private final UserService userService;

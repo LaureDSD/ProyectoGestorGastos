@@ -1,20 +1,21 @@
 package Proyecto.GestorAPI.controllers;
 
 
+import Proyecto.GestorAPI.models.Ticket;
 import Proyecto.GestorAPI.models.User;
+import Proyecto.GestorAPI.modelsDTO.SpentDto;
 import Proyecto.GestorAPI.modelsDTO.UserDto;
 import Proyecto.GestorAPI.security.CustomUserDetails;
+import Proyecto.GestorAPI.security.RoleServer;
 import Proyecto.GestorAPI.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,76 +31,112 @@ import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/users")
-@Tag(name = "User Management (Admin only)", description = "Gestion de usuarios")
+@Tag(name = "User Management (Verify control) ", description = "Gestion de usuarios")
 public class UserController {
 
     // Servicio que gestiona las operaciones de usuarios.
     private final UserService userService;
 
-    /**
-     * Obtiene la información del usuario actualmente autenticado.
-     * Utiliza el objeto `CustomUserDetails` para obtener el usuario autenticado.
-     *
-     * @param currentUser El usuario actualmente autenticado.
-     * @return Un objeto `UserDto` con la información del usuario autenticado.
-     */
+
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @GetMapping("/me")
     public UserDto getCurrentUser(@AuthenticationPrincipal CustomUserDetails currentUser) {
-        // Valida y obtiene el usuario por su nombre de usuario (username).
+        // Valida y obtiene el usuario
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
-        return UserDto.from(user); // Convierte el usuario a un DTO para retornar la información.
+        return UserDto.from(user);
     }
 
-    /**
-     * Obtiene la lista de todos los usuarios.
-     * Solo accesible por usuarios autenticados con el token Bearer.
-     *
-     * @return Una lista de objetos `UserDto` que representan la información de los usuarios.
-     */
+
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @GetMapping
-    public List<UserDto> getUsers(
-            @AuthenticationPrincipal CustomUserDetails currentUse
+    public ResponseEntity<List<UserDto>> getUsers(
+            @AuthenticationPrincipal CustomUserDetails currentUser
     ) {
-        // Obtiene todos los usuarios y los convierte a `UserDto` para ser enviados como respuesta.
-        return userService.getUsers().stream()
-                .map(UserDto::from) // Mapea cada usuario a un DTO.
-                .collect(Collectors.toList()); // Recolecta los DTOs en una lista.
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+        //Validacion
+        if(user.getRole() != RoleServer.ADMIN){
+            return ResponseEntity.noContent().build();
+        }
+        //Devolucion
+        return ResponseEntity.ok(userService.getUsers().stream()
+                .map(UserDto::from)
+                .collect(Collectors.toList()));
     }
 
-    /**
-     * Obtiene la información de un usuario específico por su nombre de usuario.
-     * Solo accesible por usuarios autenticados con el token Bearer.
-     *
-     * @param username El nombre de usuario del cual se desea obtener la información.
-     * @return Un objeto `UserDto` con la información del usuario.
-     */
-    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
-    @GetMapping("/{username}")
-    public UserDto getUser(
-            @PathVariable String username,
-            @AuthenticationPrincipal CustomUserDetails currentUser) {
 
-        // Valida y obtiene el usuario por su nombre de usuario (username).
-        return UserDto.from(userService.validateAndGetUserByUsername(username));
+    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
+    @GetMapping("/{clienteId}")
+    public ResponseEntity<UserDto> getUser(
+            @PathVariable Long clienteId,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+        User findUser = userService.getUserById(clienteId).orElse(null);
+        //Validacoin existencia
+        if(findUser == null){
+            return ResponseEntity.notFound().build();
+        }
+        //Si es admin
+        if(user.getRole() == RoleServer.ADMIN ){
+            return ResponseEntity.ok(UserDto.from(findUser));
+        }
+        //Validacion propiedad usuario
+        if(( !user.getId().equals(findUser.getId()) || !user.getId().equals(clienteId))){
+            return ResponseEntity.badRequest().build();
+        }
+        //Devolucion
+        return ResponseEntity.ok(UserDto.from(user));
     }
 
-    /**
-     * Elimina un usuario específico por su nombre de usuario.
-     * Solo accesible por usuarios autenticados con el token Bearer.
-     *
-     * @param username El nombre de usuario del cual se desea eliminar.
-     * @return El DTO del usuario eliminado.
-     */
+
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
-    @DeleteMapping("/{username}")
-    public UserDto deleteUser(
-            @PathVariable String username,
+    @DeleteMapping("/{ClienteId}")
+    public ResponseEntity<UserDto> deleteUser(
+            @PathVariable Long clienteId,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
-        // Valida y obtiene el usuario por su nombre de usuario (username).
-        User user = userService.validateAndGetUserByUsername(username);
-        userService.deleteUser(user); // Elimina el usuario de la base de datos.
-        return UserDto.from(user); // Retorna el DTO del usuario eliminado.
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+        User findUser = userService.getUserById(clienteId).orElse(null);
+        //Validacoin existencia
+        if(findUser == null){
+            return ResponseEntity.notFound().build();
+        }
+        //Si es admin
+        if(user.getRole() == RoleServer.ADMIN ){
+            userService.deleteUser(findUser);
+            return ResponseEntity.ok(UserDto.from(user));
+        }
+        //Validacion propiedad usuario
+        if(( !user.getId().equals(findUser.getId()) || !user.getId().equals(clienteId))){
+            return ResponseEntity.badRequest().build();
+        }
+        //Desactivacion de la cuenta
+        user.setActive(false);
+        userService.saveUser(user);
+        return ResponseEntity.ok(UserDto.from(user));
+    }
+
+    //update
+    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
+    @PutMapping("/{ClienteId}")
+    public ResponseEntity<UserDto> updateUser(
+            @PathVariable Long clienteId,
+            @Valid @RequestBody User request,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+        User findUser = userService.getUserById(clienteId).orElse(null);
+        //Validacoin existencia
+        if(findUser == null){
+            return ResponseEntity.notFound().build();
+        }
+        //Si es admin y no coinciden idcliente y request
+        if(user.getRole() == RoleServer.ADMIN && !findUser.getId().equals(request.getId()) ){
+            return ResponseEntity.badRequest().build();
+        }
+        //Si es usuario y no cumle triple verificacion
+        if(( !user.getId().equals(findUser.getId()) || !request.getId().equals(clienteId))){
+            return ResponseEntity.badRequest().build();
+        }
+        //Guardado
+        userService.saveUser(request);
+        return ResponseEntity.ok(UserDto.from(user));
     }
 }

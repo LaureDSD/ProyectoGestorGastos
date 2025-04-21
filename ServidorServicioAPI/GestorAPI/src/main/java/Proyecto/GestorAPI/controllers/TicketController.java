@@ -28,7 +28,7 @@ import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/tickets")
-@Tag(name = "Ticket Management (Restricted access)", description = "Operation con tickets")
+@Tag(name = "Ticket Management (Verify control)", description = "Operation con tickets")
 public class TicketController {
 
     private final TicketService ticketService;

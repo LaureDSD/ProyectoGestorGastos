@@ -30,7 +30,7 @@ import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/gastos")
-@Tag(name = "Gasto Management (Only users , verify) ", description = "Operaciones sobre los gastos registrados")
+@Tag(name = "Spent Management (Verify control) ", description = "Operaciones sobre los gastos registrados")
 public class SpentController {
 
     private final SpentService spentService;
