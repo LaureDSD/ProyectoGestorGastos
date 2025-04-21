@@ -14,4 +14,5 @@ public record CreateTicketRequest(
         @NotNull LocalDateTime fechaCompra,
         @Positive double total,
         String productosJSON
-) {}
+) {
+}

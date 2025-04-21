@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME;
@@ -36,7 +35,6 @@ public class TicketController {
     private final UserService userService;
     private final CategoryExpenseService categoriaService;
 
-
     @GetMapping("/")
     @Operation(
             security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
@@ -49,6 +47,7 @@ public class TicketController {
 
         List<Ticket> tickets = new ArrayList<>();
 
+        //Verificacion propiedad
         if(user.getRole()!= RoleServer.ADMIN){
             //si no es admin
             tickets = ticketService.getTicketsByUserId(user.getId());
@@ -59,15 +58,16 @@ public class TicketController {
                     : ticketService.getAll();
         }
 
+        //Verificacionde de existencia
         if (tickets.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 
+        //Devolucion
         return ResponseEntity.ok(tickets.stream()
                 .map(TicketDto::from)
                 .collect(Collectors.toList()));
     }
-
 
     @PostMapping("/")
     @Operation(
@@ -83,22 +83,22 @@ public class TicketController {
 
         if(user.getRole()!= RoleServer.ADMIN){
             //si no es admin
-            ticket = newTicket(request,0L);
+            ticket = mappingTicket(request, user.getId());
         }else{
             //si es admin
-            ticket = newTicket(request,clienteId);
+            ticket = mappingTicket(request,(clienteId != null) ? clienteId : user.getId());
         }
-
+        //Creacion
         Ticket createdTicket = ticketService.setItem(ticket);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(TicketDto.from(createdTicket));
     }
 
-    private Ticket newTicket (CreateTicketRequest request , Long clienteId) {
+    private Ticket mappingTicket(CreateTicketRequest request , Long clienteId) {
         // Crear el ticket con referencias por ID
         Ticket ticket = new Ticket();
 
-        ticket.setUser(userService.getUserById((clienteId != 0L) ? clienteId : request.userId()).orElse(new User()));
+        ticket.setUser(userService.getUserById(clienteId).orElse(new User()));
         ticket.setCategory(categoriaService.getByID(request.categoriaId()).orElse(null));
         ticket.setExpenseDate(request.fechaCompra());
         ticket.setTotal(request.total());
@@ -106,10 +106,6 @@ public class TicketController {
         ticket.setCreatedAt(LocalDateTime.now());
         return  ticket;
     }
-
-
-
-
 
     @DeleteMapping("/{ticketId}")
     @Operation(
@@ -121,25 +117,18 @@ public class TicketController {
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
         Ticket ticket = ticketService.getByID(ticketId).orElse(null);
-
         //Verificacionde existencia
         if ( ticket == null){
             return ResponseEntity.notFound().build();
         }
-
         //Verificacion de propiedad
         if(user.getRole() != RoleServer.ADMIN && !ticket.getUser().getId().equals(user.getId())){
             return ResponseEntity.badRequest().build();
         }
-
         //Eliminacion
         ticketService.deleteByID(ticketId);
         return ResponseEntity.noContent().build();
-
     }
-
-
-
 
     @PutMapping("/{ticketId}")
     @Operation(
@@ -148,22 +137,26 @@ public class TicketController {
     )
     public ResponseEntity<TicketDto> updateTicket(
             @PathVariable Long ticketId,
-            @Valid @RequestBody Ticket ticket,
+            @Valid @RequestBody Ticket request,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
-
+        Ticket ticket;
         //verificacion de propiedad
-        if(user.getRole() != RoleServer.ADMIN && !ticket.getUser().getId().equals(user.getId())){
+        if(user.getRole() != RoleServer.ADMIN && !request.getUser().getId().equals(user.getId())){
             return ResponseEntity.badRequest().build();
         }
-
         //Verificacion complememntaria
-        if (ticket.getSpent_id() == null || !ticket.getSpent_id().equals(ticketId)) {
+        if (request.getSpent_id() == null || !request.getSpent_id().equals(ticketId)) {
             return ResponseEntity.badRequest().build();
+        }else {
+            ticket = ticketService.getByID(ticketId).orElse(null);
         }
-
+        //Veriificacion existencia
+        if (ticket == null) {
+            return ResponseEntity.notFound().build();
+        }
         //Actualizacion
-        Ticket updatedTicket = ticketService.setItem(ticket);
+        Ticket updatedTicket = ticketService.setItem(request);
         return ResponseEntity.ok(TicketDto.from(updatedTicket));
     }
 }

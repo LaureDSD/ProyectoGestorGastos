@@ -59,7 +59,9 @@ public class UserController {
      */
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @GetMapping
-    public List<UserDto> getUsers() {
+    public List<UserDto> getUsers(
+            @AuthenticationPrincipal CustomUserDetails currentUse
+    ) {
         // Obtiene todos los usuarios y los convierte a `UserDto` para ser enviados como respuesta.
         return userService.getUsers().stream()
                 .map(UserDto::from) // Mapea cada usuario a un DTO.
@@ -75,7 +77,10 @@ public class UserController {
      */
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @GetMapping("/{username}")
-    public UserDto getUser(@PathVariable String username) {
+    public UserDto getUser(
+            @PathVariable String username,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+
         // Valida y obtiene el usuario por su nombre de usuario (username).
         return UserDto.from(userService.validateAndGetUserByUsername(username));
     }
@@ -89,7 +94,9 @@ public class UserController {
      */
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @DeleteMapping("/{username}")
-    public UserDto deleteUser(@PathVariable String username) {
+    public UserDto deleteUser(
+            @PathVariable String username,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
         // Valida y obtiene el usuario por su nombre de usuario (username).
         User user = userService.validateAndGetUserByUsername(username);
         userService.deleteUser(user); // Elimina el usuario de la base de datos.

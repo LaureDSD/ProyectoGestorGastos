@@ -3,6 +3,7 @@ package Proyecto.GestorAPI.controllers;
 import Proyecto.GestorAPI.models.Spent;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.modelsDTO.CreateSpentRequest;
+import Proyecto.GestorAPI.modelsDTO.CreateTicketRequest;
 import Proyecto.GestorAPI.modelsDTO.SpentDto;
 import Proyecto.GestorAPI.security.CustomUserDetails;
 import Proyecto.GestorAPI.security.RoleServer;
@@ -56,11 +57,11 @@ public class SpentController {
                     ? spentService.getSpentsByUserId(clienteId)
                     : spentService.getAll();
         }
-
+        //Verificacion de existencia
         if (spents.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-
+        //Devolucion
         return ResponseEntity.ok(spents.stream()
                 .map(SpentDto::from)
                 .collect(Collectors.toList()));
@@ -72,13 +73,29 @@ public class SpentController {
             summary = "Crear un nuevo gasto"
     )
     public ResponseEntity<SpentDto> createSpent(
+            @RequestParam(value = "clienteId", required = false) Long clienteId,
             @Valid @RequestBody CreateSpentRequest request,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+        Spent spent;
 
+        if(user.getRole() != RoleServer.ADMIN){
+            //si no es admin
+            spent = mappingSpent(request, user.getId());
+        }else{
+            //si es admin
+            spent = mappingSpent(request,(clienteId != null) ? clienteId : user.getId());
+        }
+        //Creacion
+        Spent createdSpent = spentService.setItem(spent);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(SpentDto.from(createdSpent));
+    }
+
+    private Spent mappingSpent (CreateSpentRequest request , Long clienteId){
         // Crear el gasto con referencias por ID
         Spent spent = new Spent();
-        spent.setUser(userService.getUserById(request.userId()).orElse(new User()));
+        spent.setUser(userService.getUserById(clienteId).orElse(new User()));
         spent.setCategory(categoriaService.getByID(request.categoriaId()).orElse(null));
         spent.setExpenseDate(request.fechaCompra());
         spent.setTotal(request.total());
@@ -87,10 +104,7 @@ public class SpentController {
         spent.setDescription(request.description());
         spent.setIcon(request.icon());
         spent.setCreatedAt(LocalDateTime.now());
-
-        Spent createdSpent = spentService.setItem(spent);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(SpentDto.from(createdSpent));
+        return  spent;
     }
 
     @DeleteMapping("/{spentId}")
@@ -102,10 +116,16 @@ public class SpentController {
             @PathVariable Long spentId,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
-
-        if (!spentService.existsById(spentId)) {
+        Spent spent = spentService.getByID(spentId).orElse(null);
+        //Veriificacion
+        if (spent == null) {
             return ResponseEntity.notFound().build();
         }
+        //Verificacion de propiedad
+        if(user.getRole() != RoleServer.ADMIN && !spent.getUser().getId().equals(user.getId())){
+            return ResponseEntity.badRequest().build();
+        }
+        //Eliminacion
         spentService.deleteByID(spentId);
         return ResponseEntity.noContent().build();
     }
@@ -117,16 +137,26 @@ public class SpentController {
     )
     public ResponseEntity<SpentDto> updateSpent(
             @PathVariable Long spentId,
-            @Valid @RequestBody Spent spent,
+            @Valid @RequestBody Spent request,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
-
-        if (spent.getSpent_id() == null || !spent.getSpent_id().equals(spentId)) {
+        Spent spent;
+        //verificacion de propiedad
+        if(user.getRole() != RoleServer.ADMIN && !request.getUser().getId().equals(user.getId())){
             return ResponseEntity.badRequest().build();
         }
-
-        Spent updatedSpent = spentService.setItem(spent);
+        //Verificacion complememntaria
+        if (request.getSpent_id() == null || !request.getSpent_id().equals(spentId)) {
+            return ResponseEntity.badRequest().build();
+        }else{
+            spent = spentService.getByID(spentId).orElse(null);
+        }
+        //Veriificacion existencia
+        if (spent == null) {
+            return ResponseEntity.notFound().build();
+        }
+        //Actualizacion
+        Spent updatedSpent = spentService.setItem(request);
         return ResponseEntity.ok(SpentDto.from(updatedSpent));
     }
-
 }

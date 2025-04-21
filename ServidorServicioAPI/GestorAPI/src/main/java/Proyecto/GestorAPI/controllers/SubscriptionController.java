@@ -4,6 +4,7 @@ import Proyecto.GestorAPI.models.Spent;
 import Proyecto.GestorAPI.models.Subscription;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.modelsDTO.CreateSubscriptionRequest;
+import Proyecto.GestorAPI.modelsDTO.CreateTicketRequest;
 import Proyecto.GestorAPI.modelsDTO.SubscriptionDto;
 import Proyecto.GestorAPI.security.CustomUserDetails;
 import Proyecto.GestorAPI.security.RoleServer;
@@ -54,11 +55,11 @@ public class SubscriptionController {
                     ? subscriptionService.getSubscriptionsByUserId(clienteId)
                     : subscriptionService.getAll();
         }
-
+        //Verificacion de existencia
         if (subscriptions.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-
+        //Devolucion
         return ResponseEntity.ok(subscriptions.stream()
                 .map(SubscriptionDto::from)
                 .collect(Collectors.toList()));
@@ -71,13 +72,29 @@ public class SubscriptionController {
             summary = "Crear una nueva suscripción"
     )
     public ResponseEntity<SubscriptionDto> createSubscription(
+            @RequestParam(value = "clienteId", required = false) Long clienteId,
             @Valid @RequestBody CreateSubscriptionRequest request,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+        Subscription subscription;
 
+        if(user.getRole()!= RoleServer.ADMIN){
+            //si no es admin
+            subscription = mappingSubscription(request, user.getId());
+        }else{
+            //si es admin
+            subscription = mappingSubscription(request,(clienteId != null) ? clienteId : user.getId());
+        }
+        //Creacion
+        Subscription createdSubscription = subscriptionService.setItem(subscription);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(SubscriptionDto.from(createdSubscription));
+    }
+
+    private Subscription mappingSubscription(CreateSubscriptionRequest request , Long clienteId){
         // Crear la suscripción con referencias por ID
         Subscription subscription = new Subscription();
-        subscription.setUser(userService.getUserById(request.userId()).orElse(null));
+        subscription.setUser(userService.getUserById(clienteId).orElse(null));
         subscription.setName(request.name());
         subscription.setDescription(request.description());
         subscription.setIcon(request.icon());
@@ -90,10 +107,7 @@ public class SubscriptionController {
         subscription.setRestartDay(request.restartDay());
         subscription.setIntervalTime(request.intervalTime());
         subscription.setActiva(request.activa());
-
-        Subscription createdSubscription = subscriptionService.setItem(subscription);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(SubscriptionDto.from(createdSubscription));
+        return subscription;
     }
 
     @DeleteMapping("/{subscriptionId}")
@@ -105,10 +119,16 @@ public class SubscriptionController {
             @PathVariable Long subscriptionId,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
-
-        if (!subscriptionService.existsById(subscriptionId)) {
+        Subscription subscription = subscriptionService.getByID(subscriptionId).orElse(null);
+        //Verificacionde existencia
+        if ( subscription == null){
             return ResponseEntity.notFound().build();
         }
+        //Verificacion de propiedad
+        if(user.getRole() != RoleServer.ADMIN && !subscription.getUser().getId().equals(user.getId())){
+            return ResponseEntity.badRequest().build();
+        }
+        //Eliminacion
         subscriptionService.deleteByID(subscriptionId);
         return ResponseEntity.noContent().build();
     }
@@ -120,15 +140,26 @@ public class SubscriptionController {
     )
     public ResponseEntity<SubscriptionDto> updateSubscription(
             @PathVariable Long subscriptionId,
-            @Valid @RequestBody Subscription subscription,
+            @Valid @RequestBody Subscription request,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
-
-        if (subscription.getSpent_id() == null || !subscription.getSpent_id().equals(subscriptionId)) {
+        Subscription subscription;
+        //verificacion de propiedad
+        if(user.getRole() != RoleServer.ADMIN && !request.getUser().getId().equals(user.getId())){
             return ResponseEntity.badRequest().build();
         }
-
-        Subscription updatedSubscription = subscriptionService.setItem(subscription);
+        //Verificacion complememntaria
+        if (request.getSpent_id() == null || !request.getSpent_id().equals(subscriptionId)) {
+            return ResponseEntity.badRequest().build();
+        }else {
+            subscription = subscriptionService.getByID(subscriptionId).orElse(null);
+        }
+        //Veriificacion existencia
+        if (subscription == null) {
+            return ResponseEntity.notFound().build();
+        }
+        //Actualizacion
+        Subscription updatedSubscription = subscriptionService.setItem(request);
         return ResponseEntity.ok(SubscriptionDto.from(updatedSubscription));
     }
 }
