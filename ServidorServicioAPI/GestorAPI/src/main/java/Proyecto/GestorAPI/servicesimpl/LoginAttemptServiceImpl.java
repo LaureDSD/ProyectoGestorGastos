@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -76,6 +78,12 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
         Instant unlockTime = firstAttemptTime.plus(Duration.ofMinutes(blockDuration));
 
         return Duration.between(now, unlockTime);
+    }
+
+
+
+    public List<LoginAttempt> getAll() {
+        return loginAttemptRepository.findAll();
     }
 }
 
