@@ -80,6 +80,8 @@ public class SecurityConfig {
                         .requestMatchers("/static/**", "/resources/**", "/css/**", "/js/**", "/images/**").permitAll()
                         // Acceso restringido a los usuarios con roles ADMIN o USER
                         .requestMatchers(HttpMethod.GET, "/api/tickets", "/api/tickets/**").hasAnyAuthority(ADMIN, USER)
+                        .requestMatchers(HttpMethod.GET, "/api/gastos", "/api/gastos/**").hasAnyAuthority(ADMIN, USER)
+                        .requestMatchers(HttpMethod.GET, "/api/subscripciones", "/api/subscripciones/**").hasAnyAuthority(ADMIN, USER)
                         .requestMatchers(HttpMethod.GET, "/api/users/me").hasAnyAuthority(ADMIN, USER)
                         // Acceso solo para ADMIN a ciertas rutas de tickets y usuarios
                         .requestMatchers("/api/tickets", "/api/tickets/**").hasAuthority(ADMIN)

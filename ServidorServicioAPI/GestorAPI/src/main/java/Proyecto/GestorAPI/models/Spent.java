@@ -94,7 +94,7 @@ public class Spent {
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo", nullable = false)
-    private ExpenseClass typeExpense;
+    private ExpenseClass typeExpense = ExpenseClass.GASTO_GENERICO;
 
     /**
      * Callback de JPA que se ejecuta automáticamente antes de insertar un nuevo gasto.

@@ -9,10 +9,14 @@ import java.time.LocalDateTime;
 public record CreateTicketRequest(
         @NotNull Long userId,
         @NotNull Long categoriaId,
-        @NotNull String store,  // Nueva propiedad para la tienda
+        @NotNull String name,
+        String description,
+        String icon,
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         @NotNull LocalDateTime fechaCompra,
         @Positive double total,
+        @Positive double iva,
+        @NotNull String store,
         String productosJSON
 ) {
 }

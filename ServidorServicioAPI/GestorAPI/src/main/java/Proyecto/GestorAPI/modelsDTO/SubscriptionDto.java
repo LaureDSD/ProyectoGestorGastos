@@ -8,13 +8,16 @@ public record SubscriptionDto(Long clienteId, String fechaCompra, String nombre,
     public static SubscriptionDto from(Subscription subscription) {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         return new SubscriptionDto(
+                //Id
                 subscription.getUser().getId(),
                 formatter.format(subscription.getExpenseDate()),
+                //Base
                 subscription.getName(),
                 subscription.getDescription(),
                 subscription.getTotal(),
                 subscription.getIva(),
                 subscription.getIcon(),
+                //Extra
                 subscription.getStart() != null ? formatter.format(subscription.getStart()) : null,
                 subscription.getEnd() != null ? formatter.format(subscription.getEnd()) : null,
                 subscription.getAccumulate(),
