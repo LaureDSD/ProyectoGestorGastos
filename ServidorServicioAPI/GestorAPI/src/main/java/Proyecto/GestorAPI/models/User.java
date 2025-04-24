@@ -73,9 +73,11 @@ public class User {
     private String providerId;
 
     /** Fecha de creación del usuario. */
+    @JsonIgnore
     private LocalDateTime createdAt;
 
     /** Fecha de la última modificación del usuario. */
+    @JsonIgnore
     private LocalDateTime updatedAt;
 
     /**

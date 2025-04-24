@@ -83,9 +83,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/gastos", "/api/gastos/**").hasAnyAuthority(ADMIN, USER)
                         .requestMatchers(HttpMethod.GET, "/api/subscripciones", "/api/subscripciones/**").hasAnyAuthority(ADMIN, USER)
                         .requestMatchers(HttpMethod.GET, "/api/users/me").hasAnyAuthority(ADMIN, USER)
-                        // Acceso solo para ADMIN a ciertas rutas de tickets y usuarios
-                        .requestMatchers("/api/tickets", "/api/tickets/**").hasAuthority(ADMIN)
-                        .requestMatchers("/api/users", "/api/users/**").hasAuthority(ADMIN)
+                        .requestMatchers("/api/users", "/api/users/**", "/api/users/me").hasAnyAuthority(ADMIN,USER)
                         // Rutas públicas de autenticación y recursos públicos
                         .requestMatchers("/public/**", "/auth/**", "/oauth2/**").permitAll()
                         .requestMatchers("/", "/error", "/csrf", "/swagger-ui/**", "/v3/api-docs/**","api/ocr/**").permitAll()
