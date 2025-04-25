@@ -6,19 +6,21 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
 @Configuration
-public class CorsConfig {
+public class CorsConfig implements WebMvcConfigurer {
 
     /**
      * Configura CORS para permitir solicitudes de ciertos orígenes.
      *
-     * @param allowedOrigins Lista de orígenes permitidos, configurada en el archivo de propiedades.
+     *   Lista de orígenes permitidos, configurada en el archivo de propiedades.
      * @return Una fuente de configuración de CORS.
      */
-    @Bean
+    /*@Bean
     CorsConfigurationSource corsConfigurationSource(@Value("${app.cors.allowed-origins}") List<String> allowedOrigins) {
         CorsConfiguration configuration = new CorsConfiguration();
 
@@ -39,5 +41,20 @@ public class CorsConfig {
         source.registerCorsConfiguration("/**", configuration);
 
         return source;
+    }*/
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        // Configuración global para todas las rutas
+        registry.addMapping("/**")
+                // Permite todos los orígenes, o puedes restringirlo: .allowedOrigins("http://example.com")
+                //.allowedOrigins("*")
+                .allowedOrigins("http://localhost:8080")
+                // Métodos HTTP permitidos
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                // Permitir credenciales, encabezados, etc.
+                .allowedHeaders("*")
+                .allowCredentials(true);
     }
+
 }

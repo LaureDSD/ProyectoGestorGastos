@@ -8,16 +8,25 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
@@ -80,18 +89,35 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
 
                         // Acceso público a recursos estáticos y ciertas rutas
-                        .requestMatchers("/static/**", "/resources/**", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers(
+                                "/static/**",
+                                "/resources/**",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",
+                                "/public/**",
+                                "/auth/**",
+                                "/register/**",
+                                "/favicon.ico",
+                                "/oauth2/**",
+                                "/api/**",
+                                "/",
+                                "/error",
+                                "/csrf",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**").permitAll()
 
                         // Acceso restringido a los usuarios con roles ADMIN o USER
-                        .requestMatchers(HttpMethod.GET, "/api/tickets", "/api/tickets/**").hasAnyAuthority(ADMIN, USER)
+                        .requestMatchers(HttpMethod.GET, "/api/tickets", "/api/tickets/**", "api/ocr/**").hasAnyAuthority(ADMIN, USER)
                         .requestMatchers(HttpMethod.GET, "/api/gastos", "/api/gastos/**").hasAnyAuthority(ADMIN, USER)
                         .requestMatchers(HttpMethod.GET, "/api/subscripciones", "/api/subscripciones/**").hasAnyAuthority(ADMIN, USER)
-                        .requestMatchers(HttpMethod.GET, "/api/users", "/api/users/**").hasAnyAuthority(ADMIN)
+
                         .requestMatchers(HttpMethod.GET, "/api/user/","/api/user/**").hasAnyAuthority(ADMIN,USER)
 
-                        // Rutas públicas de autenticación y recursos públicos
-                        .requestMatchers("/public/**", "/auth/**", "/oauth2/**").permitAll()
-                        .requestMatchers("/", "/error", "/csrf", "/swagger-ui/**", "/v3/api-docs/**","api/ocr/**").permitAll()
+                        //Solo admins
+                        .requestMatchers("/admin/**").hasAuthority(ADMIN)
+                        .requestMatchers(HttpMethod.GET, "/api/users", "/api/users/**").hasAnyAuthority(ADMIN)
+
 
                         // Cualquier otra solicitud requiere autenticación
                         .anyRequest().authenticated())
@@ -124,4 +150,27 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // Permitir Angular
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true); // Permitir credenciales (JWT en cookies)
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    /*
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }*/
+
 }

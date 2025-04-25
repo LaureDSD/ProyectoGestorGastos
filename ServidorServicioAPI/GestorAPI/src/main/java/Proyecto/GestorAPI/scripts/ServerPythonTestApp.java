@@ -1,4 +1,4 @@
-package Proyecto.GestorAPI.config;
+package Proyecto.GestorAPI.scripts;
 
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;

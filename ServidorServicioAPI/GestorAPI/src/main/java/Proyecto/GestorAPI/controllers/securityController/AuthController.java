@@ -11,6 +11,7 @@ import Proyecto.GestorAPI.modelsDTO.authDTO.SignUpRequest;
 import Proyecto.GestorAPI.security.TokenProvider;
 import Proyecto.GestorAPI.security.oauth2.OAuth2Provider;
 import Proyecto.GestorAPI.services.UserService;
+import Proyecto.GestorAPI.servicesimpl.AuthServiceImpl;
 import Proyecto.GestorAPI.servicesimpl.LoginAttemptServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,17 +20,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -50,10 +48,9 @@ import java.util.Optional;
 public class AuthController {
 
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final TokenProvider tokenProvider;
     private final LoginAttemptServiceImpl loginAttemptService;
+    @Autowired
+    private AuthServiceImpl authService;
 
     /**
      * Endpoint para la autenticación de usuarios.
@@ -72,14 +69,14 @@ public class AuthController {
                     @ApiResponse(responseCode = "401", description = "Credenciales incorrectas")
             })
     @PostMapping("/authenticate")
+    @CrossOrigin(origins = "http://localhost:4200")
     public AuthResponse login(@Valid @RequestBody LoginRequest loginRequest) {
-        System.out.println("Validando");
         if (loginAttemptService.isBlocked(loginRequest.user())) {
             throw new UserBlockedException("Cuenta bloqueada temporalmente. Intente nuevamente en 30 minutos");
         }
 
         try {
-            String token = authenticateAndGetToken(loginRequest.user(), loginRequest.password());
+            String token = authService.authenticateAndGetToken(loginRequest.user(), loginRequest.password());
             loginAttemptService.registerLoginAttempt(loginRequest.user(), true);
             return new AuthResponse(token);
         } catch (AuthenticationException ex) {
@@ -107,6 +104,7 @@ public class AuthController {
                     @ApiResponse(responseCode = "400", description = "Usuario o correo electrónico ya registrados")
             })
     @ResponseStatus(HttpStatus.CREATED)
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/signup")
     public AuthResponse signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         if (userService.hasUserWithUsername(signUpRequest.username())) {
@@ -115,52 +113,10 @@ public class AuthController {
         if (userService.hasUserWithEmail(signUpRequest.email())) {
             throw new DuplicatedUserInfoException(String.format("Email %s already been used", signUpRequest.email()));
         }
-        userService.saveUser(mapSignUpRequestToUser(signUpRequest));
-        String token = authenticateAndGetToken(signUpRequest.username(), signUpRequest.password());
+        userService.saveUser(authService.mapSignUpRequestToUser(signUpRequest));
+        String token = authService.authenticateAndGetToken(signUpRequest.username(), signUpRequest.password());
         return new AuthResponse(token);
     }
 
-    /**
-     * Método privado para autenticar al usuario con las credenciales proporcionadas
-     * y obtener un token JWT.
-     *
-     * @param user El nombre de usuario.
-     * @param password La contraseña del usuario.
-     * @return El token JWT generado para el usuario autenticado.
-     * @throws RuntimeException Si el usuario no es encontrado en el sistema.
-     */
-    private String authenticateAndGetToken(String user, String password) {
-        Authentication authentication;
-        Optional<User> userOptional = userService.getUserByUsernameOrEmail(user);
-        if (userOptional.isPresent() ) {
-            if(userOptional.get().isActive()) {
-                User existingUser = userOptional.get();
-                authentication = authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(existingUser.getUsername(), password));
-                System.out.println(authentication);
-                return tokenProvider.generate(authentication);
-            } else  {
-                throw new UserBlockedException("The account is blocked or pending deletion");
-            }
-        } else {
-            throw new UserNotFoundException("User not found");
-        }
-    }
 
-    /**
-     * Mapea un objeto `SignUpRequest` a un objeto `User`, para crear un nuevo usuario.
-     *
-     * @param signUpRequest Los datos proporcionados por el usuario para el registro.
-     * @return El objeto `User` que se utilizará para guardar el nuevo usuario en la base de datos.
-     */
-    private User mapSignUpRequestToUser(SignUpRequest signUpRequest) {
-        User user = new User();
-        user.setUsername(signUpRequest.username());
-        user.setPassword(passwordEncoder.encode(signUpRequest.password()));
-        user.setName(signUpRequest.name());
-        user.setEmail(signUpRequest.email());
-        user.setRole(RoleServer.USER);
-        user.setProvider(OAuth2Provider.LOCAL);
-        return user;
-    }
 }

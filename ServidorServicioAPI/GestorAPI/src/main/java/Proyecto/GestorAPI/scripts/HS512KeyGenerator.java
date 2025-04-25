@@ -1,4 +1,4 @@
-package Proyecto.GestorAPI.security;
+package Proyecto.GestorAPI.scripts;
 
 import io.jsonwebtoken.Jwts;
 import javax.crypto.SecretKey;
