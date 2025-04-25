@@ -97,6 +97,8 @@ public class SecurityConfig {
                                 "/images/**",
                                 "/public/**",
                                 "/auth/**",
+                                "/login",
+                                "/register",
                                 "/register/**",
                                 "/favicon.ico",
                                 "/oauth2/**",
@@ -105,18 +107,32 @@ public class SecurityConfig {
                                 "/error",
                                 "/csrf",
                                 "/swagger-ui/**",
-                                "/v3/api-docs/**").permitAll()
+                                "/v3/api-docs/**")
+                        .permitAll()
 
                         // Acceso restringido a los usuarios con roles ADMIN o USER
-                        .requestMatchers(HttpMethod.GET, "/api/tickets", "/api/tickets/**", "api/ocr/**").hasAnyAuthority(ADMIN, USER)
-                        .requestMatchers(HttpMethod.GET, "/api/gastos", "/api/gastos/**").hasAnyAuthority(ADMIN, USER)
-                        .requestMatchers(HttpMethod.GET, "/api/subscripciones", "/api/subscripciones/**").hasAnyAuthority(ADMIN, USER)
-
-                        .requestMatchers(HttpMethod.GET, "/api/user/","/api/user/**").hasAnyAuthority(ADMIN,USER)
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/tickets",
+                                "/api/tickets/**",
+                                "/api/ocr/**",
+                                "/api/uploads/**",
+                                "/api/gastos",
+                                "/api/gastos/**",
+                                "/api/subscripciones",
+                                "/api/subscripciones/**",
+                                "/api/user/",
+                                "/api/user/**")
+                        .hasAnyAuthority(ADMIN,USER)
 
                         //Solo admins
-                        .requestMatchers("/admin/**").hasAuthority(ADMIN)
-                        .requestMatchers(HttpMethod.GET, "/api/users", "/api/users/**").hasAnyAuthority(ADMIN)
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/users",
+                                "/api/users/**",
+                                "/dasboard",
+                                "/admin/**")
+                        .hasAnyAuthority(ADMIN)
 
 
                         // Cualquier otra solicitud requiere autenticación

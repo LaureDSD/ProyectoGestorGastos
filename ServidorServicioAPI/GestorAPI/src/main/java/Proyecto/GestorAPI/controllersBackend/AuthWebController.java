@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/auth")
+@RequestMapping("")
 public class AuthWebController {
 
     @Autowired
@@ -63,24 +63,6 @@ public class AuthWebController {
         } catch (Exception e) {
             model.addAttribute("error", "Error al registrar: " + e.getMessage());
             return "register"; // Muestra el formulario de registro con el mensaje de error
-        }
-    }
-
-    @CrossOrigin(origins = "http://localhost:4200")
-    @PostMapping("/registro")
-    public ResponseEntity<Map<String, String>> register(@RequestBody User usuario) {
-        Map<String, String> response = new HashMap<>();
-        try {
-            if (usuarioService.saveUser(usuario) != null) {
-                response.put("message", "Usuario registrado exitosamente");
-                return ResponseEntity.status(HttpStatus.CREATED).body(response);
-            } else {
-                response.put("error", "Error al guardar el usuario");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-            }
-        } catch (Exception e) {
-            response.put("error", "Error al registrar: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
