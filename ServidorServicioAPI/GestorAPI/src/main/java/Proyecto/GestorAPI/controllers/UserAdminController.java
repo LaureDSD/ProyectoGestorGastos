@@ -1,6 +1,7 @@
 package Proyecto.GestorAPI.controllers;
 
 
+import Proyecto.GestorAPI.exceptions.UserNotFoundException;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.modelsDTO.UserDto;
 import Proyecto.GestorAPI.security.CustomUserDetails;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,53 +33,35 @@ import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME
 @Tag(name = "User Management (Admin only) ", description = "Gestion de usuarios")
 public class UserAdminController {
 
-    // Servicio que gestiona las operaciones de usuarios.
     private final UserService userService;
-
-/*
-    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
-    @GetMapping("/me")
-    public UserDto getCurrentUser(@AuthenticationPrincipal CustomUserDetails currentUser) {
-        // Valida y obtiene el usuario
-        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
-        return UserDto.from(user);
-    }*/
-
 
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @GetMapping
-    public ResponseEntity<List<UserDto>> getUsers() {
-        //Devolucion
-        return ResponseEntity.ok(userService.getUsers().stream()
-                .map(UserDto::from)
-                .collect(Collectors.toList()));
+    public ResponseEntity<List<User>> getUsers() {
+        return ResponseEntity.ok(new ArrayList<>(userService.getUsers()));
     }
-
 
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @GetMapping("/{clienteId}")
-    public ResponseEntity<UserDto> getUser(
+    public ResponseEntity<User> getUser(
             @PathVariable Long clienteId) {
         User findUser = userService.getUserById(clienteId).orElse(null);
-        //Validacoin existencia
         if(findUser == null){
             return ResponseEntity.notFound().build();
         }
-        //Devolucion
-        return ResponseEntity.ok(UserDto.from(findUser));
+        return ResponseEntity.ok(findUser);
     }
 
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @DeleteMapping("/{ClienteId}")
-    public ResponseEntity<UserDto> deleteUser(
+    public ResponseEntity<User> deleteUser(
             @PathVariable Long clienteId) {
         User findUser = userService.getUserById(clienteId).orElse(null);
-        //Validacoin existencia
         if(findUser == null){
             return ResponseEntity.notFound().build();
         }
         userService.deleteUser(findUser);
-        return ResponseEntity.ok(UserDto.from(findUser));
+        return ResponseEntity.ok(findUser);
     }
 
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})

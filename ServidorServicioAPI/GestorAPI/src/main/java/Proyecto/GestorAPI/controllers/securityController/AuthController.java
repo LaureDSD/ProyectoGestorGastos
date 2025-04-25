@@ -2,7 +2,7 @@ package Proyecto.GestorAPI.controllers.securityController;
 
 import Proyecto.GestorAPI.exceptions.DuplicatedUserInfoException;
 import Proyecto.GestorAPI.exceptions.UserBlockedException;
-import Proyecto.GestorAPI.exceptions.UserNoFoundException;
+import Proyecto.GestorAPI.exceptions.UserNotFoundException;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.security.RoleServer;
 import Proyecto.GestorAPI.modelsDTO.authDTO.AuthResponse;
@@ -73,9 +73,11 @@ public class AuthController {
             })
     @PostMapping("/authenticate")
     public AuthResponse login(@Valid @RequestBody LoginRequest loginRequest) {
+        System.out.println("Validando");
         if (loginAttemptService.isBlocked(loginRequest.user())) {
             throw new UserBlockedException("Cuenta bloqueada temporalmente. Intente nuevamente en 30 minutos");
         }
+
         try {
             String token = authenticateAndGetToken(loginRequest.user(), loginRequest.password());
             loginAttemptService.registerLoginAttempt(loginRequest.user(), true);
@@ -135,12 +137,13 @@ public class AuthController {
                 User existingUser = userOptional.get();
                 authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(existingUser.getUsername(), password));
+                System.out.println(authentication);
                 return tokenProvider.generate(authentication);
             } else  {
                 throw new UserBlockedException("The account is blocked or pending deletion");
             }
         } else {
-            throw new UserNoFoundException("User not found");
+            throw new UserNotFoundException("User not found");
         }
     }
 

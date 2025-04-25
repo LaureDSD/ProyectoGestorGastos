@@ -1,0 +1,19 @@
+<div class="container mt-5">
+    <h2>Login</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input id="username" formControlName="username" class="form-control" />
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input id="password" type="password" formControlName="password" class="form-control" />
+      </div>
+      <button type="submit" class="btn btn-primary w-100" [disabled]="isLoading">Entrar</button>
+    </form>
+    <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
+    <hr />
+    <button class="btn btn-danger w-100 mb-2" (click)="loginGoogle()">Entrar con Google</button>
+    <button class="btn btn-dark w-100" (click)="loginGitHub()">Entrar con GitHub</button>
+    <p class="mt-3">¿No tienes cuenta? <a routerLink="/register">Regístrate</a></p>
+  </div>

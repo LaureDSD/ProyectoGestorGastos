@@ -1,0 +1,78 @@
+1. Google
+Accede a Google Cloud Console
+👉 https://console.cloud.google.com/apis/credentials
+
+Configura la pantalla de consentimiento (OAuth consent screen)
+
+En el menú lateral, elige OAuth consent screen.
+
+Selecciona User Type (External o Internal).
+
+Rellena:
+
+App name (p. ej. “GestorAPI Frontend”)
+
+User support email
+
+Opcional: logo, dominios, etc.
+
+Guarda y sigue.
+
+Crea unas credenciales OAuth 2.0
+
+Ve a Credentials → Create Credentials → OAuth client ID.
+
+Elige Application type: Web application.
+
+Rellena:
+
+Name: nombre descriptivo.
+
+Authorized JavaScript origins:
+
+arduino
+Copiar código
+http://localhost:8080
+Authorized redirect URIs:
+
+bash
+Copiar código
+http://localhost:8080/login/oauth2/code/google
+Haz clic en Create.
+
+Anota las credenciales
+
+Client ID
+
+Client Secret
+Guárdalos en un lugar seguro (o como variables de entorno).
+
+2. GitHub
+Entra en GitHub
+👉 https://github.com → tu avatar → Settings → Developer settings → OAuth Apps.
+
+Registra una nueva aplicación
+
+Haz clic en New OAuth App.
+
+Rellena:
+
+Application name: p. ej. “GestorAPI Frontend”
+
+Homepage URL:
+
+arduino
+Copiar código
+http://localhost:8080
+Authorization callback URL:
+
+bash
+Copiar código
+http://localhost:8080/login/oauth2/code/github
+Pulsa Register application.
+
+Anota las credenciales
+
+Client ID (ya visible)
+
+Haz clic en Generate a new client secret → copia el Client Secret.
