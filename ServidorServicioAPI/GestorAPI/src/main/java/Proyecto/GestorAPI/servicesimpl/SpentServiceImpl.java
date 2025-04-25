@@ -83,6 +83,7 @@ public class SpentServiceImpl implements SpentService {
         return repository.existsById(id);
     }
 
+    //Falta comentar
     @Override
     public List<Spent> getSpentsByUserId(Long id) {
         return  repository.getByUserId(id);

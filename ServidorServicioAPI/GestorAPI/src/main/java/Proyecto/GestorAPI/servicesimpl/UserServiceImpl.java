@@ -45,8 +45,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(userId);
     }
 
-
-
     /**
      * Obtiene un usuario por su nombre de usuario.
      *
@@ -159,8 +157,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException(String.format("User with email %s not found", email)));
     }
 
-
-
     /**
      * Método que busca un usuario en base al nombre de usuario o al correo electrónico.
      *
@@ -173,13 +169,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Optional<User> getUserByUsernameOrEmail(String user) {
-        // Primero verifica si el 'user' parece un correo electrónico
         if (isEmail(user)) {
-            // Si el 'user' es un correo, se busca el usuario por correo electrónico
             return getUserByEmail(user);
         } else {
-            // Si no es un correo, lo considera como un nombre de usuario
-            // Se busca el usuario por nombre de usuario
             return getUserByUsername(user);
         }
     }

@@ -20,19 +20,11 @@ public class AIChatController {
             summary = "Enviar un mensaje al chat y recibir una respuesta por IA"
     )
     public ResponseEntity<String> sendMessage(@RequestBody String clientMessage, @RequestAttribute("user") User user) {
-
-
         if (user == null) {
             return ResponseEntity.status(401).body("Usuario no autenticado");
         }
-
-
-        String aiResponse = simulateAIResponse(clientMessage);
-
+        String aiResponse = "Respuesta generada por IA: " + clientMessage;
         return ResponseEntity.ok(aiResponse);
     }
 
-    private String simulateAIResponse(String clientMessage) {
-        return "Respuesta generada por IA: " + clientMessage;
-    }
 }

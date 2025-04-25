@@ -25,17 +25,17 @@ public class OCRServiceImpl implements OCRService {
 
     @Override
     public String sendFileForOCR(File file) throws IOException {
-        // Crea un archivo Multipart para enviarlo al servidor Python.
+        // Crea un archivo Multipart
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("file", file);
 
-        // Crear una solicitud HTTP con los parámetros correctos
+        // Crear una solicitud HTTP
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(body, headers);
 
-        // Enviar la solicitud POST al servidor Python
+        // Enviar la solicitud
         ResponseEntity<String> response = restTemplate.exchange(
                 pythonServerUrl + "/procesar", // Endpoint del servidor Python
                 HttpMethod.POST,
@@ -43,7 +43,7 @@ public class OCRServiceImpl implements OCRService {
                 String.class
         );
 
-        // Procesa la respuesta JSON del servidor Python (suponemos que devuelve un JSON)
+        // Procesa la respuesta JSON
         if (response.getStatusCode() == HttpStatus.OK) {
             return response.getBody(); // El resultado del OCR en formato JSON
         } else {

@@ -1,6 +1,8 @@
 package Proyecto.GestorAPI.services;
 
 import Proyecto.GestorAPI.models.User;
+import jakarta.validation.Valid;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;

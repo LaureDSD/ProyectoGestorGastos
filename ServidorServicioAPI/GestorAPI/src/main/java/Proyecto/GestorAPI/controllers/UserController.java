@@ -1,12 +1,11 @@
 package Proyecto.GestorAPI.controllers;
 
 
-import Proyecto.GestorAPI.models.Ticket;
+import Proyecto.GestorAPI.exceptions.UpdateImageException;
 import Proyecto.GestorAPI.models.User;
-import Proyecto.GestorAPI.modelsDTO.SpentDto;
 import Proyecto.GestorAPI.modelsDTO.UserDto;
 import Proyecto.GestorAPI.security.CustomUserDetails;
-import Proyecto.GestorAPI.security.RoleServer;
+import Proyecto.GestorAPI.services.StorageService;
 import Proyecto.GestorAPI.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -16,9 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.web.multipart.MultipartFile;
 
 import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME;
 
@@ -30,113 +27,111 @@ import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/users")
-@Tag(name = "User Management (Verify control) ", description = "Gestion de usuarios")
+@RequestMapping("/api/user")
+@Tag(name = "User Management (User Only) ", description = "Gestion de usuarios")
 public class UserController {
 
-    // Servicio que gestiona las operaciones de usuarios.
     private final UserService userService;
-
+    private final StorageService storageService;
 
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @GetMapping("/me")
-    public UserDto getCurrentUser(@AuthenticationPrincipal CustomUserDetails currentUser) {
-        // Valida y obtiene el usuario
+    public UserDto getCurrentUser(
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+        //Info basica del usaurio
         return UserDto.from(user);
     }
 
-
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @GetMapping
-    public ResponseEntity<List<UserDto>> getUsers(
-            @AuthenticationPrincipal CustomUserDetails currentUser
-    ) {
-        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
-        //Validacion
-        if(user.getRole() != RoleServer.ADMIN){
-            return ResponseEntity.noContent().build();
-        }
-        //Devolucion
-        return ResponseEntity.ok(userService.getUsers().stream()
-                .map(UserDto::from)
-                .collect(Collectors.toList()));
-    }
-
-
-    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
-    @GetMapping("/{clienteId}")
-    public ResponseEntity<UserDto> getUser(
-            @PathVariable Long clienteId,
+    public ResponseEntity<UserDto> getUserData(
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
-        User findUser = userService.getUserById(clienteId).orElse(null);
-        //Validacoin existencia
-        if(findUser == null){
-            return ResponseEntity.notFound().build();
-        }
-        //Si es admin
-        if(user.getRole() == RoleServer.ADMIN ){
-            return ResponseEntity.ok(UserDto.from(findUser));
-        }
-        //Validacion propiedad usuario
-        if(( !user.getId().equals(findUser.getId()) || !user.getId().equals(clienteId))){
-            return ResponseEntity.badRequest().build();
-        }
-        //Devolucion
+        //Obatener la info del usuario
         return ResponseEntity.ok(UserDto.from(user));
     }
 
-
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
-    @DeleteMapping("/{ClienteId}")
+    @DeleteMapping
     public ResponseEntity<UserDto> deleteUser(
-            @PathVariable Long clienteId,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
-        User findUser = userService.getUserById(clienteId).orElse(null);
-        //Validacoin existencia
-        if(findUser == null){
-            return ResponseEntity.notFound().build();
-        }
-        //Si es admin
-        if(user.getRole() == RoleServer.ADMIN ){
-            userService.deleteUser(findUser);
-            return ResponseEntity.ok(UserDto.from(user));
-        }
-        //Validacion propiedad usuario
-        if(( !user.getId().equals(findUser.getId()) || !user.getId().equals(clienteId))){
-            return ResponseEntity.badRequest().build();
-        }
-        //Desactivacion de la cuenta
+        //Desactiva la cuenta
         user.setActive(false);
+        //Guarda la config
         userService.saveUser(user);
         return ResponseEntity.ok(UserDto.from(user));
     }
 
-    //update
+
+
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
-    @PutMapping("/{ClienteId}")
-    public ResponseEntity<UserDto> updateUser(
-            @PathVariable Long clienteId,
-            @Valid @RequestBody User request,
+    @PutMapping("*/newName")
+    public ResponseEntity<UserDto> updateName(
+            @Valid @RequestBody String request,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
-        User findUser = userService.getUserById(clienteId).orElse(null);
+        //Cambio de nombre
+        user.setName(request);
+        //Guardar usuario
+        userService.saveUser(user);
+        return ResponseEntity.ok(UserDto.from(user));
+    }
+
+    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
+    @PutMapping("*/newImage")
+    public ResponseEntity<UserDto> updateImage(
+            @RequestParam(value = "archivo", required = false) MultipartFile file,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+        String oldUrl = "";
+
+        //Si no carga imagen
+        if(file.isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
+        //Preapracion
+        oldUrl = user.getImageUrl();
+
+        try {
+            //Cargar imagen
+            String newUrl = storageService.updateImageData("profileImage",file);
+            user.setImageUrl(newUrl);
+            //Guardar url
+            userService.saveUser(user);
+            //Borrar restos (Opcional)
+            storageService.deleteImageData(oldUrl);
+            return ResponseEntity.ok(UserDto.from(user));
+
+        }catch (Exception e){
+            //return  new UpdateImageException("Error al cargar imagen: "+e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+     /*
+    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
+    @PutMapping
+    public ResponseEntity<UserDto> updateUser(
+            @Valid @RequestBody User request,
+            @RequestParam(value = "archivo", required = false) MultipartFile file,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
         //Validacoin existencia
-        if(findUser == null){
+        if(user == null){
             return ResponseEntity.notFound().build();
         }
-        //Si es admin y no coinciden idcliente y request
-        if(user.getRole() == RoleServer.ADMIN && !findUser.getId().equals(request.getId()) ){
+        //Validacion identidaad
+        if(user.getId().equals(request.getId())){
             return ResponseEntity.badRequest().build();
         }
-        //Si es usuario y no cumle triple verificacion
-        if(( !user.getId().equals(findUser.getId()) || !request.getId().equals(clienteId))){
-            return ResponseEntity.badRequest().build();
+        //Actualizacion de datos
+        if(){
+
         }
         //Guardado
         userService.saveUser(request);
-        return ResponseEntity.ok(UserDto.from(user));
-    }
+        return ResponseEntity.ok(UserDto.from(request));
+    }*/
 }
