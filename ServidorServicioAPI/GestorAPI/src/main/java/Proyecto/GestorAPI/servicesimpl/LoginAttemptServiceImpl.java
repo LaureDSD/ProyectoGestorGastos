@@ -83,5 +83,9 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
     public List<LoginAttempt> getAll() {
         return loginAttemptRepository.findAll();
     }
+
+    public List<LoginAttempt> getByUsernameOrEamil(String username) {
+        return loginAttemptRepository.findByUsername(username);
+    }
 }
 

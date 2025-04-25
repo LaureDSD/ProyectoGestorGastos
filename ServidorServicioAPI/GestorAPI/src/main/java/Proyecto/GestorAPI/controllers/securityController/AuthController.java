@@ -73,19 +73,14 @@ public class AuthController {
             })
     @PostMapping("/authenticate")
     public AuthResponse login(@Valid @RequestBody LoginRequest loginRequest) {
-
-        // Primero, verifica si el usuario está bloqueado
         if (loginAttemptService.isBlocked(loginRequest.user())) {
             throw new UserBlockedException("Cuenta bloqueada temporalmente. Intente nuevamente en 30 minutos");
         }
-
         try {
             String token = authenticateAndGetToken(loginRequest.user(), loginRequest.password());
-            // Registra el intento exitoso (podrías limpiar los registros de fallos para ese usuario si se desea)
             loginAttemptService.registerLoginAttempt(loginRequest.user(), true);
             return new AuthResponse(token);
         } catch (AuthenticationException ex) {
-            // Registra el intento fallido
             loginAttemptService.registerLoginAttempt(loginRequest.user(), false);
             throw ex;
         }
@@ -112,19 +107,13 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/signup")
     public AuthResponse signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
-        // Verifica si el nombre de usuario ya está en uso
         if (userService.hasUserWithUsername(signUpRequest.username())) {
             throw new DuplicatedUserInfoException(String.format("Username %s already been used", signUpRequest.username()));
         }
-        // Verifica si el correo electrónico ya está en uso
         if (userService.hasUserWithEmail(signUpRequest.email())) {
             throw new DuplicatedUserInfoException(String.format("Email %s already been used", signUpRequest.email()));
         }
-
-        // Guarda el nuevo usuario
         userService.saveUser(mapSignUpRequestToUser(signUpRequest));
-
-        // Genera un token para el nuevo usuario
         String token = authenticateAndGetToken(signUpRequest.username(), signUpRequest.password());
         return new AuthResponse(token);
     }
@@ -140,17 +129,16 @@ public class AuthController {
      */
     private String authenticateAndGetToken(String user, String password) {
         Authentication authentication;
-
-        // Obtiene el usuario ya sea por nombre de usuario o por correo electrónico
         Optional<User> userOptional = userService.getUserByUsernameOrEmail(user);
-
-        if (userOptional.isPresent()) {
-            User existingUser = userOptional.get();
-
-            // Realiza la autenticación del usuario con el `AuthenticationManager`
-            authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(existingUser.getUsername(), password));
-            return tokenProvider.generate(authentication);
+        if (userOptional.isPresent() ) {
+            if(userOptional.get().isActive()) {
+                User existingUser = userOptional.get();
+                authentication = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(existingUser.getUsername(), password));
+                return tokenProvider.generate(authentication);
+            } else  {
+                throw new UserBlockedException("The account is blocked or pending deletion");
+            }
         } else {
             throw new UserNoFoundException("User not found");
         }
@@ -168,8 +156,8 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(signUpRequest.password()));
         user.setName(signUpRequest.name());
         user.setEmail(signUpRequest.email());
-        user.setRole(RoleServer.USER); // El rol por defecto es "USER"
-        user.setProvider(OAuth2Provider.LOCAL); // El proveedor es LOCAL por defecto
+        user.setRole(RoleServer.USER);
+        user.setProvider(OAuth2Provider.LOCAL);
         return user;
     }
 }

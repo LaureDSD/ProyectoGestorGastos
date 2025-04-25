@@ -32,13 +32,13 @@ public class LoginAttempController {
             summary = ""
     )
     public ResponseEntity<List<LoginAttempt>> getLogins(
-            @RequestParam(value = "loginId", required = false) Long logId) {
+            @RequestParam(value = "username/email", required = false) String user) {
         List<LoginAttempt> loginAttempts ;
-        //if(logId != null){
-            //loginAttempts = loginAttemptService.getByUserId(logId);
-        //}else{
+        if(user != null){
+            loginAttempts = loginAttemptService.getByUsernameOrEamil(user);
+        }else{
             loginAttempts = loginAttemptService.getAll();
-        //}
+        }
 
         if(loginAttempts.isEmpty()){
             return ResponseEntity.noContent().build();
