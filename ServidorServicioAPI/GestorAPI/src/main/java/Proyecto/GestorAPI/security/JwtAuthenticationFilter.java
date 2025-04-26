@@ -21,7 +21,7 @@ import java.util.Optional;
 @Slf4j // Registra los logs de la clase
 @RequiredArgsConstructor // Genera el constructor con los parámetros necesarios para la inyección de dependencias
 @Component // Marca la clase como un componente de Spring para ser inyectado en otras clases
-public class TokenAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     // Definición de constantes para las cabeceras de autenticación
     public static final String TOKEN_HEADER = "Authorization";  // Nombre del encabezado para el token

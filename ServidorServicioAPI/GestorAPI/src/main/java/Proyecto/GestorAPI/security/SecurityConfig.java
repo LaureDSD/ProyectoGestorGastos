@@ -2,20 +2,15 @@ package Proyecto.GestorAPI.security;
 
 import Proyecto.GestorAPI.security.oauth2.CustomAuthenticationSuccessHandler;
 import Proyecto.GestorAPI.security.oauth2.CustomOAuth2UserService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -25,7 +20,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -59,8 +53,8 @@ public class SecurityConfig {
      * @return TokenAuthenticationFilter, filtro para autenticar solicitudes con tokens.
      */
     @Bean
-    public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter(userDetailsService, tokenProvider);
+    public JwtAuthenticationFilter tokenAuthenticationFilter() {
+        return new JwtAuthenticationFilter(userDetailsService, tokenProvider);
     }
 
     /**
@@ -90,20 +84,17 @@ public class SecurityConfig {
 
                         // Acceso público a recursos estáticos y ciertas rutas
                         .requestMatchers(
+                                //"/admin/dashboard",
+                                "/auth/**",
                                 "/static/**",
                                 "/resources/**",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
                                 "/public/**",
-                                "/auth/**",
-                                "/login",
-                                "/register",
-                                "/register/**",
                                 "/favicon.ico",
                                 "/oauth2/**",
                                 "/api/**",
-                                "/",
                                 "/error",
                                 "/csrf",
                                 "/swagger-ui/**",
@@ -112,25 +103,14 @@ public class SecurityConfig {
 
                         // Acceso restringido a los usuarios con roles ADMIN o USER
                         .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/tickets",
-                                "/api/tickets/**",
-                                "/api/ocr/**",
-                                "/api/uploads/**",
-                                "/api/gastos",
-                                "/api/gastos/**",
-                                "/api/subscripciones",
-                                "/api/subscripciones/**",
-                                "/api/user/",
-                                "/api/user/**")
+                                "/api/**")
                         .hasAnyAuthority(ADMIN,USER)
 
                         //Solo admins
                         .requestMatchers(
-                                HttpMethod.GET,
+                                //falta logas
                                 "/api/users",
                                 "/api/users/**",
-                                "/dasboard",
                                 "/admin/**")
                         .hasAnyAuthority(ADMIN)
 
@@ -149,8 +129,7 @@ public class SecurityConfig {
                 // Configuración para sesiones sin estado (sin sesión en el servidor)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // Manejo de errores de autenticación (401)
-                .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 // Deshabilitar CSRF (recomendado solo si la aplicación no tiene formularios de sesión)
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
@@ -179,14 +158,5 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-    /*
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }*/
 
 }

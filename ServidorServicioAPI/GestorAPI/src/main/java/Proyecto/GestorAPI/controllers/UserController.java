@@ -34,6 +34,7 @@ public class UserController {
     private final UserService userService;
     private final StorageService storageService;
 
+
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @GetMapping("/me")
     public UserDto getCurrentUser(

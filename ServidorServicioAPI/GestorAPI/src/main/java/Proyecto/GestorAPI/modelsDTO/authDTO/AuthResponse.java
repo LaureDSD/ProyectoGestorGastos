@@ -10,5 +10,5 @@ package Proyecto.GestorAPI.modelsDTO.authDTO;
  * El `accessToken` es un JSON Web Token (JWT) o cualquier otro tipo de token que sirva para mantener la sesión activa
  * y garantizar que las solicitudes que se realicen al servidor provengan de un usuario autenticado.
  */
-public record AuthResponse(String accessToken) {
+public record AuthResponse(String token) {
 }

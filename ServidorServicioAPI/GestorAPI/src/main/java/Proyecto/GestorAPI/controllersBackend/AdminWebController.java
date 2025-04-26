@@ -18,19 +18,9 @@ public class AdminWebController {
     @GetMapping("/dashboard")
     public String getDashboard(Model model, Authentication authentication) {
         if (authentication != null) {
-            // Obtener el usuario autenticado
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
-
-            // Obtener roles
-            List<String> roles = userDetails.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.toList());
-
-            // Agregar al modelo
-            model.addAttribute("usuario", username);
-            model.addAttribute("roles", roles);
+            System.out.println("redirect");
         }
+        System.out.println("redirect2");
 
         return "admin/dashboard";
     }

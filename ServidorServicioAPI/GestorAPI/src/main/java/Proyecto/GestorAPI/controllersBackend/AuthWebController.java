@@ -2,6 +2,7 @@ package Proyecto.GestorAPI.controllersBackend;
 
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.modelsDTO.authDTO.AuthResponse;
+import Proyecto.GestorAPI.modelsDTO.authDTO.JwtResponse;
 import Proyecto.GestorAPI.modelsDTO.authDTO.SignUpRequest;
 import Proyecto.GestorAPI.servicesimpl.AuthServiceImpl;
 import Proyecto.GestorAPI.servicesimpl.LoginAttemptServiceImpl;
@@ -40,11 +41,6 @@ public class AuthWebController {
     @Autowired
     private LoginAttemptServiceImpl loginAttemptService;
 
-    // Método GET para mostrar el formulario de login
-    @GetMapping("/login")
-    public String showLoginForm() {
-        return "login"; // Retorna la plantilla login.html
-    }
 
     // Método GET para mostrar el formulario de registro
     @GetMapping("/register")
@@ -67,15 +63,24 @@ public class AuthWebController {
         }
     }
 
+    // Método GET para mostrar el formulario de login
+    @GetMapping("/login")
+    public String showLoginForm() {
+        return "login"; // Retorna la plantilla login.html
+    }
+
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam String correo, @RequestParam String contraseña, HttpServletRequest request) {
             try {
+                System.out.println(correo + " " + contraseña);
                 String token = authService.authenticateAndGetToken(correo, contraseña);
                 loginAttemptService.registerLoginAttempt(correo, true);
-                return ResponseEntity.ok().body(token);
+                System.out.println(Map.of("token", token));
+                return ResponseEntity.ok().body(Map.of("token", token));
             } catch (AuthenticationException ex) {
                 loginAttemptService.registerLoginAttempt(correo, false);
-                throw ex;
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Error en la autenticación:" + ex));
             }
     }
 }
