@@ -8,6 +8,7 @@ import Proyecto.GestorAPI.security.RoleServer;
 import Proyecto.GestorAPI.security.TokenProvider;
 import Proyecto.GestorAPI.security.oauth2.OAuth2Provider;
 import Proyecto.GestorAPI.services.AuthService;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +20,8 @@ import java.util.Optional;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+
+    private static long localUserCounter = 0;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -32,6 +35,11 @@ public class AuthServiceImpl implements AuthService {
     public AuthServiceImpl(AuthenticationManager authenticationManager, TokenProvider tokenProvider) {
         this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
+    }
+
+    @PostConstruct
+    public void init() {
+        localUserCounter = userService.countByProvider(OAuth2Provider.LOCAL);
     }
 
     /**
@@ -73,8 +81,12 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(signUpRequest.password()));
         user.setName(signUpRequest.name());
         user.setEmail(signUpRequest.email());
+        user.setActive(true);
         user.setRole(RoleServer.USER);
         user.setProvider(OAuth2Provider.LOCAL);
+        localUserCounter++;
+        user.setProviderId("local-"+localUserCounter);
+        user.setImageUrl("default/profile.jpg");
         return user;
     }
 

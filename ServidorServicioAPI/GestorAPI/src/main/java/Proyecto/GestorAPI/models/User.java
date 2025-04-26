@@ -48,12 +48,6 @@ public class User {
     /** URL de la imagen de perfil del usuario. */
     private String imageUrl;
 
-    /** Umbral de aviso para gastos mensuales (notificaciones). */
-    private double noticeExpense;
-
-    /** Presupuesto mensual asignado al usuario. */
-    private double budgetMonthly;
-
     /** Indica si la cuenta del usuario está activa. */
     private boolean active;
 
@@ -122,7 +116,5 @@ public class User {
         this.provider = provider;
         this.providerId = providerId;
         this.active = true;
-        this.budgetMonthly = 500; // Presupuesto inicial por defecto
-        this.noticeExpense = 100; // Aviso de gasto inicial por defecto
     }
 }

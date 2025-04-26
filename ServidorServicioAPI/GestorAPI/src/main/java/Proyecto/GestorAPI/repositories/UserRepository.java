@@ -1,6 +1,7 @@
 package Proyecto.GestorAPI.repositories;
 
 import Proyecto.GestorAPI.models.User;
+import Proyecto.GestorAPI.security.oauth2.OAuth2Provider;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -45,4 +46,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     boolean existsByEmail(String email);
 
+    long countByProvider(OAuth2Provider oAuth2Provider);
 }

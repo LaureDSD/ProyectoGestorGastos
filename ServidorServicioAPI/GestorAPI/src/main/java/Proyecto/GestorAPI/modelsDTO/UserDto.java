@@ -10,8 +10,7 @@ import Proyecto.GestorAPI.models.User;
  * que puede ser utilizada para la comunicación entre la capa de servicios y la capa de presentación, o entre
  * el cliente y el servidor en una API RESTful.
  */
-public record UserDto(Long id, String username, String name, String email,
-                      String role ,double BudgetMonthly,double NoticeExpense) {
+public record UserDto(Long id, String username, String name, String email, String role) {
 
     /**
      * Método estático para convertir una entidad `User` en un DTO `UserDto`.
@@ -25,13 +24,11 @@ public record UserDto(Long id, String username, String name, String email,
      */
     public static UserDto from(User user) {
         return new UserDto(
-                user.getId(),                          // ID del usuario
-                user.getUsername(),                    // Nombre de usuario
-                user.getName(),                        // Nombre completo del usuario
-                user.getEmail(),                       // Correo electrónico
-                user.getRole().name(),                 // Rol del usuario como String (usando name())
-                user.getBudgetMonthly(),               // Presupuesto mensual del usuario
-                user.getNoticeExpense()                // Notificación de gasto del usuario
+                user.getId(),
+                user.getUsername(),
+                user.getName(),
+                user.getEmail(),
+                user.getRole().name()
         );
     }
 }

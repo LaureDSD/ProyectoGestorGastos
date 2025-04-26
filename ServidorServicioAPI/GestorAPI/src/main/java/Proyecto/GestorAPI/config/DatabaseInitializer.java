@@ -57,8 +57,8 @@ public class DatabaseInitializer implements CommandLineRunner {
 
     /** Lista de usuarios por defecto (admin y usuario normal). */
     private static final List<User> USERS = Arrays.asList(
-            new User("admin", "admin", "Admin", "admin@gesthor.com", RoleServer.ADMIN, null, OAuth2Provider.LOCAL, "1"),
-            new User("user", "user", "User", "user@gesthor.com", RoleServer.USER, null, OAuth2Provider.LOCAL, "2")
+            new User("admin", "admin", "Admin", "admin@gesthor.com", RoleServer.ADMIN, "default/profile.jpg", OAuth2Provider.LOCAL, "local-1"),
+            new User("user", "user", "User", "user@gesthor.com", RoleServer.USER, "default/profile.jpg", OAuth2Provider.LOCAL, "local-2")
     );
 
     /** Lista de categorías de gastos predeterminadas. */

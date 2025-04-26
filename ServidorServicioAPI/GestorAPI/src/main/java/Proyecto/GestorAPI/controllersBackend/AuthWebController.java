@@ -2,6 +2,7 @@ package Proyecto.GestorAPI.controllersBackend;
 
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.modelsDTO.authDTO.AuthResponse;
+import Proyecto.GestorAPI.modelsDTO.authDTO.SignUpRequest;
 import Proyecto.GestorAPI.servicesimpl.AuthServiceImpl;
 import Proyecto.GestorAPI.servicesimpl.LoginAttemptServiceImpl;
 import Proyecto.GestorAPI.servicesimpl.UserServiceImpl;
@@ -24,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-@RequestMapping("")
+@RequestMapping("/auth")
 public class AuthWebController {
 
     @Autowired
@@ -53,9 +54,9 @@ public class AuthWebController {
 
     // Método POST para manejar el registro
     @PostMapping("/register")
-    public String register(@ModelAttribute User usuario, Model model) {
+    public String register(@ModelAttribute SignUpRequest signUpRequest, Model model) {
         try {
-            if (usuarioService.saveUser(usuario) == null) {
+            if (usuarioService.saveUser(authService.mapSignUpRequestToUser(signUpRequest)) == null) {
                 model.addAttribute("error", "Error al guardar usuario");
                 return "register"; // Muestra el formulario de registro con el mensaje de error
             }
