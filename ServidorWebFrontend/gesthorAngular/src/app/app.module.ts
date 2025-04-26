@@ -8,7 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { OAuth2RedirectComponent } from './components/oauth2-redirect/oauth2-redirect.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { HomeComponent } from './pages/home/home.component';

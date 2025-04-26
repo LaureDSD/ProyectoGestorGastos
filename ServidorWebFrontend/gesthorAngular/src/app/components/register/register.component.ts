@@ -34,7 +34,7 @@ export class RegisterComponent {
     this.auth.register(username, name, email, password).subscribe({
       next: res => {
         localStorage.setItem('token', res.token);
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/home']);
       },
       error: err => {
         this.error = 'Registration failed';

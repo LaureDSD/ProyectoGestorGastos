@@ -1,19 +1,37 @@
-<div class="container mt-5">
-    <h2>Login</h2>
+<div class="mycontainer d-flex justify-content-center align-items-center vh-100">
+  <div class="login-container shadow-lg rounded p-5">
+    <div class="text-center mb-5">
+      <img src="/gesthor2.png" alt="Logo" class="logo mb-5">
+      <h2 class="text-light">Iniciar sesión</h2>
+    </div>
+
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
+        <label for="username" class="form-label text-light">Usuario</label>
         <input id="username" formControlName="username" class="form-control" />
       </div>
       <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input id="password" type="password" formControlName="password" class="form-control" />
+        <label for="password" class="form-label text-light">Contraseña</label>
+        <div class="input-group">
+          <input id="password" [type]="passwordVisible ? 'text' : 'password'" formControlName="password" class="form-control" />
+          <button type="button" class="btn btn-outline-light" (click)="togglePasswordVisibility()">
+            <span>{{ passwordVisible ? 'O' : 'M' }}</span>
+          </button>
+        </div>
       </div>
-      <button type="submit" class="btn btn-primary w-100" [disabled]="isLoading">Entrar</button>
+      <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="isLoading">Entrar</button>
+      <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
     </form>
-    <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
-    <hr />
-    <button class="btn btn-danger w-100 mb-2" (click)="loginGoogle()">Entrar con Google</button>
-    <button class="btn btn-dark w-100" (click)="loginGitHub()">Entrar con GitHub</button>
-    <p class="mt-3">¿No tienes cuenta? <a routerLink="/register">Regístrate</a></p>
+
+    <div class="d-flex justify-content-center gap-3 mt-2">
+      <button class="btn btn-light rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;" (click)="loginGoogle()">
+        <img src="/gog.png" alt="Google" class="icon-img" />
+      </button>
+      <button class="btn btn-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;" (click)="loginGitHub()">
+        <img src="/git2.png" alt="GitHub" class="icon-img" />
+      </button>
+    </div>
+
+    <p class="mt-5 mb-3 text-center text-light">¿No tienes cuenta? <a routerLink="/register" class="text-decoration-none text-primary">Regístrate</a></p>
   </div>
+</div>

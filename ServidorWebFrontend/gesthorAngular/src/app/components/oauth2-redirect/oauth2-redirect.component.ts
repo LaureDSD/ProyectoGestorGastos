@@ -15,7 +15,7 @@ export class OAuth2RedirectComponent implements OnInit {
     const token = this.route.snapshot.queryParamMap.get('token');
     if (token) {
       localStorage.setItem('token', token);
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/home']);
     } else {
       this.router.navigate(['/login']);
     }

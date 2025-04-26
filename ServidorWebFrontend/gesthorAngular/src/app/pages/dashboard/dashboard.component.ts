@@ -1,14 +1,15 @@
+
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-dashboard',
   standalone: false,
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  templateUrl: './dashboard.component.html'
+    
 })
-export class HomeComponent implements OnInit {
- token: string | null = null;
+export class DashboardComponent implements OnInit {
+  token: string | null = null;
 
   userl: any;
 
@@ -26,4 +27,5 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+  
 }

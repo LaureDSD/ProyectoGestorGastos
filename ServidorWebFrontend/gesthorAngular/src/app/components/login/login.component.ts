@@ -7,7 +7,8 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-login',
   standalone: false,             
-  templateUrl: './login.component.html'
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
@@ -35,7 +36,7 @@ export class LoginComponent implements OnInit {
       next: res => {
         localStorage.setItem('token', res.token);
         console.log(res.token)
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/home']);
       },
       error: err => {
         this.error = 'Login failed';
@@ -43,6 +44,13 @@ export class LoginComponent implements OnInit {
       }
     });
   }
+
+  passwordVisible: boolean = false;
+
+  togglePasswordVisibility() {
+  this.passwordVisible = !this.passwordVisible;
+}
+
 
   loginGoogle() { this.auth.loginWithOAuth2('google'); }
   loginGitHub() { this.auth.loginWithOAuth2('github'); }
