@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
-  standalone: false,             
+  standalone: false,
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -36,10 +36,10 @@ export class LoginComponent implements OnInit {
       next: res => {
         localStorage.setItem('token', res.token);
         console.log(res.token)
-        this.router.navigate(['/home']);
+        this.router.navigate(['/protected/home']);
       },
       error: err => {
-        this.error = 'Login failed';
+        this.error = 'Credenciales no validas';
         this.isLoading = false;
       }
     });

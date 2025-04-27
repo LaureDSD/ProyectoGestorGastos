@@ -1,0 +1,52 @@
+<div class="mycontainer d-flex justify-content-center align-items-center vh-100">
+  <div class="login-container shadow-lg rounded p-5">
+    <div class="text-center mb-5">
+      <img src="/gesthor1.png" alt="Logo" class="logo mb-5">
+      <h2 class="text-light">Registrarse</h2>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="username" class="form-label text-light">Usuario</label>
+        <input id="username" placeholder="usuario" formControlName="username" class="form-control" />
+      </div>
+      <div class="mb-3">
+        <label for="name" class="form-label text-light">Tu nombre</label>
+        <input id="name" placeholder="Nombre completo" formControlName="name" class="form-control" />
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label text-light">Email</label>
+        <input id="email" placeholder="correo@gesthor.me" formControlName="email" class="form-control" />
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label text-light">Contraseña</label>
+        <div class="input-group">
+          <input id="password" placeholder="contraseña" [type]="passwordVisible ? 'text' : 'password'" formControlName="password" class="form-control" />
+          <button type="button"  class="btn btn-outline-light" (click)="togglePasswordVisibility()">
+            <span>{{ passwordVisible ? 'O' : 'M' }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="confirmPassword" class="form-label text-light">Confirmar contraseña</label>
+        <div class="input-group">
+          <input id="confirmPassword" placeholder="contraseña" [type]="passwordVisibleConfirm ? 'text' : 'password'" formControlName="confirmPassword" class="form-control" />
+          <button type="button"  class="btn btn-outline-light" (click)="togglePasswordVisibilityConfirm()">
+            <span>{{ passwordVisibleConfirm ? 'O' : 'M' }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="passwordsMismatch" class="alert alert-danger">Las contraseñas no coinciden.</div>
+      <div *ngIf="weakPassword" class="alert alert-warning">La contraseña no es segura.{{error}}</div>
+
+      <button type="submit" class="btn btn-primary w-100" [disabled]="isLoading">Registrar</button>
+    </form>
+
+    <p class="mt-5 mb-3 text-center text-light">
+      ¿Ya tienes cuenta? 
+      <a routerLink="/login" class="text-decoration-none text-primary">Iniciar sesión</a>
+    </p>
+  </div>
+</div>

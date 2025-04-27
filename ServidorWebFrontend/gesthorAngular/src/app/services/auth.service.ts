@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private baseUrl = `${environment.apiUrl}/auth`;
+  router: any;
 
   constructor(private http: HttpClient) { }
 
@@ -24,12 +26,21 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
+  isAuthenticated(): boolean {
+    return !!this.getToken();
+  }
+
   getCurrentUser() {
     return this.http.get(`${environment.apiUrl}/api/user/me`);
   }
 
-  logout() {
+  logout(): void {
     localStorage.removeItem('token');
+    this.router.navigate(['/login']);
   }
-  
+
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post('/api/auth/forgot-password', { email });
+  }
+
 }

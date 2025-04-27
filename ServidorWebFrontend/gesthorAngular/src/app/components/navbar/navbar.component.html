@@ -1,0 +1,46 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top" data-bs-theme="dark">
+
+
+
+  <img class="collapse navbar-collapse" src="/icon.png" style="width: 40px; margin-left: 1%">
+
+
+
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#"  [routerLink]="[default]">{{titulo}}</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div *ngIf="hayToken()" class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li  *ngFor="let e of enlaces"  class="nav-item">
+          <a  class="nav-link" aria-current="page" href="#" [routerLinkActive]="'active'" [routerLink]="[e[1]]" >{{e[0] | titlecase }}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+
+  <div style="margin-left: 10px;">
+    <div class="collapse navbar-collapse " id="navbarSupportedContent">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0 " style="padding-right: 10px;">
+        <li *ngIf="!hayToken()">
+          <a class="nav-link" aria-current="page" href="#"  [routerLink]="'/login'">Logearse</a>
+        </li>
+        <li *ngIf="hayToken()">
+            <a class="nav-link" aria-current="page" href="#"  (click)="borrarToken()">Desconectarse</a>
+        </li>
+        <li *ngIf="hayToken()">
+          <a class="nav-link" aria-current="page" href="#"  [routerLink]="'/protected/dashboard'">MiCuenta</a>
+      </li>
+      <li *ngIf="esAdmin()">
+        <a class="nav-link" aria-current="page" href="#"  [routerLink]="'/private/admindashboard'">Admin</a>
+    </li>
+    </ul>
+    </div>
+  </div>
+
+
+
+</nav>
+

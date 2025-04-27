@@ -1,22 +1,26 @@
 <div class="mycontainer d-flex justify-content-center align-items-center vh-100">
   <div class="login-container shadow-lg rounded p-5">
     <div class="text-center mb-5">
-      <img src="/gesthor2.png" alt="Logo" class="logo mb-5">
+      <img src="/gesthor1.png" alt="Logo" class="logo mb-5">
       <h2 class="text-light">Iniciar sesión</h2>
     </div>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="mb-3">
         <label for="username" class="form-label text-light">Usuario</label>
-        <input id="username" formControlName="username" class="form-control" />
+        <input id="username" placeholder="usuario/email" formControlName="username" class="form-control" />
       </div>
       <div class="mb-3">
         <label for="password" class="form-label text-light">Contraseña</label>
         <div class="input-group">
-          <input id="password" [type]="passwordVisible ? 'text' : 'password'" formControlName="password" class="form-control" />
+          <input id="password" placeholder="contraseña" [type]="passwordVisible ? 'text' : 'password'" formControlName="password" class="form-control" />
           <button type="button" class="btn btn-outline-light" (click)="togglePasswordVisibility()">
             <span>{{ passwordVisible ? 'O' : 'M' }}</span>
           </button>
+        </div>
+
+        <div *ngIf="error" class="mt-2 ">
+          <a routerLink="/forgot-password" class="text-decoration-none text-primary small">¿Problemas al iniciar sesión?</a>
         </div>
       </div>
       <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="isLoading">Entrar</button>
@@ -28,7 +32,7 @@
         <img src="/gog.png" alt="Google" class="icon-img" />
       </button>
       <button class="btn btn-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;" (click)="loginGitHub()">
-        <img src="/git2.png" alt="GitHub" class="icon-img" />
+        <img src="/git2.png" alt="GitHub" style="width: 50px; height: 50px;" class="icon-img" />
       </button>
     </div>
 

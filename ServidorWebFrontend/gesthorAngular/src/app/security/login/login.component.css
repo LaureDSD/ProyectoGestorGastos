@@ -1,0 +1,118 @@
+.mycontainer {
+  background-image: url("/wall0.jpg");
+  background-size: cover;
+  height: 100vh;
+}
+
+.login-container {
+  background: rgba(0, 0, 0, 0.713);
+  border-radius: 15px;
+  padding: 40px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 1 4px 10px rgba(0, 0, 0, 0.85);
+  border: 0px solid rgba(213, 174, 55, 0.3);
+  animation: fadeIn 0.5s ease-in-out;
+  position: relative;
+}
+
+.logo {
+  width: 300px;
+  height: 160px;
+  object-fit: cover;
+}
+
+.icon-img {
+  width: 65px;
+  height: 65px;
+  object-fit: cover;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+}
+
+.input-group button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #de8d00;
+}
+
+input[type="password"] {
+  padding-right: 40px;
+}
+
+.text-light {
+  color: #fff;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(251, 142, 0, 0.3);
+}
+
+button {
+  transition: transform 0.3s ease;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+button i {
+  font-size: 1.25rem;
+}
+
+button.btn-light,
+button.btn-dark {
+  background-color: transparent;
+  border: 2px solid #000000;
+}
+
+button.btn-light:hover {
+  background-color: #ffffff;
+  color: #ffffff;
+}
+
+button.btn-dark:hover {
+  background-color: #2e2424;
+  color: #ffffff;
+}
+
+a {
+  color: #1e90ff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button span {
+  font-size: 1rem;
+  color: #d3b700;
+  padding: 0 10px;
+}
+
+.error-container {
+  min-height: 40px;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  color: #ff0000;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.error-container p {
+  margin: 0;
+  padding: 10px 0;
+  font-weight: bold;
+}
