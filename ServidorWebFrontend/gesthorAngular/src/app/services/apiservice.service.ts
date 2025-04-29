@@ -16,6 +16,10 @@ export class ApiserviceService {
       private http: HttpClient,
       private secureApi : AuthService ) { }
 
+      getTotalUsers() {
+        return this.http.get(`${environment.apiUrl}/public/usuarios`);
+      }
+
 /* Ejemplo
   obtenerSeccion(ruta: string): Observable<any> {
     const token = this.secureApi.getToken();

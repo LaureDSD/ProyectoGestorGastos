@@ -1,12 +1,10 @@
-<div class="bg-dark border-bottom border-body" data-bs-theme="dark">
-  <footer class=" ">
-    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-      <li *ngFor="let e of enlaces" class="nav-item">
-        <a href="#" [routerLink]="[e[1]]" class="nav-link px-2 text-body-secondary">
-          {{e[0] | titlecase}}
-        </a>
-      </li>
-    </ul>
-    <p class="text-center text-body-secondary">© {{fecha}} {{comania | titlecase}}</p>
-  </footer>
-</div>
+<footer class="footer mt-auto py-4 text-center text-light" style="background-color: #000;">
+  <ul class="nav justify-content-center mb-3" style="border-bottom: 1px solid #e7e6e1;">
+    <li *ngFor="let e of enlaces" class="nav-item">
+      <a [routerLink]="[e[1]]" class="nav-link px-3" style="color: #e6e4db; transition: color 0.3s;">
+        {{ e[0] | titlecase }}
+      </a>
+    </li>
+  </ul>
+  <p style="color: #888;">© {{ fecha }} {{ comania | titlecase }} · Todos los derechos reservados.</p>
+</footer>

@@ -29,6 +29,18 @@ import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard
 import { SearchFiltersComponent } from './pages/search-filters/search-filters.component';
 import { ProtectedComponent } from './pages/protected/protected.component';
 import { PrivateComponent } from './pages/private/private.component';
+import { HeroComponent } from './components/public/hero/hero.component';
+import { ImageComponent } from './components/public/image/image.component';
+import { SeparatorComponent } from './components/public/separator/separator.component';
+import { CallButtomComponent } from './components/public/call-buttom/call-buttom.component';
+import { SectionLeftComponent } from './components/public/section-left/section-left.component';
+import { SectionRightComponent } from './components/public/section-right/section-right.component';
+import { SectionCardsComponent } from './components/public/section-cards/section-cards.component';
+import { SectionRight2Component } from './components/public/section-right2/section-right2.component';
+import { SectionCardComponent } from './components/public/section-card/section-card.component';
+import { IndexComponent } from './pages/index/index.component';
+import { BackButtonComponent } from './components/public/back-button/back-button.component';
+
 
 @NgModule({
   declarations: [
@@ -54,7 +66,18 @@ import { PrivateComponent } from './pages/private/private.component';
     AdminDashboardComponent,
     SearchFiltersComponent,
     ProtectedComponent,
-    PrivateComponent
+    PrivateComponent,
+    HeroComponent,
+    ImageComponent,
+    SeparatorComponent,
+    CallButtomComponent,
+    SectionLeftComponent,
+    SectionRightComponent,
+    SectionCardsComponent,
+    SectionRight2Component,
+    SectionCardComponent,
+    IndexComponent,
+    BackButtonComponent
   ],
   imports: [
     BrowserModule,

@@ -18,6 +18,7 @@ import { SearchFiltersComponent } from './pages/search-filters/search-filters.co
 import { ContactComponent } from './pages/contact/contact.component';
 import { ProtectedComponent } from './pages/protected/protected.component';
 import { PrivateComponent } from './pages/private/private.component';
+import { IndexComponent } from './pages/index/index.component';
 
 
 
@@ -30,7 +31,10 @@ const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordComponent },
   //Rutas publicas
   { path: 'public', component: PublicComponent,
-    children : []
+    children : [
+      { path: 'home' , component: IndexComponent},
+      { path: 'contact', component: ContactComponent },
+    ]
   },
   //Rutas protegidas
   { path: 'protected', component: ProtectedComponent ,
@@ -39,7 +43,7 @@ const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'tools', component: ToolsComponent },
       { path: 'search', component: SearchFiltersComponent },
-      { path: 'contact', component: ContactComponent },
+
   ],
       canActivate: [AuthGuard]},
   //Rutas privadas

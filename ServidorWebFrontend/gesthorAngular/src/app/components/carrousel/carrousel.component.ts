@@ -8,10 +8,11 @@ import { Component, Input } from '@angular/core';
 })
 export class CarrouselComponent {
   @Input() carr : string[] = [
-    "/Optimiza-tu-gestion-financiera-con-SAP-Business-One.jpg",
+    "/luca-romano-3ciMh7Ck92s-unsplash.jpg",
     "/pexels-photo-7680742.jpeg",
     "/pexels-photo-7926655.jpeg"]
 
   constructor(){}
+
 
 }
