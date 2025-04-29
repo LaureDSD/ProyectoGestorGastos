@@ -5,16 +5,20 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+
   private baseUrl = `${environment.apiUrl}/auth`;
   router: any;
+  role: string = "";
 
   constructor(private http: HttpClient) { }
 
   login(username: string, password: string) {
+    this.role = ""
     return this.http.post<{ token: string }>(`${this.baseUrl}/authenticate`, { user: username, password });
   }
 
   register(username: string, name: string, email: string, password: string) {
+    this.role = ""
     return this.http.post<{ token: string }>(`${this.baseUrl}/signup`, { username, name, email, password });
   }
 
@@ -27,6 +31,9 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
+    if(this.role==""){
+      this.checkAdmin()
+    }
     return !!this.getToken();
   }
 
@@ -36,11 +43,33 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('token');
+    this.role = ""
     this.router.navigate(['/login']);
   }
 
   forgotPassword(email: string): Observable<any> {
     return this.http.post('/api/auth/forgot-password', { email });
+  }
+
+  private decodeToken(): any {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  private checkAdmin(): void {
+    const payload = this.decodeToken();
+    this.role = payload?.rol;
+  }
+
+  isAdmin(): boolean {
+    return this.role == "ADMIN";
   }
 
 }

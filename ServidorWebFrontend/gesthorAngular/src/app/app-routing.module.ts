@@ -9,16 +9,18 @@ import { ForgotPasswordComponent } from './security/forgot-password/forgot-passw
 import { AuthGuard } from './services/auth-guard.service';
 
 //Pages components
-import { HomeComponent } from './pages/home/home.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { HomeComponent } from './pages/protected/home/home.component';
+import { DashboardComponent } from './pages/private/dashboard/dashboard.component';
 import { PublicComponent } from './pages/public/public.component';
-import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard.component';
-import { ToolsComponent } from './pages/tools/tools.component';
-import { SearchFiltersComponent } from './pages/search-filters/search-filters.component';
-import { ContactComponent } from './pages/contact/contact.component';
+import { AdminDashboardComponent } from './pages/private/admin-dashboard/admin-dashboard.component';
+import { ToolsComponent } from './pages/protected/tools/tools.component';
+import { SearchFiltersComponent } from './pages/protected/search-filters/search-filters.component';
+import { ContactComponent } from './pages/public/contact/contact.component';
 import { ProtectedComponent } from './pages/protected/protected.component';
 import { PrivateComponent } from './pages/private/private.component';
-import { IndexComponent } from './pages/index/index.component';
+import { IndexComponent } from './pages/public/index/index.component';
+import { PrivacityComponent } from './pages/public/privacity/privacity.component';
+
 
 
 
@@ -34,13 +36,13 @@ const routes: Routes = [
     children : [
       { path: 'home' , component: IndexComponent},
       { path: 'contact', component: ContactComponent },
+      { path: 'privacity', component: PrivacityComponent },
     ]
   },
   //Rutas protegidas
   { path: 'protected', component: ProtectedComponent ,
     children : [
       { path: 'home', component: HomeComponent },
-      { path: 'dashboard', component: DashboardComponent },
       { path: 'tools', component: ToolsComponent },
       { path: 'search', component: SearchFiltersComponent },
 
@@ -50,6 +52,7 @@ const routes: Routes = [
   { path: 'private', component: PrivateComponent,
     children : [
       { path: 'admindashboard', component: AdminDashboardComponent },
+      { path: 'dashboard', component: DashboardComponent },
     ],
       canActivate: [AuthGuard]},
 

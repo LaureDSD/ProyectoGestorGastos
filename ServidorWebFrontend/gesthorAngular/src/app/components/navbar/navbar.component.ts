@@ -10,14 +10,10 @@ import { AuthService } from '../../services/auth.service';
 })
 export class NavbarComponent {
 
-
-
   @Input() titulo : string = "GESTHOR"
-  @Input() default : string = "/public"
+  @Input() default : string = "/public/home"
   @Input() icono : string = "/icon.png"
-  @Input() enlaces : string[][] = [["Inicio","/protected/home"],["Herramientas","/protected/tools"],["Contacto","/protected/contact"]]
-  @Input() user: any = {role: "ADMIN"}
-
+  @Input() enlaces : string[][] = [["Inicio","/protected/home"],["Herramientas","/protected/tools"],["Contacto","/public/contact"]]
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -26,20 +22,22 @@ export class NavbarComponent {
     return this.authService.isAuthenticated();
   }
 
+  esAdmin(){
+    return this.authService.isAdmin()
+  }
 
   borrarToken(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
 
-  esAdmin(){
-    return this.user.role == "ADMIN"
+
+  esAdminUsuario: boolean = false;
+
+  ngOnInit() {
+    if (this.hayToken()) {
+      this.esAdminUsuario = this.authService.isAdmin();
+    }
   }
-
-  buscar: string  = ""
-
-
-  buscarGeneral(texto : string) {
-    this.router.navigate(['/buscar/',texto]);
-  }
+  
 }

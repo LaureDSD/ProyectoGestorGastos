@@ -8,13 +8,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './security/login/login.component';
 import { RegisterComponent } from './security/register/register.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { DashboardComponent } from './pages/private/dashboard/dashboard.component';
 import { OAuth2RedirectComponent } from './security/oauth2-redirect/oauth2-redirect.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
-import { HomeComponent } from './pages/home/home.component';
+import { HomeComponent } from './pages/protected/home/home.component';
 import { ForgotPasswordComponent } from './security/forgot-password/forgot-password.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { ContactComponent } from './pages/contact/contact.component';
+import { ContactComponent } from './pages/public/contact/contact.component';
 import { TabvarComponent } from './components/tabvar/tabvar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { CarrouselComponent } from './components/carrousel/carrousel.component';
@@ -22,11 +22,11 @@ import { CardComponent } from './components/card/card.component';
 import { NavtabComponent } from './components/navtab/navtab.component';
 import { SeccionComponent } from './components/seccion/seccion.component';
 import { SpinningComponent } from './components/spinning/spinning.component';
-import { DetailComponent } from './pages/detail/detail.component';
+import { DetailComponent } from './pages/protected/detail/detail.component';
 import { PublicComponent } from './pages/public/public.component';
-import { ToolsComponent } from './pages/tools/tools.component';
-import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard.component';
-import { SearchFiltersComponent } from './pages/search-filters/search-filters.component';
+import { ToolsComponent } from './pages/protected/tools/tools.component';
+import { AdminDashboardComponent } from './pages/private/admin-dashboard/admin-dashboard.component';
+import { SearchFiltersComponent } from './pages/protected/search-filters/search-filters.component';
 import { ProtectedComponent } from './pages/protected/protected.component';
 import { PrivateComponent } from './pages/private/private.component';
 import { HeroComponent } from './components/public/hero/hero.component';
@@ -38,8 +38,12 @@ import { SectionRightComponent } from './components/public/section-right/section
 import { SectionCardsComponent } from './components/public/section-cards/section-cards.component';
 import { SectionRight2Component } from './components/public/section-right2/section-right2.component';
 import { SectionCardComponent } from './components/public/section-card/section-card.component';
-import { IndexComponent } from './pages/index/index.component';
+import { IndexComponent } from './pages/public/index/index.component';
 import { BackButtonComponent } from './components/public/back-button/back-button.component';
+import { PrivacityComponent } from './pages/public/privacity/privacity.component';
+import { FormComponent } from './components/public/form/form.component';
+import { AcordionComponent } from './components/public/acordion/acordion.component';
+import { AiButtonComponent } from './components/ai-button/ai-button.component';
 
 
 @NgModule({
@@ -77,7 +81,11 @@ import { BackButtonComponent } from './components/public/back-button/back-button
     SectionRight2Component,
     SectionCardComponent,
     IndexComponent,
-    BackButtonComponent
+    BackButtonComponent,
+    PrivacityComponent,
+    FormComponent,
+    AcordionComponent,
+    AiButtonComponent
   ],
   imports: [
     BrowserModule,

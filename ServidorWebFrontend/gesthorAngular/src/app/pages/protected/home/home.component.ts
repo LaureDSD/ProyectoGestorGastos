@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -7,26 +7,8 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent  {
  token: string | null = null;
-
-  userl: any;
-
-  constructor(private authService: AuthService) { }
-
-  ngOnInit() {
-    this.token = this.authService.getToken();
-
-    this.authService.getCurrentUser().subscribe({
-      next: (user) => {
-        this.userl = user
-      },
-      error: (error) => {
-        console.error('Error obteniendo el usuario:', error);
-      }
-    });
-  }
-
   secciones : any = [
     ["mapas","mapa",true]
     ,["monstruos","monstruo",true]

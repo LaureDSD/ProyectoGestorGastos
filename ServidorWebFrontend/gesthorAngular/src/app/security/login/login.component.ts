@@ -35,7 +35,6 @@ export class LoginComponent implements OnInit {
     this.auth.login(username, password).subscribe({
       next: res => {
         localStorage.setItem('token', res.token);
-        console.log(res.token)
         this.router.navigate(['/protected/home']);
       },
       error: err => {

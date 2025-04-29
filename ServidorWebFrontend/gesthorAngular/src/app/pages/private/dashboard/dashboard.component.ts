@@ -1,12 +1,12 @@
 
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: false,
   templateUrl: './dashboard.component.html'
-    
+
 })
 export class DashboardComponent implements OnInit {
   token: string | null = null;
@@ -17,7 +17,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.token = this.authService.getToken();
-  
+
     this.authService.getCurrentUser().subscribe({
       next: (user) => {
         this.userl = user
@@ -27,5 +27,5 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
-  
+
 }

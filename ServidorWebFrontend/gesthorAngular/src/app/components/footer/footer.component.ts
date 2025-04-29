@@ -9,7 +9,7 @@ import { Component, Input } from '@angular/core';
 export class FooterComponent {
   fecha : number = new Date().getFullYear()
   @Input() comania : string = "laureano.SL"
-  @Input() enlaces : string[][] = [["Privacidad","/public/privacity"],["Contacto","public/contact"],["Soporte","public/support"],["Login","/login"]]
+  @Input() enlaces : string[][] = [["Privacidad","/public/privacity"],["Contacto","/public/contact"],["Soporte","/public/contact"],["Login","/login"]]
 
   constructor(){}
 
