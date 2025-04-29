@@ -1,30 +1,167 @@
-<div class="container mt-5">
+<div class="container" >
   <div class="row">
 
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-body text-center">
-          <img src="/git2.png" class="rounded-circle mb-3" alt="Imagen de perfil" style="background-color: black;" width="200px" >
-          <h5 class="card-title"> Usuario: {{ userl.name }}</h5>
-          <p class="card-text">Nombre :{{ userl.username }}</p>
-          <p class="text-muted">Permiso: {{ userl.role }}</p>
-        </div>
+
+    <div class="col-md-5" style="margin: 20px;">
+
+      <div class="text-center mt-5 mb-5">
+        <img class="rounded-circle mb-3 " src="{{user.profile}}" alt="Perfil" width="290" height="285" style="box-shadow: 5px 5px 17px 10px Black;"/>
       </div>
+
+      <h3 class="text-light">Gestión de Perfil</h3>
+
+
+      <h5 class="mt-4 text-light">Datos de Perfil</h5>
+      <ul class="list-group mb-3" style="box-shadow: 5px 5px 17px 10px Black;">
+        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
+          <span>Foto de perfil</span>
+          <button class="btn btn-outline-light btn-sm">Editar</button>
+        </li>
+        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
+          <span>Nombre de Usuario: {{user.username}}</span>
+          <button class="btn btn-outline-light btn-sm">Editar</button>
+        </li>
+        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
+          <span>Nombre Público: {{user.name}}</span>
+          <button class="btn btn-outline-light btn-sm">Editar</button>
+        </li>
+        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
+          <span>Correo Electrónico: {{user.email}}</span>
+          <button class="btn btn-outline-light btn-sm">Editar</button>
+        </li>
+        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
+          <span>Teléfono: {{user.phone}}</span>
+          <button class="btn btn-outline-light btn-sm">Editar</button>
+        </li>
+        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
+          <span>Dirección: {{user.address}}</span>
+          <button class="btn btn-outline-light btn-sm">Editar</button>
+        </li>
+      </ul>
+
+
+      <h5 class="mt-4 text-light">Seguridad</h5>
+      <ul class="list-group mb-4" style="box-shadow: 5px 5px 17px 10px Black;">
+        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
+          <span>Modificar contraseña</span>
+          <button class="btn btn-outline-light btn-sm">Editar</button>
+        </li>
+        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
+          <span>Verificación en 2 pasos: {{user.fv2 ? 'Activa' : 'Desactivada'}}</span>
+          <button class="btn btn-outline-light btn-sm">{{user.fv2 ? 'Desactivar' : 'Activar'}}</button>
+        </li>
+      </ul>
     </div>
 
-    <div class="col-md-8">
-      <div class="card">
-        <div class="card-body">
-          <h2>Dashboard</h2>
-          <p class="lead">¡Autenticado exitosamente!</p>
-          <hr>
-          <h5>Detalles del Token:</h5>
-          <p><strong>Token:</strong> {{ token }}</p>
-          <hr>
-          <h5>Detalles del Usuario:</h5>
-          <pre>{{ userl | json }}</pre>
+
+
+
+
+
+    <div class="col-md-5 pr-1" style="margin: 20px;">
+      <h5 class="mt-4 text-light">Información de Cuenta</h5>
+      <ul class="list-group mb-3" style="box-shadow: 5px 5px 17px 10px Black;">
+        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
+          <span>Tipo de Usuario: {{user.rol}}</span>
+        </li>
+        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
+          <span>Última Actividad: {{user.updatedAt}}</span>
+        </li>
+        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
+          <span>Miembro desde: {{user.createdAt}}</span>
+        </li>
+        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
+          <span>Servidor: {{user.server}}</span>
+        </li>
+        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
+          <span>Estado de cuenta: {{user.status ? "Activa" : "Desactivada"}}</span>
+        </li>
+        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
+          <span>Tiempo conectado: {{server.activity}}</span>
+        </li>
+        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
+          <span>Gastos registrados: {{user.totalspents}}</span>
+        </li>
+      </ul>
+
+
+
+      <div class="mb-5 mt-5">
+        <div class="card bg-dark text-white shadow rounded-4 border border-secondary" >
+          <div class="card-body" style="box-shadow: 5px 5px 17px 10px Black;">
+            <h5 class="card-title text-light">Últimos accesos</h5>
+            <ul class="list-group list-group-flush" >
+              <li class="list-group-item bg-dark text-white border-secondary" *ngFor="let log of user.logs">
+                <span class="badge bg-secondary me-2">{{ log.date }}</span>
+                <span [class.text-success]="log.status == 'true'" [class.text-danger]="log.status == 'false'">
+                  {{ log.status == 'true' ? 'Correcto' : 'Fallido' }}
+                </span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
+
+
+      <div class="mb-5 mt-5">
+        <div class="card bg-dark text-white shadow rounded-4 border border-secondary">
+          <div class="card-body" style="box-shadow: 5px 5px 17px 10px Black;">
+            <h5 class="card-title text-light">Métodos de Pago</h5>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item bg-dark text-white border-secondary" *ngFor="let p of user.payments">
+                <i class="bi bi-credit-card me-2 text-info"></i>{{ p.provider }} - <span>{{ p.ref }}</span>
+              </li>
+            </ul>
+            <div class="text-center mt-2">
+              <button class="btn btn-outline-light btn-sm">
+                <i class="bi bi-gear"></i> Gestionar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+<div class="mt-5 mb-5">
+  <div class="card bg-dark text-white shadow rounded-4 border border-secondary">
+    <div class="card-body" style="box-shadow: 5px 5px 17px 10px rgb(17, 17, 17);">
+      <h5 class="card-title d-flex justify-content-between align-items-center">
+        Mis categorías
+        <button class="btn btn-outline-light btn-sm" (click)="agregarCategoria()">
+          <i class="bi bi-plus-circle"></i> Añadir
+        </button>
+      </h5>
+
+      <div *ngIf="user.categories?.length > 0; else noCategories" class="mt-3">
+        <div *ngFor="let cat of user.categories" class="d-flex justify-content-between align-items-center mb-2 p-2 rounded border"
+             [style.borderColor]="cat.color"
+             [style.backgroundColor]="cat.color + '20'">
+
+          <div class="d-flex align-items-center">
+            <span class="fw-semibold" >{{ cat.name }}</span>
+          </div>
+
+          <div>
+            <button class="btn btn-outline-light btn-sm me-1" (click)="editarCategoria(cat)">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button class="btn btn-outline-danger btn-sm" (click)="borrarCategoria(cat)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <ng-template #noCategories>
+        <p class="text-muted mt-3">No hay categorías añadidas aún.</p>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+
+
     </div>
   </div>
 </div>

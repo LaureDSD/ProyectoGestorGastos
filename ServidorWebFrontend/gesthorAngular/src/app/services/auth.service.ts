@@ -47,6 +47,7 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
+  //Falta
   forgotPassword(email: string): Observable<any> {
     return this.http.post('/api/auth/forgot-password', { email });
   }

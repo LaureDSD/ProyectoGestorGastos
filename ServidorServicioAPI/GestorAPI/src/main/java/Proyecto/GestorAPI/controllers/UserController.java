@@ -46,11 +46,11 @@ public class UserController {
 
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @GetMapping
-    public ResponseEntity<UserDto> getUserData(
+    public ResponseEntity<User> getUserData(
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
         //Obatener la info del usuario
-        return ResponseEntity.ok(UserDto.from(user));
+        return ResponseEntity.ok(user);
     }
 
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
@@ -111,7 +111,7 @@ public class UserController {
         }
     }
 
-     /*
+
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @PutMapping
     public ResponseEntity<UserDto> updateUser(
@@ -120,19 +120,17 @@ public class UserController {
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
         //Validacoin existencia
-        if(user == null){
+        if (user == null) {
             return ResponseEntity.notFound().build();
         }
         //Validacion identidaad
-        if(user.getId().equals(request.getId())){
+        if (user.getId().equals(request.getId())) {
             return ResponseEntity.badRequest().build();
         }
         //Actualizacion de datos
-        if(){
 
-        }
         //Guardado
         userService.saveUser(request);
         return ResponseEntity.ok(UserDto.from(request));
-    }*/
+    }
 }
