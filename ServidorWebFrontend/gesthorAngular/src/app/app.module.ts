@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -44,6 +44,9 @@ import { PrivacityComponent } from './pages/public/privacity/privacity.component
 import { FormComponent } from './components/public/form/form.component';
 import { AcordionComponent } from './components/public/acordion/acordion.component';
 import { AiButtonComponent } from './components/ai-button/ai-button.component';
+import { EditFormComponent } from './components/edit-form/edit-form.component';
+import { EditFormProfileComponent } from './components/edit-form-profile/edit-form-profile.component';
+import { EditFormPasswordComponent } from './components/edit-form-password/edit-form-password.component';
 
 
 @NgModule({
@@ -85,13 +88,17 @@ import { AiButtonComponent } from './components/ai-button/ai-button.component';
     PrivacityComponent,
     FormComponent,
     AcordionComponent,
-    AiButtonComponent
+    AiButtonComponent,
+    EditFormComponent,
+    EditFormProfileComponent,
+    EditFormPasswordComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
 ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }

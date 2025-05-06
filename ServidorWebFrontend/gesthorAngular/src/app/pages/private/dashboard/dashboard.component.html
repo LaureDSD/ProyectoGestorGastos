@@ -2,55 +2,75 @@
 <div class="container" style="margin-top: 90px;" >
   <div class="row">
 
+    <!-- <h1>{{user | json }}</h1> -->
 
     <div class="col-md-6">
-
-      <div class="text-center mt-5 mb-5">
-        <img class="rounded-circle mb-3 " src="{{user.profile}}" alt="Perfil" width="50%" height="50%" style="box-shadow: 5px 5px 17px 10px Black;"/>
-      </div>
-
       <h3 class="text-light">Gestión de Perfil</h3>
-
-
       <h5 class="mt-4 text-light">Datos de Perfil</h5>
       <ul class="list-group mb-3" style="box-shadow: 5px 5px 17px 10px Black;">
-        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
-          <span>Foto de perfil</span>
-          <button class="btn btn-outline-light btn-sm">Editar</button>
-        </li>
-        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
-          <span>Nombre de Usuario: {{user.username}}</span>
-          <button class="btn btn-outline-light btn-sm">Editar</button>
-        </li>
-        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
-          <span>Nombre Público: {{user.name}}</span>
-          <button class="btn btn-outline-light btn-sm">Editar</button>
-        </li>
-        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
-          <span>Correo Electrónico: {{user.email}}</span>
-          <button class="btn btn-outline-light btn-sm">Editar</button>
-        </li>
-        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
-          <span>Teléfono: {{user.phone}}</span>
-          <button class="btn btn-outline-light btn-sm">Editar</button>
-        </li>
-        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
-          <span>Dirección: {{user.address}}</span>
-          <button class="btn btn-outline-light btn-sm">Editar</button>
-        </li>
-      </ul>
 
+      <app-edit-form-profile
+        profile=[user.imageUrl]
+        (save)="guardarCampo($event)"
+      ></app-edit-form-profile>
+
+      <!--Datos de perfil-->
+
+      <app-edit-form
+        label="Nombre de Usuario"
+        field="username"
+        [value]="user.username"
+        (save)="guardarCampo($event)"
+      ></app-edit-form>
+
+      <app-edit-form
+        label="Nombre Público"
+        field="name"
+        [value]="user.name"
+        (save)="guardarCampo($event)"
+      ></app-edit-form>
+
+      <app-edit-form
+        label="Correo Electrónico"
+        field="email"
+        [value]="user.email"
+        (save)="guardarCampo($event)"
+      ></app-edit-form>
+
+      <app-edit-form
+        label="Teléfono"
+        field="phone"
+        [value]="user.phone"
+        (save)="guardarCampo($event)"
+      ></app-edit-form>
+
+      <app-edit-form
+        label="Dirección"
+        field="address"
+        [value]="user.address"
+        (save)="guardarCampo($event)"
+      ></app-edit-form>
+
+      <li  class="list-group-item bg-dark text-light  justify-content-between align-items-center border-secondary">
+        <button class="btn btn-outline-light btn-sm "  (click)="borrarToken()">Desconectarse</button>
+        <button class="btn btn-outline-light btn-sm ms-3"  [disabled] = true (click)="redirectTo()">Ajustes</button>
+      </li>
+
+    </ul>
 
       <h5 class="mt-4 text-light">Seguridad</h5>
       <ul class="list-group mb-4" style="box-shadow: 5px 5px 17px 10px Black;">
-        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
-          <span>Modificar contraseña</span>
-          <button class="btn btn-outline-light btn-sm">Editar</button>
-        </li>
+
+        <app-edit-form-password
+        (save)="cambiarPassword($event)"
+        ></app-edit-form-password>
+
         <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
           <span>Verificación en 2 pasos: {{user.fv2 ? 'Activa' : 'Desactivada'}}</span>
-          <button class="btn btn-outline-light btn-sm">{{user.fv2 ? 'Desactivar' : 'Activar'}}</button>
+          <button class="btn btn-outline-light btn-sm" [disabled] = true >{{user.fv2 ? 'Desactivar' : 'Activar'}}</button>
         </li>
+
+
       </ul>
     </div>
 
@@ -63,19 +83,19 @@
       <h5 class="mt-4 text-light">Información de Cuenta</h5>
       <ul class="list-group mb-3" style="box-shadow: 5px 5px 17px 10px Black;">
         <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
-          <span>Tipo de Usuario: {{user.rol}}</span>
+          <span>Nivel de acceso: {{user.role == "USER" ? "Usuario" : "Administrador" }}</span>
         </li>
         <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
-          <span>Última Actividad: {{user.updatedAt}}</span>
+          <span>Última Modificación: {{user.updatedAt | date }}</span>
         </li>
         <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
-          <span>Miembro desde: {{user.createdAt}}</span>
+          <span>Miembro desde: {{user.createdAt |  date }}</span>
         </li>
         <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
           <span>Servidor: {{user.server}}</span>
         </li>
         <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
-          <span>Estado de cuenta: {{user.status ? "Activa" : "Desactivada"}}</span>
+          <span>Estado de cuenta: {{user.active ? "Activa" : "Desactivada"}}</span>
         </li>
         <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
           <span>Tiempo conectado: {{server.activity}}</span>
@@ -85,35 +105,16 @@
         </li>
       </ul>
 
-
-      <div class="mb-5 mt-5">
-        <div class="card bg-dark text-white shadow rounded-4 border border-secondary">
-          <div class="card-body" style="box-shadow: 5px 5px 17px 10px Black;">
-            <h5 class="card-title d-flex justify-content-between align-items-center">
-              Métodos de Pago
-              <button class="btn btn-outline-light btn-sm" (click)="agregarCategoria()">
-                <i class="bi bi-plus-circle"></i> Añadir
-              </button>
-            </h5>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item bg-dark text-white border-secondary" *ngFor="let p of user.payments">
-                <i class="bi bi-credit-card me-2 text-info"></i>{{ p.provider }} - <span>{{ p.ref }}</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-
+      <!-- <h1>{{logs | json }}</h1> -->
       <div class="mb-5 mt-5">
         <div class="card bg-dark text-white shadow rounded-4 border border-secondary" >
           <div class="card-body" style="box-shadow: 5px 5px 17px 10px Black;">
             <h5 class="card-title text-light">Últimos accesos</h5>
             <ul class="list-group list-group-flush" >
-              <li class="list-group-item bg-dark text-white border-secondary" *ngFor="let log of user.logs">
-                <span class="badge bg-secondary me-2">{{ log.date }}</span>
-                <span [class.text-success]="log.status == 'true'" [class.text-danger]="log.status == 'false'">
-                  {{ log.status == 'true' ? 'Correcto' : 'Fallido' }}
+              <li class="list-group-item bg-dark text-white border-secondary" *ngFor="let log of logs">
+                <span class="badge bg-secondary me-2">{{ log.attemptTime | date }} </span>
+                <span [class.text-success]="log.success" [class.text-danger]="!log.success">
+                  {{ log.success ? 'Correcto' : 'Fallido' }}
                 </span>
               </li>
             </ul>
@@ -121,45 +122,6 @@
         </div>
       </div>
 
-
-
-<div class="mt-5 mb-5">
-  <div class="card bg-dark text-white shadow rounded-4 border border-secondary">
-    <div class="card-body" style="box-shadow: 5px 5px 17px 10px rgb(17, 17, 17);">
-      <h5 class="card-title d-flex justify-content-between align-items-center">
-        Mis categorías
-        <button class="btn btn-outline-light btn-sm" (click)="agregarCategoria()">
-          <i class="bi bi-plus-circle"></i> Añadir
-        </button>
-      </h5>
-
-      <div *ngIf="user.categories?.length > 0; else noCategories" class="mt-3">
-        <div *ngFor="let cat of user.categories" class="d-flex justify-content-between align-items-center mb-2 p-2 rounded border"
-             [style.borderColor]="cat.color"
-             [style.backgroundColor]="cat.color + '20'">
-
-          <div class="d-flex align-items-center">
-            <span class="fw-semibold" >{{ cat.name }}</span>
-          </div>
-
-          <div>
-            <button class="btn btn-outline-light btn-sm me-1" (click)="editarCategoria(cat)">
-              <i class="bi bi-pencil-square"></i>
-            </button>
-            <button class="btn btn-outline-danger btn-sm" (click)="borrarCategoria(cat)">
-              <i class="bi bi-trash"></i>
-            </button>
-          </div>
-
-        </div>
-      </div>
-
-      <ng-template #noCategories>
-        <p class="text-muted mt-3">No hay categorías añadidas aún.</p>
-      </ng-template>
-    </div>
-  </div>
-</div>
 
 
 

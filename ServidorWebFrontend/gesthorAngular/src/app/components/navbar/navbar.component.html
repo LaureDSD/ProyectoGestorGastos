@@ -27,15 +27,22 @@
         <li *ngIf="!hayToken()">
           <a class="nav-link" aria-current="page" href="#"  [routerLink]="'/login'">Logearse</a>
         </li>
+
         <li *ngIf="hayToken()">
-            <a class="nav-link" aria-current="page" href="#"  (click)="borrarToken()">Desconectarse</a>
+          <a class="nav-link" aria-current="page"  (click)="borrarToken()">Desconectarse</a>
         </li>
+
         <li *ngIf="hayToken()">
           <a class="nav-link" aria-current="page" href="#"  [routerLink]="'/private/dashboard'">MiCuenta</a>
+        </li>
+        
+        <li *ngIf="hayToken() && profile!=null">
+          <img [src]="profile" alt="Preview" width="40" height="40" class=" ms-2" style="border-radius: 50%;" />
+        </li>
+
+        <li *ngIf="esAdmin()">
+          <a class="nav-link" aria-current="page" href="#"  [routerLink]="'/private/admindashboard'">Admin</a>
       </li>
-      <li *ngIf="esAdmin()">
-        <a class="nav-link" aria-current="page" href="#"  [routerLink]="'/private/admindashboard'">Admin</a>
-    </li>
     </ul>
     </div>
   </div>

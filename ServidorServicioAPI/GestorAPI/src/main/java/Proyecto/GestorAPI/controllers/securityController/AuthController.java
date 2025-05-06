@@ -72,6 +72,7 @@ public class AuthController {
     @CrossOrigin(origins = "http://localhost:4200")
     public AuthResponse login(@Valid @RequestBody LoginRequest loginRequest) {
         if (loginAttemptService.isBlocked(loginRequest.user())) {
+            loginAttemptService.registerLoginAttempt(loginRequest.user(), false);
             throw new UserBlockedException("Cuenta bloqueada temporalmente. Intente nuevamente en 30 minutos");
         }
 
@@ -79,11 +80,10 @@ public class AuthController {
             String token = authService.authenticateAndGetToken(loginRequest.user(), loginRequest.password());
             loginAttemptService.registerLoginAttempt(loginRequest.user(), true);
             return new AuthResponse(token);
-        } catch (AuthenticationException ex) {
+        }catch (AuthenticationException | UserNotFoundException | UserBlockedException ex) {
             loginAttemptService.registerLoginAttempt(loginRequest.user(), false);
             throw ex;
         }
-
     }
 
     /**

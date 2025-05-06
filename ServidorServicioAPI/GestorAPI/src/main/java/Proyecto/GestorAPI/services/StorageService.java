@@ -11,9 +11,7 @@ import java.util.Optional;
 
 public interface StorageService {
 
-    String createImageData(String folderPath,MultipartFile file);
-
-    String updateImageData(String folderPath,MultipartFile file);
+    String createImageData(String folderPath,MultipartFile file) throws IOException;
 
     void deleteImageData(String filePath);
 

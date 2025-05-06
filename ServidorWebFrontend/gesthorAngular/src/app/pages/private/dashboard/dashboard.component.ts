@@ -1,6 +1,9 @@
+import { ApiserviceService } from './../../../services/apiservice.service';
 
 import { Component, OnInit } from '@angular/core';
 import { UserserviceService } from '../../../services/userservice.service';
+import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -10,121 +13,59 @@ import { UserserviceService } from '../../../services/userservice.service';
   styleUrl: './dashboard.component.css'
 
 })
-export class DashboardComponent implements OnInit {
-agregarCategoria() {
-throw new Error('Method not implemented.');
-}
-borrarCategoria(_t90: any) {
-throw new Error('Method not implemented.');
-}
-editarCategoria(_t90: any) {
-throw new Error('Method not implemented.');
-}
-editarFotoPerfil() {
-throw new Error('Method not implemented.');
-}
+export class DashboardComponent {
 
-  server : any = {
+  server : any = {};
+  logs : any = {};
+  user : any = {};
 
+  preguntas: { pregunta: string; respuesta: string; class: string }[] = [];
+
+  constructor(
+    private userService: UserserviceService,
+    private authservice : AuthService,
+    private apiserviceService : ApiserviceService,
+    private route : Router) {
+    this.cargarUsuario()
+    this.cargarLogs()
   }
 
-  user : any = {
-    profile: '/img/_fddad796-df42-4d46-9d79-5558fa9b7a1f.jpg',
-    name: 'Juan Pérez',
-    username: 'JP_GamerX',
-    server: 'API-Gesthot-1',
-    status: "true",
-    role: 'USER',
-    password: 'USER123',
-    activity: '12:12:12',
-    email: 'juan.perez@example.com',
-    phone: '+34 600 123 456',
-    address: 'Calle Ejemplo 123, Madrid',
-    fv2: 'Activada',
-    totalspents: "12",
-    id: 'ID-12345-GT',
-    payments: [
-      { provider: 'Visa', ref: '**** 1234' },
-      { provider: 'PayPal', ref: 'juan.perez@paypal.com' }
-    ],
-    categories: [
-      { name: 'Casa', color: '#3343' },
-      { name: 'Patio', color: '#7645' }
-    ],
-    logs: [
-      { date: '12:12:12', status: 'true' },
-      { date: '12:12:12', status: 'false' }
-    ]
-  };
-
-  preguntas = [
-    {
-      pregunta: '¿Cómo cambio mi nombre público?',
-      respuesta: 'Ve a tu perfil y haz clic en el botón actualizar junto al nombre público.',
-      class: 'accordion-collapse collapse'
-    },
-    {
-      pregunta: '¿Puedo cambiar mi servidor?',
-      respuesta: 'No, el servidor no se puede cambiar una vez registrado.',
-      class: 'accordion-collapse collapse'
-    }
-
-
-  ];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-logout() {
-throw new Error('Method not implemented.');
-}
-  token: string | null = null;
-
-
-  constructor(private userService: UserserviceService) {}
-
-  ngOnInit() {
-    //this.userService.getUserData().subscribe(data => this.user = data);
+  cargarUsuario(){
+    this.user = this.userService.getFullCurrentUser().subscribe( u => this.user = u);
   }
 
-  updateName() {
-    this.userService.updateName(this.user.name).subscribe(updated => {
-      this.user.name = updated.name;
+  guardarCampo(event: { field: string; value: string }) {
+    this.user[event.field] = event.value;
+    this.user.server = this.apiserviceService.getApiServer().name
+    this.userService.actualizarUsuario(this.user).subscribe({
+      next: (res) => {
+        alert('Usuario actualizado correctamente');
+      },
+      error: (err) => {
+        alert('Error al actualizar el usuario: ' + err);
+        this.cargarUsuario()
+        this.cargarLogs()
+      }
     });
   }
 
-  onImageChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.userService.updateImage(file).subscribe(updated => {
-        this.user.imageUrl = updated.imageUrl;
+  cambiarPassword(data: { current: string; newPassword: string }) {
+      this.userService.cambiarPassword(data.current, data.newPassword).subscribe({
+        next: () => alert('Contraseña actualizada con éxito.')
       });
-    }
+  }
+
+  cargarLogs() {
+    this.userService.getLogs().subscribe(l => this.logs = l.slice(0, 10));
+  }
+
+  borrarToken() {
+    this.authservice.logout()
+    this.route.navigate(["/login"])
+  }
+
+  redirectTo() {
+    this.route.navigate(["/private/setings"])
   }
 
 }

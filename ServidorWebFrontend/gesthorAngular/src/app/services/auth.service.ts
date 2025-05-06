@@ -7,18 +7,45 @@ import { Observable } from 'rxjs';
 export class AuthService {
 
   private baseUrl = `${environment.apiUrl}/auth`;
-  router: any;
-  role: string = "";
+
+  user: any = {
+    profile: '/img/_fddad796-df42-4d46-9d79-5558fa9b7a1f.jpg',
+    name: 'Juan Pérez',
+    username: 'JP_GamerX',
+    server: 'API-Gesthot-1',
+    status: "true",
+    role: 'USER',
+    password: 'USER123',
+    activity: '12:12:12',
+    email: 'juan.perez@example.com',
+    phone: '+34 600 123 456',
+    address: 'Calle Ejemplo 123, Madrid',
+    fv2: 'Activada',
+    totalspents: "12",
+    id: 'ID-12345-GT',
+    payments: [
+      { provider: 'Visa', ref: '**** 1234' },
+      { provider: 'PayPal', ref: 'juan.perez@paypal.com' }
+    ],
+    categories: [
+      { name: 'Casa', color: '#3343' },
+      { name: 'Patio', color: '#7645' }
+    ],
+    logs: [
+      { date: '12:12:12', status: 'true' },
+      { date: '12:12:12', status: 'false' }
+    ]
+  };;
 
   constructor(private http: HttpClient) { }
 
   login(username: string, password: string) {
-    this.role = ""
+    this.user = ""
     return this.http.post<{ token: string }>(`${this.baseUrl}/authenticate`, { user: username, password });
   }
 
   register(username: string, name: string, email: string, password: string) {
-    this.role = ""
+    this.user = ""
     return this.http.post<{ token: string }>(`${this.baseUrl}/signup`, { username, name, email, password });
   }
 
@@ -30,21 +57,9 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  isAuthenticated(): boolean {
-    if(this.role==""){
-      this.checkAdmin()
-    }
-    return !!this.getToken();
-  }
-
+  //DTO
   getCurrentUser() {
-    return this.http.get(`${environment.apiUrl}/api/user/me`);
-  }
-
-  logout(): void {
-    localStorage.removeItem('token');
-    this.role = ""
-    this.router.navigate(['/login']);
+    this.http.get(`${environment.apiUrl}/api/user`).subscribe(u => this.user = u);
   }
 
   //Falta
@@ -52,25 +67,25 @@ export class AuthService {
     return this.http.post('/api/auth/forgot-password', { email });
   }
 
-  private decodeToken(): any {
-    const token = localStorage.getItem('token');
-    if (!token) return null;
-
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  private checkAdmin(): void {
-    const payload = this.decodeToken();
-    this.role = payload?.rol;
+  logout(): void {
+    localStorage.removeItem('token');
+    this.user = ""
   }
 
   isAdmin(): boolean {
-    return this.role == "ADMIN";
+    return this.user.role == "ADMIN";
+  }
+
+  getLoadUser(){
+    return this.user
+  }
+
+  isAuthenticated(): boolean {
+    var respuesta = !!this.getToken();
+    if(respuesta && this.user.role==""){
+      this.getCurrentUser()
+    }
+    return respuesta;
   }
 
 }

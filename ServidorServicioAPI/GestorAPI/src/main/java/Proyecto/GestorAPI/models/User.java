@@ -42,6 +42,12 @@ public class User {
     /** Correo electrónico del usuario. */
     private String email;
 
+    private String server ;
+
+    private String address ;
+
+    private String phone = "+**-******";
+
     /** Rol del usuario dentro del sistema (admin, user). */
     private RoleServer role;
 
@@ -67,11 +73,11 @@ public class User {
     private String providerId;
 
     /** Fecha de creación del usuario. */
-    @JsonIgnore
+    //@JsonIgnore
     private LocalDateTime createdAt;
 
     /** Fecha de la última modificación del usuario. */
-    @JsonIgnore
+    //@JsonIgnore
     private LocalDateTime updatedAt;
 
     /**

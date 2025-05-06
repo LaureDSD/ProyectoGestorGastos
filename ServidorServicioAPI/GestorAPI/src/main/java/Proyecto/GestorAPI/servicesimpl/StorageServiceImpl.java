@@ -15,20 +15,22 @@ import java.nio.file.Path;
 public class StorageServiceImpl implements StorageService {
 
 
-    //Falta comentar
     @Override
-    public String createImageData(String folderPath, MultipartFile file) {
-        return "";
-    }
-
-    @Override
-    public String updateImageData(String folderPath, MultipartFile file) {
-        return "";
+    public String createImageData(String folderPath, MultipartFile imagen) throws IOException {
+        String nombreArchivo = System.currentTimeMillis() + "-" + imagen.getOriginalFilename();
+        String rutaDestino = folderPath + nombreArchivo;
+        File archivoDestino = new File(rutaDestino);
+        archivoDestino.getParentFile().mkdirs();
+        imagen.transferTo(archivoDestino);
+        return folderPath + nombreArchivo;
     }
 
     @Override
     public void deleteImageData(String filePath) {
-
+        File file = new File(filePath);
+        if (file.exists()) {
+            file.delete();
+        }
     }
 
     @Override
