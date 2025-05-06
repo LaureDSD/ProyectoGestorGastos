@@ -1,0 +1,37 @@
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { UserserviceService } from '../../services/userservice.service';
+
+@Component({
+  selector: 'app-edit-form-profile',
+  standalone: false,
+  templateUrl: './edit-form-profile.component.html',
+  styleUrl: './edit-form-profile.component.css'
+})
+export class EditFormProfileComponent {
+
+  @Input() profile: string = '';
+  @Output() save = new EventEmitter<{ field: string; value: string }>();
+
+  constructor(private userService: UserserviceService) {}
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    const file = input.files[0];
+    const formData = new FormData();
+    formData.append('image', file);
+
+    this.userService.subirFotoPerfil(formData).subscribe({
+      next: (res) => {
+        this.save.emit({ field: 'profile', value: this.profile });
+      },
+      error: () => {
+        alert('Error al subir la imagen.');
+      }
+    });
+  }
+
+
+}
+

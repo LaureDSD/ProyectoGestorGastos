@@ -16,15 +16,7 @@ export class AdminDashboardComponent {
 
   ngOnInit() {
     this.token = this.authService.getToken();
-
-    this.authService.getCurrentUser().subscribe({
-      next: (user) => {
-        this.userl = user
-      },
-      error: (error) => {
-        console.error('Error obteniendo el usuario:', error);
-      }
-    });
+    this.authService.getCurrentUser();
   }
 
 }

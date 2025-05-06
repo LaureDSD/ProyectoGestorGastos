@@ -1,15 +1,9 @@
-.mycontainer {
-  background-image: url("/wall0.jpg");
-  background-size: cover;
-  height: 100vh;
-}
-
 .login-container {
   background: rgba(0, 0, 0, 0.713);
   border-radius: 15px;
   padding: 40px;
   width: 100%;
-  max-width: 500px; 
+  max-width: 500px;
   box-shadow: 1 4px 10px rgba(0, 0, 0, 0.85);
   border: 0px solid rgba(213, 174, 55, 0.3);
   animation: fadeIn 0.5s ease-in-out;
@@ -102,7 +96,7 @@ button span {
 }
 
 .error-container {
-  min-height: 40px; 
+  min-height: 40px;
   position: absolute;
   width: 100%;
   bottom: 0;

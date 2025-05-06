@@ -1,0 +1,15 @@
+<!--Foto de perfil-->
+<li class="list-group-item bg-dark text-light d-flex justify-content-center align-items-center border-secondary">
+  <div class="text-center mt-5 mb-5">
+    <img
+      [src]="profile"
+      alt="Perfil"
+      width="200" height="200"
+      class=" mb-3"
+      style="object-fit: cover; box-shadow: 5px 5px 17px 10px Black;" />
+      <div>
+        <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept="image/*" />
+        <button class="btn btn-outline-light btn-sm " (click)="fileInput.click()">Editar</button>
+      </div>
+  </div>
+</li>

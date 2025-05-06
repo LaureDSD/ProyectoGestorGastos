@@ -9,6 +9,7 @@ import { AuthService } from './auth.service';
 })
 export class ApiserviceService {
 
+
   private baseUrl = `${environment.apiUrl}/auth`;
   router: any;
 
@@ -23,6 +24,10 @@ export class ApiserviceService {
   //Falta
   enviarMensaje(contacto: Contacto) {
     return this.http.post(`${environment.apiUrl}/public/forms`, contacto);
+  }
+
+  getApiServer(): any {
+    return { name: "GESTHOR1" , activity: "12321"}
   }
 
 }
