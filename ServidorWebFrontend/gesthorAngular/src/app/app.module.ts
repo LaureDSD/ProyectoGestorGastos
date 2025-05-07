@@ -1,9 +1,8 @@
+import { NgChartsModule } from 'ng2-charts';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './security/login/login.component';
@@ -99,6 +98,7 @@ import { EditFormPasswordComponent } from './components/edit-form-password/edit-
     ReactiveFormsModule,
     AppRoutingModule,
     FormsModule,
+    NgChartsModule
 ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }

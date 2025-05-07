@@ -85,6 +85,7 @@ public class SecurityConfig {
                         // Acceso público a recursos estáticos y ciertas rutas
                         .requestMatchers(
                                 //"/admin/dashboard",
+                                "/uploads/perfiles/**",
                                 "/auth/**",
                                 "/static/**",
                                 "/resources/**",

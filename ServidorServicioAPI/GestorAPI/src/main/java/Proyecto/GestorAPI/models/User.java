@@ -46,7 +46,9 @@ public class User {
 
     private String address ;
 
-    private String phone = "+**-******";
+    private String phone;
+
+    private boolean tfa;
 
     /** Rol del usuario dentro del sistema (admin, user). */
     private RoleServer role;

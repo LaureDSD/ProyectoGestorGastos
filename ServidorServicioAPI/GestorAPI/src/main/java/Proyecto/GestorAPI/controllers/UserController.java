@@ -2,12 +2,10 @@ package Proyecto.GestorAPI.controllers;
 
 
 import Proyecto.GestorAPI.exceptions.DuplicatedUserInfoException;
-import Proyecto.GestorAPI.exceptions.UpdateImageException;
 import Proyecto.GestorAPI.models.LoginAttempt;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.modelsDTO.UserDto;
 import Proyecto.GestorAPI.security.CustomUserDetails;
-import Proyecto.GestorAPI.services.LoginAttemptService;
 import Proyecto.GestorAPI.services.StorageService;
 import Proyecto.GestorAPI.services.UserService;
 import Proyecto.GestorAPI.servicesimpl.LoginAttemptServiceImpl;
@@ -24,7 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -44,12 +41,15 @@ import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME
 public class UserController {
 
     private final UserService userService;
+
     private final StorageService storageService;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private LoginAttemptServiceImpl loginAttemptService;
 
+    private static final String STORAGE_BASE_PATH = "uploads/perfiles/";
 
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @GetMapping("/me")
@@ -64,9 +64,7 @@ public class UserController {
     public ResponseEntity<UserDto> deleteUser(
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
-        //Desactiva la cuenta
         user.setActive(false);
-        //Guarda la config
         userService.saveUser(user);
         return ResponseEntity.ok(UserDto.from(user));
     }
@@ -77,16 +75,20 @@ public class UserController {
     public ResponseEntity<?> uploadProfile(
             @RequestParam(value = "image") MultipartFile file,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
+        System.out.println("Carga en revision");
         if (file == null || file.isEmpty()) {
             return ResponseEntity.badRequest().body("No se envió ninguna imagen.");
         }
+        System.out.println("Iniciando carga en revision");
         try {
+
             User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
             String oldUrl = user.getImageUrl();
-            String newUrl = storageService.createImageData("/uploads/perfiles/", file);
-            user.setImageUrl(newUrl);
-            userService.saveUser(user);
+            String newUrl = storageService.saveImageData(STORAGE_BASE_PATH, file);
+            //user.setImageUrl(newUrl);
+            //userService.saveUser(user);
             storageService.deleteImageData(oldUrl);
+            System.out.println("Borrada");
             return ResponseEntity.ok(Map.of("url", newUrl));
         } catch (IOException e) {
             return ResponseEntity.internalServerError().body("Error al guardar la imagen.");
@@ -100,36 +102,31 @@ public class UserController {
     public ResponseEntity<UserDto> updateUser(
             @Valid @RequestBody User request,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
-
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
-
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
-
         if (!user.getId().equals(request.getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-
         if (!user.getUsername().equals(request.getUsername()) &&
                 userService.hasUserWithUsername(request.getUsername())) {
             throw new DuplicatedUserInfoException("Username %s already been used".formatted(request.getUsername()));
         }
-
         if (!user.getEmail().equals(request.getEmail()) &&
                 userService.hasUserWithEmail(request.getEmail())) {
             throw new DuplicatedUserInfoException("Email %s already been used".formatted(request.getEmail()));
         }
-
+        //Campos modificables (Pendiente pasar a DTO)
         user.setName(request.getName());
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
         user.setAddress(request.getAddress());
         user.setServer(request.getServer());
+        user.setTfa(false);
 
         userService.saveUser(user);
-
         return ResponseEntity.ok(UserDto.from(user));
     }
 
@@ -152,21 +149,14 @@ public class UserController {
 
     @Operation(
             summary = "Obtener logs de acceso del usuario actual",
-            security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)
-    )
+            security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME))
     @GetMapping("/me/logs")
     public ResponseEntity<List<LoginAttempt>> getUserLoginAttempts(
             @AuthenticationPrincipal CustomUserDetails currentUser) {
-
         List<LoginAttempt> attempts = loginAttemptService.getByUsernameOrEamil(currentUser.getUsername());
-
         if (attempts.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-
         return ResponseEntity.ok(attempts);
     }
-
-
-
 }

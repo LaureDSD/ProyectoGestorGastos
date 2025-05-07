@@ -1,9 +1,11 @@
+import { NavbarComponent } from './../../../components/navbar/navbar.component';
 import { ApiserviceService } from './../../../services/apiservice.service';
 
 import { Component, OnInit } from '@angular/core';
 import { UserserviceService } from '../../../services/userservice.service';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -15,9 +17,10 @@ import { Router } from '@angular/router';
 })
 export class DashboardComponent {
 
-  server : any = {};
+  server : any = `${environment.apiUrl}`;
   logs : any = {};
   user : any = {};
+
 
   preguntas: { pregunta: string; respuesta: string; class: string }[] = [];
 
@@ -36,7 +39,7 @@ export class DashboardComponent {
 
   guardarCampo(event: { field: string; value: string }) {
     this.user[event.field] = event.value;
-    this.user.server = this.apiserviceService.getApiServer().name
+    this.user.server = `${environment.apiName}`
     this.userService.actualizarUsuario(this.user).subscribe({
       next: (res) => {
         alert('Usuario actualizado correctamente');
@@ -56,7 +59,7 @@ export class DashboardComponent {
   }
 
   cargarLogs() {
-    this.userService.getLogs().subscribe(l => this.logs = l.slice(0, 10));
+    this.userService.getLogs().subscribe(l => this.logs = l.slice(-11));
   }
 
   borrarToken() {

@@ -14,22 +14,28 @@ import java.nio.file.Path;
 @Service
 public class StorageServiceImpl implements StorageService {
 
+    private String STORAGE_PATH = "C:/";
 
     @Override
-    public String createImageData(String folderPath, MultipartFile imagen) throws IOException {
+    public String saveImageData(String folderPath, MultipartFile imagen) throws IOException {
         String nombreArchivo = System.currentTimeMillis() + "-" + imagen.getOriginalFilename();
-        String rutaDestino = folderPath + nombreArchivo;
-        File archivoDestino = new File(rutaDestino);
-        archivoDestino.getParentFile().mkdirs();
+        File carpeta = new File(STORAGE_PATH+folderPath);
+        carpeta.mkdirs();
+        File archivoDestino = new File(carpeta, nombreArchivo);
         imagen.transferTo(archivoDestino);
         return folderPath + nombreArchivo;
     }
 
+
     @Override
-    public void deleteImageData(String filePath) {
-        File file = new File(filePath);
+    public void deleteImageData(String publicUrlPath) {
+        String relativePath = publicUrlPath.startsWith("/") ? publicUrlPath.substring(1) : publicUrlPath;
+        File file = new File(STORAGE_PATH+ relativePath);
         if (file.exists()) {
-            file.delete();
+            boolean deleted = file.delete();
+            System.out.println("Eliminado: " + deleted);
+        } else {
+            System.out.println("No encontrado: " + file.getAbsolutePath());
         }
     }
 

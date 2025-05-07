@@ -57,11 +57,6 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  //DTO
-  getCurrentUser() {
-    this.http.get(`${environment.apiUrl}/api/user`).subscribe(u => this.user = u);
-  }
-
   //Falta
   forgotPassword(email: string): Observable<any> {
     return this.http.post('/api/auth/forgot-password', { email });
@@ -76,16 +71,13 @@ export class AuthService {
     return this.user.role == "ADMIN";
   }
 
-  getLoadUser(){
-    return this.user
+  getLoadUser(): Observable<any>{
+    return this.http.get(`${environment.apiUrl}/api/user/me`);
   }
 
   isAuthenticated(): boolean {
-    var respuesta = !!this.getToken();
-    if(respuesta && this.user.role==""){
-      this.getCurrentUser()
-    }
-    return respuesta;
+    const token = this.getToken();
+    return !!token;
   }
 
 }
