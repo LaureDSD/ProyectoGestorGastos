@@ -30,4 +30,54 @@
 </div>
 -->
 
+<div class="container" style="margin-top: 6%; margin-bottom: 18%">
+
+
+
+  <div class="row text-white text-center mb-4">
+    <div class="col" *ngFor="let m of metrics">
+      <div class="p-3 rounded shadow" [ngClass]="m.bg">
+        <h4 class="mb-0">{{ m.value }}</h4>
+        <small>{{ m.label }}</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+
+    <div class="col-md-4 mb-3">
+      <div class="card p-3 shadow">
+        <h6>Almacenamiento</h6>
+        <canvas baseChart
+            [data]="donutData"
+            [options]="donutOptions"
+          [type]="'doughnut'">
+        </canvas>
+        <div class="text-center mt-2">{{ storageValue }} GB usados</div>
+      </div>
+    </div>
+
+
+    <div class="col-md-8">
+      <div class="card p-3 shadow">
+        <h6>Accesos</h6>
+        <canvas baseChart
+          [data]="lineData"
+          [options]="lineOptions"
+          [type]="'line'">
+        </canvas>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="card p-3 shadow">
+    <h6>Actividad</h6>
+    <canvas baseChart
+      [data]="barData"
+      [options]="barOptions"
+      [type]="'bar'">
+    </canvas>
+  </div>
+</div>
 

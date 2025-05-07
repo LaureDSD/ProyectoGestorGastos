@@ -10,6 +10,8 @@ import { UserserviceService } from '../../services/userservice.service';
 export class EditFormProfileComponent {
 
   @Input() profile: string = '';
+  @Input() field = '';
+  @Input() icon = '';
   @Output() save = new EventEmitter<{ field: string; value: string }>();
 
   constructor(private userService: UserserviceService) {}
@@ -24,7 +26,8 @@ export class EditFormProfileComponent {
 
     this.userService.subirFotoPerfil(formData).subscribe({
       next: (res) => {
-        this.save.emit({ field: 'profile', value: this.profile });
+        this.profile = res.url;
+        this.save.emit({ field: this.field, value: this.profile });
       },
       error: () => {
         alert('Error al subir la imagen.');

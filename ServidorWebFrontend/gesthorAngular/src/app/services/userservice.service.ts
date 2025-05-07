@@ -21,7 +21,7 @@ export class UserserviceService {
   }
 
   actualizarUsuario(user: any): Observable<any> {
-    console.log(user)
+
     return this.http.put(`${this.baseUrl}/api/user/me`, user);
   }
 

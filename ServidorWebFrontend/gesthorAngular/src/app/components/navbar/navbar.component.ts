@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-navbar',
@@ -10,12 +11,13 @@ import { AuthService } from '../../services/auth.service';
 })
 export class NavbarComponent {
 
+  @Input() server : any = `${environment.apiUrl}`;
   @Input() titulo : string = "GESTHOR"
   @Input() default : string = "/public/home"
   @Input() icono : string = "/icon.png"
   @Input() enlaces : string[][] = [["Inicio","/protected/home"],["Herramientas","/protected/tools"]]
   esAdminUsuario: boolean = false;
-  profile: any;
+  profile: any ;
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -24,11 +26,15 @@ export class NavbarComponent {
   }
 
   getProfile(){
-    this.profile = this.authService.getLoadUser().profile
+    this.authService.getLoadUser().subscribe(u => {
+      this.profile = u.imageUrl;
+      this.esAdminUsuario = u.role === "ADMIN";
+    });
+
   }
 
   esAdmin(){
-    return this.authService.isAdmin()
+    return this.esAdminUsuario;
   }
 
   borrarToken(): void {
@@ -38,7 +44,7 @@ export class NavbarComponent {
 
   ngOnInit() {
     if (this.hayToken()) {
-      this.esAdminUsuario = this.authService.isAdmin();
+      this.getProfile()
     }
   }
 
