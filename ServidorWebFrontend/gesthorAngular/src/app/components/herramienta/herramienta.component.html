@@ -1,0 +1,12 @@
+<div class="container py-4 text-white">
+
+  <!-- Solo visible si es carga de archivo -->
+  <div *ngIf="tipo === 'ticketimagen' || tipo === 'ticketdigital'">
+    <h4>Cargar {{ tipo === 'ticketimagen' ? 'Ticket Imagen' : 'Ticket Digital' }}</h4>
+    <input type="file" class="form-control mb-2" (change)="onFileSelected($event)">
+    <button class="btn btn-success" (click)="subirArchivoYEditar()" [disabled]="!file">
+      Subir y Editar
+    </button>
+  </div>
+
+</div>

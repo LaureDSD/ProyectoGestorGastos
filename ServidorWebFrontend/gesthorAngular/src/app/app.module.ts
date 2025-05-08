@@ -1,4 +1,4 @@
-import { NgChartsModule } from 'ng2-charts';
+// Duplicate import removed
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -25,28 +25,32 @@ import { DetailComponent } from './pages/protected/detail/detail.component';
 import { PublicComponent } from './pages/public/public.component';
 import { ToolsComponent } from './pages/protected/tools/tools.component';
 import { AdminDashboardComponent } from './pages/private/admin-dashboard/admin-dashboard.component';
-import { SearchFiltersComponent } from './pages/protected/search-filters/search-filters.component';
 import { ProtectedComponent } from './pages/protected/protected.component';
 import { PrivateComponent } from './pages/private/private.component';
-import { HeroComponent } from './components/public/hero/hero.component';
-import { ImageComponent } from './components/public/image/image.component';
-import { SeparatorComponent } from './components/public/separator/separator.component';
-import { CallButtomComponent } from './components/public/call-buttom/call-buttom.component';
-import { SectionLeftComponent } from './components/public/section-left/section-left.component';
-import { SectionRightComponent } from './components/public/section-right/section-right.component';
-import { SectionCardsComponent } from './components/public/section-cards/section-cards.component';
-import { SectionRight2Component } from './components/public/section-right2/section-right2.component';
-import { SectionCardComponent } from './components/public/section-card/section-card.component';
+import { HeroComponent } from './components/hero/hero.component';
+import { ImageComponent } from './components/image/image.component';
+import { SeparatorComponent } from './components/separator/separator.component';
+import { CallButtomComponent } from './components/call-buttom/call-buttom.component';
+import { SectionLeftComponent } from './components/section-left/section-left.component';
+import { SectionRightComponent } from './components/section-right/section-right.component';
+import { SectionCardsComponent } from './components/section-cards/section-cards.component';
+import { SectionRight2Component } from './components/section-right2/section-right2.component';
+import { SectionCardComponent } from './components/section-card/section-card.component';
 import { IndexComponent } from './pages/public/index/index.component';
-import { BackButtonComponent } from './components/public/back-button/back-button.component';
+import { BackButtonComponent } from './components/back-button/back-button.component';
 import { PrivacityComponent } from './pages/public/privacity/privacity.component';
-import { FormComponent } from './components/public/form/form.component';
-import { AcordionComponent } from './components/public/acordion/acordion.component';
+import { FormComponent } from './components/form/form.component';
+import { AcordionComponent } from './components/acordion/acordion.component';
 import { AiButtonComponent } from './components/ai-button/ai-button.component';
 import { EditFormComponent } from './components/edit-form/edit-form.component';
 import { EditFormProfileComponent } from './components/edit-form-profile/edit-form-profile.component';
 import { EditFormPasswordComponent } from './components/edit-form-password/edit-form-password.component';
-
+import { GastosComponent } from './pages/protected/gastos/gastos.component';
+import { ChatComponent } from './components/chat/chat.component';
+import { FormHerramientaComponent } from './components/form-herramienta/form-herramienta.component';
+import { NgChartsModule } from 'ng2-charts';
+import { HerramientaComponent } from './components/herramienta/herramienta.component';
+import { FiltroHerramientaComponent } from './components/filtro-herramienta/filtro-herramienta.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +74,6 @@ import { EditFormPasswordComponent } from './components/edit-form-password/edit-
     PublicComponent,
     ToolsComponent,
     AdminDashboardComponent,
-    SearchFiltersComponent,
     ProtectedComponent,
     PrivateComponent,
     HeroComponent,
@@ -90,7 +93,12 @@ import { EditFormPasswordComponent } from './components/edit-form-password/edit-
     AiButtonComponent,
     EditFormComponent,
     EditFormProfileComponent,
-    EditFormPasswordComponent
+    EditFormPasswordComponent,
+    GastosComponent,
+    ChatComponent,
+    HerramientaComponent,
+    FiltroHerramientaComponent,
+    FormHerramientaComponent
   ],
   imports: [
     BrowserModule,

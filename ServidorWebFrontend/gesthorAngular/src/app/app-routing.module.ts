@@ -14,12 +14,15 @@ import { DashboardComponent } from './pages/private/dashboard/dashboard.componen
 import { PublicComponent } from './pages/public/public.component';
 import { AdminDashboardComponent } from './pages/private/admin-dashboard/admin-dashboard.component';
 import { ToolsComponent } from './pages/protected/tools/tools.component';
-import { SearchFiltersComponent } from './pages/protected/search-filters/search-filters.component';
 import { ContactComponent } from './pages/public/contact/contact.component';
 import { ProtectedComponent } from './pages/protected/protected.component';
 import { PrivateComponent } from './pages/private/private.component';
 import { IndexComponent } from './pages/public/index/index.component';
 import { PrivacityComponent } from './pages/public/privacity/privacity.component';
+import { GastosComponent } from './pages/protected/gastos/gastos.component';
+import {  FormHerramientaComponent } from './components/form-herramienta/form-herramienta.component';
+import { HerramientaComponent } from './components/herramienta/herramienta.component';
+import { FiltroHerramientaComponent } from './components/filtro-herramienta/filtro-herramienta.component';
 
 
 
@@ -31,6 +34,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'oauth2/redirect', component: OAuth2RedirectComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
+
   //Rutas publicas
   { path: 'public', component: PublicComponent,
     children : [
@@ -39,15 +43,19 @@ const routes: Routes = [
       { path: 'privacity', component: PrivacityComponent },
     ]
   },
+
   //Rutas protegidas
   { path: 'protected', component: ProtectedComponent ,
     children : [
       { path: 'home', component: HomeComponent },
       { path: 'tools', component: ToolsComponent },
-      { path: 'search', component: SearchFiltersComponent },
-
+      { path: 'gastos', component: GastosComponent },
+      { path: 'tool/:tipo', component: HerramientaComponent },
+      { path: 'form/:tipo/:id', component: FormHerramientaComponent },
+      { path: 'filter/:tipo', component: FiltroHerramientaComponent },
   ],
       canActivate: [AuthGuard]},
+
   //Rutas privadas
   { path: 'private', component: PrivateComponent,
     children : [

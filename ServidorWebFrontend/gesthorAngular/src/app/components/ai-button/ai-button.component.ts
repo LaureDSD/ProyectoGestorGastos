@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ChatserviceService } from '../../services/chatservice.service';
 
 @Component({
   selector: 'app-ai-button',
@@ -8,5 +9,9 @@ import { Component } from '@angular/core';
 })
 export class AiButtonComponent {
 
-  openChat(){}
+  constructor(private chatService : ChatserviceService){}
+
+  toggleChat(): void {
+    this.chatService.toggle();
+  }
 }

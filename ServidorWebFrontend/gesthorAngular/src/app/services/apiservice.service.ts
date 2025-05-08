@@ -1,4 +1,4 @@
-import { Contacto, FormComponent } from './../components/public/form/form.component';
+import { Contacto, FormComponent } from '../components/form/form.component';
 import { HttpClient , HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';

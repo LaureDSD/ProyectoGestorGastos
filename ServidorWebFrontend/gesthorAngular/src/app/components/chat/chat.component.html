@@ -1,0 +1,57 @@
+<!-- Escritorio: lateral derecho (oscuro) -->
+<div *ngIf="isVisible" class="d-none d-md-block">
+  <div
+    class="chat-sidebar position-fixed bottom-0 end-0 bg-dark text-white  shadow"
+    style="width: 400px; height: 50vh; z-index: 1050; border-top: 1px solid #444;"
+  >
+    <div class="p-2 ms-3 border-secondary d-flex justify-content-between">
+      <span class="fw-bold ">ChatBot GesThor</span>
+      <button class="btn btn-sm btn-outline-light" (click)="closeChat()">Minimizar</button>
+    </div>
+
+    <div #messagesContainer class="p-3 overflow-auto" style="height: calc(50vh - 120px);">
+      <div *ngFor="let msg of messages$ | async" [ngClass]="{'text-end': msg.role === 'user'}">
+        <div
+          [ngClass]="msg.role === 'user' ? 'bg-primary text-white' : 'bg-secondary text-white'"
+          class="d-inline-block rounded p-2 mb-2"
+        >
+          {{ msg.content }}
+        </div>
+      </div>
+    </div>
+
+    <div class="p-2  border-secondary input-group">
+      <input [(ngModel)]="input" class="form-control text-black border-secondary" placeholder="Escribe un mensaje...">
+      <button class="btn btn-primary" (click)="sendMessage()">Enviar</button>
+    </div>
+  </div>
+</div>
+
+<app-ai-button *ngIf="!isVisible" class="d-none d-md-block"></app-ai-button>
+
+<!-- Móvil: pantalla completa  -->
+<div *ngIf="isVisible" class="d-block d-md-none " >
+  <div class="position-fixed top-0 start-0 bg-dark text-white w-100  shadow pt-3" style="height: 100vh; z-index: 1010;">
+
+    <div class="p-2 ms-3  border-secondary d-flex justify-content-between">
+      <span class="fw-bold">ChatBot GesThor</span>
+      <button class="btn btn-sm btn-outline-light" (click)="closeChat()">Minimizar</button>
+    </div>
+
+    <div #messagesContainer class="p-3 overflow-auto" style="height: calc(100vh - 200px);">
+      <div *ngFor="let msg of messages$ | async" [ngClass]="{'text-end': msg.role === 'user'}">
+        <div
+          [ngClass]="msg.role === 'user' ? 'bg-primary text-white' : 'bg-secondary text-white'"
+          class="d-inline-block rounded p-2 mb-2"
+        >
+          {{ msg.content }}
+        </div>
+      </div>
+    </div>
+
+    <div class="p-2  border-secondary input-group" >
+      <input [(ngModel)]="input" class="form-control  text-black border-secondary" placeholder="Escribe un mensaje...">
+      <button class="btn btn-primary" (click)="sendMessage()" >Enviar</button>
+    </div>
+  </div>
+</div>

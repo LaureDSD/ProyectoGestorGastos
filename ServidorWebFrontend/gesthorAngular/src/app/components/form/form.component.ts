@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ApiserviceService } from '../../../services/apiservice.service';
+import { ApiserviceService } from '../../services/apiservice.service';
 
 @Component({
   selector: 'app-form',
@@ -27,7 +27,7 @@ export class FormComponent {
       }
     });
   }
-  
+
 }
 export interface Contacto {
   nombre: string;

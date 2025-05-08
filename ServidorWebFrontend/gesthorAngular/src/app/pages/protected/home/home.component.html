@@ -1,27 +1,64 @@
+<div class="container py-4 mb-5 mt-5">
+  <div class="row">
+    <!-- Columna izquierda: Gráfico de Rosca -->
+    <div class="col-md-4 mb-6 mt-3">
+      <div class="card shadow-sm bg-dark text-white">
+        <div class="card-body">
+          <h5 class="card-title">Gasto Semanal: Estimado vs Real</h5>
+          <canvas baseChart
+                  [data]="donutChartData"
+                  [options]="darkChartOptions"
+                  [type]="'doughnut'">
+          </canvas>
+        </div>
+      </div>
 
-<!--
-<div class="container mt-5">
-    <p>¡Autenticado exitosamente!</p>
-    <p>Token: {{ token }}</p>
-    <p>{{userl | json  }}</p>
+    </div>
+
+
+    <div class="col-md-4 mt-3">
+                <!-- Lista de gastos abajo -->
+  <div class="card shadow-sm bg-dark text-white">
+    <div class="card-body">
+      <h5 class="card-title">Últimos 10 Gastos</h5>
+      <ul class="list-group list-group-flush">
+        <li *ngFor="let gasto of ultimosGastos"
+            class="list-group-item bg-dark text-white d-flex justify-content-between">
+          <div>
+            <strong>{{ gasto.tienda }}</strong> — <small>{{ gasto.fecha | date }}</small>
+          </div>
+          <span class="fw-bold text-warning">€{{ gasto.total.toFixed(2) }}</span>
+        </li>
+      </ul>
+    </div>
   </div>
+    </div>
 
 
-<app-navtab [filtros]="secciones" (buttonClicked)="pulsarBoton($event)"></app-navtab>
-<div *ngFor="let s of secciones">
-    <app-seccion *ngIf="s[2]" [titulo]="s[0]" [ruta]="s[1]"></app-seccion>
+    <!-- Columna derecha: Barras y línea -->
+    <div class="col-md-4 mt-3">
+      <div class="card shadow-sm bg-dark text-white mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Gastos por Mes</h5>
+          <canvas baseChart
+                  [data]="monthlyChartData"
+                  [options]="darkChartOptions"
+                  [type]="'bar'">
+          </canvas>
+        </div>
+      </div>
+      <div class="card shadow-sm bg-dark text-white">
+        <div class="card-body">
+          <h5 class="card-title">Gastos de Esta Semana</h5>
+          <canvas baseChart
+                  [data]="weeklyChartData"
+                  [options]="darkChartOptions"
+                  [type]="'line'">
+          </canvas>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
 </div>
-
-  -->
-
-<div class="d-none d-md-block">
-  <app-navbar></app-navbar>
-</div>
-<div class="d-block d-md-none">
-  <app-tabvar></app-tabvar>
-</div>
-<router-outlet></router-outlet>
-
-
-
-

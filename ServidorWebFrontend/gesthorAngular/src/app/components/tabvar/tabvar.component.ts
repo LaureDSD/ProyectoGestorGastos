@@ -1,3 +1,4 @@
+import { ChatserviceService } from './../../services/chatservice.service';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -9,18 +10,14 @@ import { Router } from '@angular/router';
 })
 export class TabvarComponent {
 
-
-  wheelActive = false;
-
-  constructor(private router: Router) {}
-
-  toggleWheel(): void {
-    this.wheelActive = !this.wheelActive;
-  }
+  constructor(private router: Router , private chatService : ChatserviceService) {}
 
   navigateTo(route: string): void {
     this.router.navigate([route]);
-    this.wheelActive = false;
+  }
+
+  toggleChat(): void {
+    this.chatService.toggle();
   }
 
 }
