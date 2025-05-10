@@ -17,7 +17,7 @@ import { environment } from '../../../environments/environment';
 })
 export class DashboardComponent {
 
-  server : any = `${environment.apiUrl}`;
+  server : any = `${environment.apiUrl}/`;
   logs : any = {};
   user : any = {};
 
@@ -38,18 +38,20 @@ export class DashboardComponent {
   }
 
   guardarCampo(event: { field: string; value: string }) {
-    this.user[event.field] = event.value;
-    this.user.server = `${environment.apiName}`
-    this.userService.actualizarUsuario(this.user).subscribe({
-      next: (res) => {
-        alert('Usuario actualizado correctamente');
-      },
-      error: (err) => {
-        alert('Error al actualizar el usuario: ' + err);
-        this.cargarUsuario()
-        this.cargarLogs()
-      }
-    });
+    if(true){
+      this.user[event.field] = event.value;
+      this.user.server = `${environment.apiName}`
+      this.userService.actualizarUsuario(this.user).subscribe({
+        next: (res) => {
+          alert('Usuario actualizado correctamente');
+        },
+        error: (err) => {
+          alert('Error al actualizar el usuario: ' + err);
+          this.cargarUsuario()
+          this.cargarLogs()
+        }
+      });
+    }
   }
 
   cambiarPassword(data: { current: string; newPassword: string }) {
@@ -59,7 +61,7 @@ export class DashboardComponent {
   }
 
   cargarLogs() {
-    this.userService.getLogs().subscribe(l => this.logs = l.slice(-11));
+    this.userService.getLogs().subscribe(l => this.logs = l.slice(-10));
   }
 
   borrarToken() {

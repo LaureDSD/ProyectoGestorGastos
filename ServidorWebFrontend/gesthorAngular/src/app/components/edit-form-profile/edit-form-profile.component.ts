@@ -9,12 +9,13 @@ import { UserserviceService } from '../../services/userservice.service';
 })
 export class EditFormProfileComponent {
 
-  @Input() profile: string = '';
+  @Input() profile: any = '';
   @Input() field = '';
   @Input() icon = '';
   @Output() save = new EventEmitter<{ field: string; value: string }>();
 
-  constructor(private userService: UserserviceService) {}
+  constructor(private userService: UserserviceService) {
+  }
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
