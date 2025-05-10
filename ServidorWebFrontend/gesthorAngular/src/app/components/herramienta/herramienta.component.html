@@ -1,12 +1,21 @@
 <div class="container py-4 text-white">
 
-  <!-- Solo visible si es carga de archivo -->
   <div *ngIf="tipo === 'ticketimagen' || tipo === 'ticketdigital'">
     <h4>Cargar {{ tipo === 'ticketimagen' ? 'Ticket Imagen' : 'Ticket Digital' }}</h4>
-    <input type="file" class="form-control mb-2" (change)="onFileSelected($event)">
+
+    <input type="file" class="form-control mb-2" (change)="onFileSelected($event)" accept="image/*,.pdf">
+
+    <div *ngIf="file && file.type.includes('image')" class="mb-3">
+      <h5>Vista previa:</h5>
+      <img [src]="imagePreview" class="img-fluid rounded border border-secondary" style="max-height: 300px;">
+    </div>
+
+    <div *ngIf="file && (file.type.includes('pdf') || file.type.includes('xml') )" class="alert alert-info mb-3">
+      <i class="bi bi-file-earmark-pdf"></i> Archivo PDF seleccionado: {{ file.name }}
+    </div>
+
     <button class="btn btn-success" (click)="subirArchivoYEditar()" [disabled]="!file">
       Subir y Editar
     </button>
   </div>
-
 </div>

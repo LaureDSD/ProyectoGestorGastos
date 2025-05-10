@@ -2,6 +2,7 @@
   <div class="position-relative mt-4 mb-4" style="width: 250px; height: 250px;">
 
     <img
+      *ngIf="profile != undefined"
       [src]="profile"
       alt="Perfil"
       class="w-100 h-100 rounded shadow"

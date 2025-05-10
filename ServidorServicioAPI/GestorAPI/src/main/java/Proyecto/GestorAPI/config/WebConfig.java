@@ -17,6 +17,6 @@ public class WebConfig implements org.springframework.web.servlet.config.annotat
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:/C:/uploads/");
+                .addResourceLocations("file:///C:/uploads/");
     }
 }

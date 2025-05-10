@@ -24,16 +24,19 @@ export class ToolsComponent {
       descripcion: 'Sube una imagen de ticket para extraer datos mediante OCR (Baja eficiencia).',
       accion: 'Cargar',
       ruta: '/protected/tool/ticketimagen'
-    },
+    },]
+
+
+    herramientas1 = [
     {
-      nombre: 'Crear Ticket Manual',
+      nombre: 'Crear Ticket',
       icono: '/icon/icons8-pencil.gif',
       descripcion: 'Ingresa los datos de un ticket manualmente.',
       accion: 'Crear',
       ruta: '/protected/tool/crearticket'
     },
     {
-      nombre: 'Crear Gasto Manual',
+      nombre: 'Crear Gasto',
       icono: '/icon/icons8-pencil.gif',
       descripcion: 'Registra un gasto sin ticket asociado.',
       accion: 'Crear',
@@ -45,7 +48,10 @@ export class ToolsComponent {
       descripcion: 'Añade una nueva suscripción periódica (como Netflix o Spotify).',
       accion: 'Crear',
       ruta: '/protected/tool/crearsubscripcion'
-    },
+    },]
+
+
+    herramientas2 = [
     {
       nombre: 'Gestionar Subscripciones',
       icono: '/icon/icons8-pencil.gif',

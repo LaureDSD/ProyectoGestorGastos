@@ -1,13 +1,15 @@
 <!-- Escritorio: lateral derecho (oscuro) -->
 <div *ngIf="isVisible" class="d-none d-md-block">
   <div
-    class="chat-sidebar position-fixed bottom-0 end-0 bg-dark text-white  shadow"
-    style="width: 400px; height: 50vh; z-index: 1050; border-top: 1px solid #444;"
+    class="chat-sidebar position-fixed bottom-0 end-0 text-white  shadow "
+    style="width: 400px; height: 50vh; z-index: 1050; border-top: 1px solid #444; background-color:rgba(44, 44, 44, 0.856)"
   >
     <div class="p-2 ms-3 border-secondary d-flex justify-content-between">
       <span class="fw-bold ">ChatBot GesThor</span>
       <button class="btn btn-sm btn-outline-light" (click)="closeChat()">Minimizar</button>
     </div>
+
+    <app-separator margin="0rem 0"></app-separator>
 
     <div #messagesContainer class="p-3 overflow-auto" style="height: calc(50vh - 120px);">
       <div *ngFor="let msg of messages$ | async" [ngClass]="{'text-end': msg.role === 'user'}">
@@ -20,6 +22,9 @@
       </div>
     </div>
 
+    <app-separator margin="0rem 0"></app-separator>
+
+
     <div class="p-2  border-secondary input-group">
       <input [(ngModel)]="input" class="form-control text-black border-secondary" placeholder="Escribe un mensaje...">
       <button class="btn btn-primary" (click)="sendMessage()">Enviar</button>
@@ -31,12 +36,14 @@
 
 <!-- Móvil: pantalla completa  -->
 <div *ngIf="isVisible" class="d-block d-md-none " >
-  <div class="position-fixed top-0 start-0 bg-dark text-white w-100  shadow pt-3" style="height: 100vh; z-index: 1010;">
+  <div class="position-fixed top-0 start-0  text-white w-100  shadow pt-3" style="height: 100vh; z-index: 1010; background-color:rgba(44, 44, 44, 0.856)">
 
     <div class="p-2 ms-3  border-secondary d-flex justify-content-between">
       <span class="fw-bold">ChatBot GesThor</span>
       <button class="btn btn-sm btn-outline-light" (click)="closeChat()">Minimizar</button>
     </div>
+
+    <app-separator margin="0rem 0"></app-separator>
 
     <div #messagesContainer class="p-3 overflow-auto" style="height: calc(100vh - 200px);">
       <div *ngFor="let msg of messages$ | async" [ngClass]="{'text-end': msg.role === 'user'}">
@@ -48,6 +55,10 @@
         </div>
       </div>
     </div>
+
+
+    <app-separator margin="0rem 0"></app-separator>
+
 
     <div class="p-2  border-secondary input-group" >
       <input [(ngModel)]="input" class="form-control  text-black border-secondary" placeholder="Escribe un mensaje...">

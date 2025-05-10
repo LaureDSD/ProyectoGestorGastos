@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ChartConfiguration } from 'chart.js';
 
 @Component({
   selector: 'app-gastos',
@@ -8,10 +9,39 @@ import { Component } from '@angular/core';
 })
 export class GastosComponent {
 
-  public barChartData = [{ data: [150, 170, 200, 220, 180, 190], label: 'Gastos Mensuales' }];
-  public barChartLabels = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'];
+    // Monthly bar chart
+    monthlyChartData: ChartConfiguration<'bar'>['data'] = {
+      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May',"Jun","Jul","Ago","Sep","Nov","Dic"],
+      datasets: [
+        { label: 'Gastos (€)', data: [20, 50, 3, 10, 10], backgroundColor: '#0d6efd' }
+      ]
+    };
 
-  public lineChartData = [{ data: [50, 80, 60, 100, 120, 130, 90], label: 'Gastos' }];
-  public lineChartLabels = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+    // Dark mode chart options
+  darkChartOptions: ChartConfiguration['options'] = {
+    responsive: true,
+    plugins: {
+      legend: {
+        labels: {
+          color: '#ffffff'
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { color: '#ffffff' },
+        grid: { color: '#444' }
+      },
+      y: {
+        ticks: { color: '#ffffff' },
+        grid: { color: '#444' },
+        beginAtZero: true
+      }
+    }
+  };
+
+
+  //PETICIONDE TODOS LOS GATSO DEL USUARIO DEL ULTIMO ANO (DEFAULT)
+  //PEICIONES AL APLICAR FILTROS
 
 }

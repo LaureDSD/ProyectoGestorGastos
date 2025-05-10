@@ -89,6 +89,7 @@ public class UserController {
             //userService.saveUser(user);
             storageService.deleteImageData(oldUrl);
             System.out.println("Borrada");
+            //System.out.println("Controlador:" + newUrl + " <- " +oldUrl);
             return ResponseEntity.ok(Map.of("url", newUrl));
         } catch (IOException e) {
             return ResponseEntity.internalServerError().body("Error al guardar la imagen.");
@@ -120,6 +121,7 @@ public class UserController {
         //Campos modificables (Pendiente pasar a DTO)
         user.setName(request.getName());
         user.setUsername(request.getUsername());
+        user.setImageUrl(request.getImageUrl());
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
         user.setAddress(request.getAddress());

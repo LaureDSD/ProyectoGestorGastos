@@ -28,6 +28,10 @@
           <a class="nav-link" aria-current="page" href="#"  [routerLink]="'/login'">Logearse</a>
         </li>
 
+        <li *ngIf="esAdmin()">
+          <a class="nav-link" aria-current="page" href="#"  [routerLink]="'/private/admindashboard'">Admin</a>
+      </li>
+
         <li *ngIf="hayToken()">
           <a class="nav-link" aria-current="page"  (click)="borrarToken()">Desconectarse</a>
         </li>
@@ -36,14 +40,9 @@
           <a class="nav-link" aria-current="page" href="#"  [routerLink]="'/private/dashboard'">MiCuenta</a>
         </li>
 
-        <li *ngIf="esAdmin()">
-          <a class="nav-link" aria-current="page" href="#"  [routerLink]="'/private/admindashboard'">Admin</a>
-      </li>
-
         <li *ngIf="hayToken() && profile!=null">
-          <img [src]="server + profile" alt="Preview" width="35" height="35" class=" ms-2 mt-1" style="border-radius: 50%;" [routerLink]="'/private/dashboard'" />
+          <img [src]="server + profile" alt="Preview"  class=" ms-2 mt-1" style="border-radius: 50%; height:35px ; width:35px" [routerLink]="'/private/dashboard'" />
         </li>
-
 
     </ul>
     </div>

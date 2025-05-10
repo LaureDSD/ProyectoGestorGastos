@@ -2,9 +2,10 @@
   <div class="row">
     <!-- Columna izquierda: Gráfico de Rosca -->
     <div class="col-md-4 mb-6 mt-3">
-      <div class="card shadow-sm bg-dark text-white">
+      <h3 class="text-light">Información de la semana</h3>
+      <div class="card shadow-sm bg-dark text-white mb-3">
         <div class="card-body">
-          <h5 class="card-title">Gasto Semanal: Estimado vs Real</h5>
+          <h5 class="card-title">Gasto Semanal: Medio vs Total</h5>
           <canvas baseChart
                   [data]="donutChartData"
                   [options]="darkChartOptions"
@@ -13,33 +14,10 @@
         </div>
       </div>
 
-    </div>
-
-
-    <div class="col-md-4 mt-3">
-                <!-- Lista de gastos abajo -->
-  <div class="card shadow-sm bg-dark text-white">
-    <div class="card-body">
-      <h5 class="card-title">Últimos 10 Gastos</h5>
-      <ul class="list-group list-group-flush">
-        <li *ngFor="let gasto of ultimosGastos"
-            class="list-group-item bg-dark text-white d-flex justify-content-between">
-          <div>
-            <strong>{{ gasto.tienda }}</strong> — <small>{{ gasto.fecha | date }}</small>
-          </div>
-          <span class="fw-bold text-warning">€{{ gasto.total.toFixed(2) }}</span>
-        </li>
-      </ul>
-    </div>
-  </div>
-    </div>
-
-
-    <!-- Columna derecha: Barras y línea -->
-    <div class="col-md-4 mt-3">
-      <div class="card shadow-sm bg-dark text-white mb-3">
+        <!-- Columna derecha: Barras -->
+        <div class="card shadow-sm bg-dark text-white mb-3">
         <div class="card-body">
-          <h5 class="card-title">Gastos por Mes</h5>
+          <h5 class="card-title">Gastos por Categoria</h5>
           <canvas baseChart
                   [data]="monthlyChartData"
                   [options]="darkChartOptions"
@@ -47,6 +25,8 @@
           </canvas>
         </div>
       </div>
+
+      <!-- Columna derecha: línea -->
       <div class="card shadow-sm bg-dark text-white">
         <div class="card-body">
           <h5 class="card-title">Gastos de Esta Semana</h5>
@@ -57,8 +37,32 @@
           </canvas>
         </div>
       </div>
+
     </div>
 
+
+    <div class="col-md-8 mt-3">
+      <!-- Lista de gastos abajo -->
+      <div class="card shadow-sm bg-dark text-white">
+        <div class="card-body">
+          <h5 class="card-title">Últimos 20 Gastos</h5>
+          <ul class="list-group list-group-flush">
+            <li *ngFor="let gasto of ultimosGastos"
+                class="list-group-item bg-dark text-white d-flex justify-content-between">
+              <div>
+                <strong>{{ gasto.tienda }}</strong> — <small>{{ gasto.fecha | date }}</small>
+              </div>
+              <span class="fw-bold text-warning">€{{ gasto.total.toFixed(2) }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Columna derecha -->
+    <div class="col-md-4 mt-3">
+    </div>
 
   </div>
 </div>

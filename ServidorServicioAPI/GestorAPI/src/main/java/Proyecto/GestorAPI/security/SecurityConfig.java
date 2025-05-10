@@ -86,6 +86,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 //"/admin/dashboard",
                                 "/uploads/perfiles/**",
+                                "/uploads/**",
                                 "/auth/**",
                                 "/static/**",
                                 "/resources/**",

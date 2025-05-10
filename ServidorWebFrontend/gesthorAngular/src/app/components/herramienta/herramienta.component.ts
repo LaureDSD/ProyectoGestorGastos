@@ -7,36 +7,59 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './herramienta.component.html'
 })
 export class HerramientaComponent {
-  tipo: string = '';
+ tipo: string = '';
   file?: File;
+  imagePreview: string | ArrayBuffer | null = null;
 
   constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
     this.tipo = this.route.snapshot.paramMap.get('tipo') || '';
 
-    // Redirección directa para crear o editar
     if (['crearticket', 'creargasto', 'crearsubscripcion'].includes(this.tipo)) {
-      this.router.navigate(['/protected/create', this.tipo]);
+      this.router.navigate(['/protected/form', this.tipo.replace('crear', ''), 0]);
     }
 
     if (['editarticket', 'editargasto', 'editarsubscripcion'].includes(this.tipo)) {
-      const fakeId = '123'; // Esto se reemplazará con el ID real en el futuro
-      this.router.navigate(['/protected/edit', this.tipo.replace('editar', ''), fakeId]);
+      this.router.navigate(['/protected/filter', this.tipo.replace('editar', '')]);
     }
   }
 
   onFileSelected(event: any) {
-    this.file = event.target.files[0];
+    const file = event.target.files[0];
+    if (!file) return;
+
+    this.file = file;
+
+    // Mostrar vista previa solo si es imagen
+    if (file.type.match('image.*')) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      this.imagePreview = null;
+    }
   }
 
   subirArchivoYEditar() {
     if (!this.file) return;
-
-    // Simulación de subida de archivo
+    var Id = '';
+    switch (this.tipo) {
+      case 'ticketdigital':
+        // Lógica para ticket digital
+        break;
+      case 'ticketimagen':
+        // Lógica para ticket imagen
+        break;
+      default:
+        console.log("No válido");
+        break;
+    }
     setTimeout(() => {
-      const fakeId = '123'; // Simula la respuesta del backend
-      this.router.navigate(['/protected/edit', this.tipo, fakeId]);
+      this.router.navigate(['/protected/form', this.tipo.replace('imagen', '').replace('digital', ''), Id]);
     }, 1000);
   }
 }
+

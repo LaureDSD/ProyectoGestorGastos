@@ -51,6 +51,7 @@ import { FormHerramientaComponent } from './components/form-herramienta/form-her
 import { NgChartsModule } from 'ng2-charts';
 import { HerramientaComponent } from './components/herramienta/herramienta.component';
 import { FiltroHerramientaComponent } from './components/filtro-herramienta/filtro-herramienta.component';
+import { ToolGroupComponent } from './components/tool-group/tool-group.component';
 
 @NgModule({
   declarations: [
@@ -98,7 +99,8 @@ import { FiltroHerramientaComponent } from './components/filtro-herramienta/filt
     ChatComponent,
     HerramientaComponent,
     FiltroHerramientaComponent,
-    FormHerramientaComponent
+    FormHerramientaComponent,
+    ToolGroupComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,1 +1,5 @@
-<div style="height: 2px; background: linear-gradient(to right, transparent, #dcdcdc, transparent); margin: 4rem 0;"></div>
+<div class="gradient-divider"
+     [style.background]="'linear-gradient(to right, transparent, ' + color + ', transparent)'"
+     [style.height]="height"
+     [style.margin]="margin"
+     [style.opacity]="opacity"></div>

@@ -1,7 +1,7 @@
 .hero {
   text-align: center;
   padding: 80px 20px 60px;
-  background: linear-gradient(145deg, #111, #000);
+  background: linear-gradient(145deg, #000000, #000);
   animation: fadeIn 1s ease-out;
 }
 

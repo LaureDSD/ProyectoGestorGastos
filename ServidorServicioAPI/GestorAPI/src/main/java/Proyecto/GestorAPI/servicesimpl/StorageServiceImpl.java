@@ -23,14 +23,17 @@ public class StorageServiceImpl implements StorageService {
         carpeta.mkdirs();
         File archivoDestino = new File(carpeta, nombreArchivo);
         imagen.transferTo(archivoDestino);
+        System.out.println("Subido: " + folderPath + nombreArchivo);
         return folderPath + nombreArchivo;
     }
 
 
     @Override
     public void deleteImageData(String publicUrlPath) {
+        System.out.println( "Borrando1: " + publicUrlPath);
         String relativePath = publicUrlPath.startsWith("/") ? publicUrlPath.substring(1) : publicUrlPath;
-        File file = new File(STORAGE_PATH+ relativePath);
+        File file = new File(STORAGE_PATH + relativePath);
+        System.out.println( "Borrando2: " + relativePath);
         if (file.exists()) {
             boolean deleted = file.delete();
             System.out.println("Eliminado: " + deleted);
