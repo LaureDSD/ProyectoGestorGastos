@@ -1,0 +1,48 @@
+<div class="card bg-dark text-light mb-4 p-3 rounded shadow-sm">
+  <h5 class="card-title d-flex justify-content-between align-items-center">
+    Productos
+
+  </h5>
+
+  <div class="mb-3 row" >
+    <div class="col-md-3">
+      <label class="form-label">Nombre</label>
+      <input class="form-control bg-secondary text-light border-0" [(ngModel)]="productoActual.nombre" placeholder="Ej: Pan" />
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Categorías</label>
+      <input class="form-control bg-secondary text-light border-0" [(ngModel)]="categoriaTexto" placeholder="Ej: Alimentación, Panadería" />
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Cantidad</label>
+      <input type="number" class="form-control bg-secondary text-light border-0" [(ngModel)]="productoActual.cantidad" placeholder="Ej: 2" />
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Precio (€)</label>
+      <input type="number" class="form-control bg-secondary text-light border-0" [(ngModel)]="productoActual.precio" placeholder="Ej: 1.50" />
+    </div>
+
+    <div class="col-md-3">
+       <button class="btn btn-success md-10 mt-3 w-100" (click)="agregarProducto()">Añadir/Editar</button>
+    </div>
+
+  </div>
+
+  <ul class="list-group list-group-flush">
+    <li *ngFor="let p of productos; let i = index" class="list-group-item bg-secondary  d-flex justify-content-between align-items-center" style="color: aliceblue;">
+      <div>
+        <strong>{{ p.nombre }}</strong> - {{ p.cantidad }} × {{ p.precio }}€<br />
+        <small class="">Categorías: {{ p.categorias.join(', ') }}</small>
+      </div>
+      <div>
+        <button class="btn btn-light btn-sm me-2" (click)="editarProducto(i)">Editar</button>
+        <button class="btn btn-danger btn-sm" (click)="eliminarProducto(i)">Borrar</button>
+      </div>
+    </li>
+  </ul>
+
+  <div class="text-end mt-3 ">
+    <button class="btn btn-primary" (click)="confirmarLista()">Confirmar productos</button>
+
+  </div>
+</div>
