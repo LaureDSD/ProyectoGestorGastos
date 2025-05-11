@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UserserviceService } from '../../services/userservice.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-edit-form-profile',
@@ -9,7 +10,10 @@ import { UserserviceService } from '../../services/userservice.service';
 })
 export class EditFormProfileComponent {
 
-  @Input() profile: any = '';
+
+  server : string = `${environment.apiUrl}/`;
+  profile: string = "";
+  @Input() img: string = '';
   @Input() field = '';
   @Input() icon = '';
   @Output() save = new EventEmitter<{ field: string; value: string }>();
