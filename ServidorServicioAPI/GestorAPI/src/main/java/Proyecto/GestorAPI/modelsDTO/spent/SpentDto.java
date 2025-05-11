@@ -1,6 +1,5 @@
-package Proyecto.GestorAPI.modelsDTO;
+package Proyecto.GestorAPI.modelsDTO.spent;
 
-import Proyecto.GestorAPI.models.CategoryExpense;
 import Proyecto.GestorAPI.models.Spent;
 import java.time.format.DateTimeFormatter;
 
@@ -9,7 +8,7 @@ public record SpentDto(Long spent_id, Long clienteId, Long category, String fech
     public static SpentDto from(Spent spent) {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         return new SpentDto(
-                spent.getSpent_id(),
+                spent.getSpentId(),
                 spent.getUser().getId(),
                 spent.getCategory().getId(),
                 formatter.format(spent.getExpenseDate()),

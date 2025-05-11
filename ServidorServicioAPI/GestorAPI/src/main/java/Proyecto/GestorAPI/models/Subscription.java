@@ -1,5 +1,6 @@
 package Proyecto.GestorAPI.models;
 
+import Proyecto.GestorAPI.models.enums.ExpenseClass;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -53,4 +54,18 @@ public class Subscription extends Spent {
      * Indica si la subscripción está actualmente activa.
      */
     private boolean activa;
+
+    public Subscription(String name, String description, String icon, LocalDateTime start, double total, double iva,
+                        User user, CategoryExpense category, LocalDateTime createdAt, LocalDateTime updatedAt,
+                        ExpenseClass typeExpense, LocalDateTime startDate, LocalDateTime endDate, double accumulate,
+                        int restartDay, int intervalTime, boolean active) {
+        super(name, description, icon, start, total, iva, user, category, createdAt, updatedAt, typeExpense);
+        this.start = startDate;
+        this.end = endDate;
+        this.accumulate = accumulate;
+        this.restartDay = restartDay;
+        this.intervalTime = intervalTime;
+        this.activa = active;
+    }
+
 }

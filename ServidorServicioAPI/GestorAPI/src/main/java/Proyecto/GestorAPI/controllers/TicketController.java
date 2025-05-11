@@ -2,8 +2,9 @@ package Proyecto.GestorAPI.controllers;
 
 import Proyecto.GestorAPI.models.Ticket;
 import Proyecto.GestorAPI.models.User;
-import Proyecto.GestorAPI.modelsDTO.CreateTicketRequest;
-import Proyecto.GestorAPI.modelsDTO.TicketDto;
+import Proyecto.GestorAPI.modelsDTO.ticket.CreateTicketRequest;
+import Proyecto.GestorAPI.modelsDTO.ticket.TicketDto;
+import Proyecto.GestorAPI.modelsDTO.ticket.UpdateTicketRequest;
 import Proyecto.GestorAPI.security.CustomUserDetails;
 import Proyecto.GestorAPI.security.RoleServer;
 import Proyecto.GestorAPI.services.CategoryExpenseService;
@@ -69,18 +70,41 @@ public class TicketController {
                 .collect(Collectors.toList()));
     }
 
+    @GetMapping("/{ticketId}")
+    @Operation(
+            security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)},
+            summary = "Obtener un ticket por ID"
+    )
+    public ResponseEntity<TicketDto> getTicketById(
+            @PathVariable Long ticketId,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+
+        //System.out.println("Buscando ticket con ID: " + ticketId);
+        Ticket ticket = ticketService.getByID(ticketId).orElse(null);
+        System.out.println("Resultado: " + TicketDto.from(ticket));
+        if (ticket == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (user.getRole() != RoleServer.ADMIN && !ticket.getUser().getId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        return ResponseEntity.ok(TicketDto.from(ticket));
+    }
+
     @PostMapping("/")
     @Operation(
             security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
             summary = "Crear un nuevo ticket"
     )
-    public ResponseEntity<TicketDto> createTicket(
+    public ResponseEntity<?> createTicket(
             @RequestParam(value = "clienteId", required = false) Long clienteId,
             @Valid @RequestBody CreateTicketRequest request,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
         Ticket ticket;
-
         if(user.getRole()!= RoleServer.ADMIN){
             //si no es admin
             ticket = mappingTicket(request, user.getId());
@@ -88,7 +112,13 @@ public class TicketController {
             //si es admin
             ticket = mappingTicket(request,(clienteId != null) ? clienteId : user.getId());
         }
+
+        System.out.println(request);
+        if (ticket.getProductsJSON() == null || ticket.getProductsJSON().isEmpty()) {
+            return ResponseEntity.badRequest().body("El campo de productos no puede estar vacío.");
+        }
         //Creacion
+        System.out.println("Creando");
         Ticket createdTicket = ticketService.setItem(ticket);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(TicketDto.from(createdTicket));
@@ -99,10 +129,14 @@ public class TicketController {
         Ticket ticket = new Ticket();
 
         ticket.setUser(userService.getUserById(clienteId).orElse(new User()));
-        ticket.setCategory(categoriaService.getByID(request.categoriaId()).orElse(null));
-        ticket.setExpenseDate(request.fechaCompra());
-        ticket.setTotal(request.total());
-        ticket.setProductsJSON(request.productosJSON());
+        ticket.setCategory(categoriaService.getByID(request.getCategoriaId()).orElse(null));
+        ticket.setExpenseDate(request.getFechaCompra());
+        ticket.setTotal(request.getTotal());
+        ticket.setIcon(request.getIcon());
+        ticket.setDescription(request.getDescription());
+        ticket.setName(request.getName());
+        ticket.setStore(request.getStore());
+        ticket.setProductsJSON(request.getProductsJSON());
         ticket.setCreatedAt(LocalDateTime.now());
         return  ticket;
     }
@@ -137,26 +171,39 @@ public class TicketController {
     )
     public ResponseEntity<TicketDto> updateTicket(
             @PathVariable Long ticketId,
-            @Valid @RequestBody Ticket request,
+            @Valid @RequestBody UpdateTicketRequest request,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
-        Ticket ticket;
-        //verificacion de propiedad
-        if(user.getRole() != RoleServer.ADMIN && !request.getUser().getId().equals(user.getId())){
-            return ResponseEntity.badRequest().build();
-        }
-        //Verificacion complememntaria
-        if (request.getSpent_id() == null || !request.getSpent_id().equals(ticketId)) {
-            return ResponseEntity.badRequest().build();
-        }else {
-            ticket = ticketService.getByID(ticketId).orElse(null);
-        }
-        //Veriificacion existencia
+        Ticket ticket = ticketService.getByID(ticketId).orElse(null);
+
+        // Verificación de existencia
         if (ticket == null) {
             return ResponseEntity.notFound().build();
         }
-        //Actualizacion
-        Ticket updatedTicket = ticketService.setItem(request);
+
+        // Verificación de propiedad
+        if (user.getRole() != RoleServer.ADMIN && !ticket.getUser().getId().equals(user.getId()) ||
+            !ticket.getSpentId().equals(request.getSpentId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+
+
+        // Actualización
+        ticket.setCategory(categoriaService.getByID(request.getCategoriaId()).orElse(null));
+        ticket.setStore(request.getStore());
+        ticket.setExpenseDate(request.getFechaCompra());
+        ticket.setName(request.getName());
+        ticket.setDescription(request.getDescription());
+        ticket.setTotal(request.getTotal());
+        ticket.setIva(request.getIva());
+        ticket.setIcon(request.getIcon());
+        ticket.setIcon(request.getIcon());
+        ticket.setProductsJSON(request.getProductsJSON());
+
+        // Guardamos los cambios
+        Ticket updatedTicket = ticketService.setItem(ticket);
         return ResponseEntity.ok(TicketDto.from(updatedTicket));
     }
+
 }

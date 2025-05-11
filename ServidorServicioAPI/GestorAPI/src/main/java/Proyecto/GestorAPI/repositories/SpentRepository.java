@@ -15,6 +15,9 @@ import java.util.List;
 public interface SpentRepository extends JpaRepository<Spent, Long> {
 
     List<Spent> getByUserId(Long id);
+
+    long countByUserId(Long userId);
+
     // JpaRepository proporciona automáticamente las operaciones básicas sobre la entidad Spent
     // como findAll(), findById(), save(), deleteById(), entre otras.
 }

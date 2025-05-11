@@ -1,4 +1,4 @@
-package Proyecto.GestorAPI.modelsDTO;
+package Proyecto.GestorAPI.modelsDTO.user;
 
 import Proyecto.GestorAPI.models.User;
 
@@ -10,7 +10,7 @@ import Proyecto.GestorAPI.models.User;
  * que puede ser utilizada para la comunicación entre la capa de servicios y la capa de presentación, o entre
  * el cliente y el servidor en una API RESTful.
  */
-public record UserMeOutDto(Long id, String username, String name, String email, String role) {
+public record UserDto(Long id, String username, String name, String email, String role) {
 
     /**
      * Método estático para convertir una entidad `User` en un DTO `UserDto`.
@@ -22,8 +22,8 @@ public record UserMeOutDto(Long id, String username, String name, String email, 
      * @param user La entidad `User` a convertir en un DTO.
      * @return El DTO `UserDto` con los datos del `User` proporcionado.
      */
-    public static UserMeOutDto from(User user) {
-        return new UserMeOutDto(
+    public static UserDto from(User user) {
+        return new UserDto(
                 user.getId(),
                 user.getUsername(),
                 user.getName(),

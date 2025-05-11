@@ -88,4 +88,10 @@ public class SpentServiceImpl implements SpentService {
     public List<Spent> getSpentsByUserId(Long id) {
         return  repository.getByUserId(id);
     }
+
+    @Override
+    public long countSpentsByUserId(Long userId) {
+        return repository.countByUserId(userId);
+    }
+
 }

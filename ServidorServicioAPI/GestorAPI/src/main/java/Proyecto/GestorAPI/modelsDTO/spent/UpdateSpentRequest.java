@@ -1,4 +1,4 @@
-package Proyecto.GestorAPI.modelsDTO;
+package Proyecto.GestorAPI.modelsDTO.spent;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
 public record UpdateSpentRequest(
-        @NotNull Long spent_id,
+        @NotNull Long spentId,
         @NotNull Long userId,
         @NotNull Long categoriaId,
         @NotNull String name,

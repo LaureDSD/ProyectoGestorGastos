@@ -20,9 +20,9 @@ import { PrivateComponent } from './pages/private/private.component';
 import { IndexComponent } from './pages/public/index/index.component';
 import { PrivacityComponent } from './pages/public/privacity/privacity.component';
 import { GastosComponent } from './pages/protected/gastos/gastos.component';
-import {  FormHerramientaComponent } from './components/form-herramienta/form-herramienta.component';
-import { HerramientaComponent } from './components/herramienta/herramienta.component';
-import { FiltroHerramientaComponent } from './components/filtro-herramienta/filtro-herramienta.component';
+import {  FormHerramientaComponent } from './pages/protected/form-herramienta/form-herramienta.component';
+import { HerramientaComponent } from './pages/protected/herramienta/herramienta.component';
+import { FiltroHerramientaComponent } from './pages/protected/filtro-herramienta/filtro-herramienta.component';
 
 
 

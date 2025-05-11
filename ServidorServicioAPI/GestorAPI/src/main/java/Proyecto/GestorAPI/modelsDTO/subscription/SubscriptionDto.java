@@ -1,4 +1,4 @@
-package Proyecto.GestorAPI.modelsDTO;
+package Proyecto.GestorAPI.modelsDTO.subscription;
 
 import Proyecto.GestorAPI.models.Subscription;
 import java.time.format.DateTimeFormatter;

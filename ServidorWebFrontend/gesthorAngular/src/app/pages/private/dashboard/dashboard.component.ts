@@ -1,3 +1,4 @@
+import { SpentService } from '../../../services/spent.service';
 import { NavbarComponent } from './../../../components/navbar/navbar.component';
 import { ApiserviceService } from './../../../services/apiservice.service';
 
@@ -6,6 +7,7 @@ import { UserserviceService } from '../../../services/userservice.service';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { LoginAttempt, UserDto } from '../../../models/api-models/api-models.component';
 
 
 @Component({
@@ -17,29 +19,42 @@ import { environment } from '../../../environments/environment';
 })
 export class DashboardComponent {
 
-  server : any = `${environment.apiUrl}/`;
-  logs : any = {};
-  user : any = {};
-
+  server : string = `${environment.apiUrl}/`;
+  totalspents : number = 0 ;
+  logs : LoginAttempt[] = []
+  user : UserDto = {
+    id: 0,
+    name: '',
+    username: '',
+    email: '',
+    phone: '',
+    address: '',
+    imageUrl: '',
+    server: '',
+    role: '',
+    active: false,
+    fv2: false,
+    createdAt: '',
+    updatedAt: ''
+  };
 
   preguntas: { pregunta: string; respuesta: string; class: string }[] = [];
 
   constructor(
     private userService: UserserviceService,
     private authservice : AuthService,
-    private apiserviceService : ApiserviceService,
     private route : Router) {
     this.cargarUsuario()
     this.cargarLogs()
   }
 
   cargarUsuario(){
-    this.user = this.userService.getFullCurrentUser().subscribe( u => this.user = u);
+    this.userService.getFullCurrentUser().subscribe(u => this.user = u);
   }
 
   guardarCampo(event: { field: string; value: string }) {
     if(true){
-      this.user[event.field] = event.value;
+      (this.user as any)[event.field] = event.value;
       this.user.server = `${environment.apiName}`
       this.userService.actualizarUsuario(this.user).subscribe({
         next: (res) => {
@@ -61,7 +76,11 @@ export class DashboardComponent {
   }
 
   cargarLogs() {
-    this.userService.getLogs().subscribe(l => this.logs = l.slice(-10));
+    this.userService.getLogs().subscribe(l => this.logs = l);
+  }
+
+  cargarGastos() {
+    this.userService.getTotalSpents().subscribe(ts => this.totalspents = ts);
   }
 
   borrarToken() {

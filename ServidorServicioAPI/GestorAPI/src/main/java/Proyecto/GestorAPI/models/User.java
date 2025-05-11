@@ -31,26 +31,32 @@ public class User {
     private Long id;
 
     /** Nombre de usuario utilizado para autenticación. */
+    @Column(nullable = false, unique = true)
     private String username;
 
     /** Contraseña cifrada del usuario. */
+    @Column(nullable = false)
     private String password;
 
     /** Nombre completo del usuario. */
+    @Column(nullable = false)
     private String name;
 
     /** Correo electrónico del usuario. */
+    @Column(nullable = false, unique = true)
     private String email;
 
-    private String server ;
+    private String server;
 
-    private String address ;
+    private String address;
 
     private String phone;
 
-    private boolean tfa;
+    private boolean fv2;
 
     /** Rol del usuario dentro del sistema (admin, user). */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private RoleServer role;
 
     /** URL de la imagen de perfil del usuario. */
@@ -75,11 +81,9 @@ public class User {
     private String providerId;
 
     /** Fecha de creación del usuario. */
-    //@JsonIgnore
     private LocalDateTime createdAt;
 
     /** Fecha de la última modificación del usuario. */
-    //@JsonIgnore
     private LocalDateTime updatedAt;
 
     /**
@@ -114,7 +118,7 @@ public class User {
      * @param providerId  ID proporcionado por el proveedor
      */
     public User(String username, String password, String name, String email, RoleServer role,
-                String imageUrl, OAuth2Provider provider, String providerId) {
+                String imageUrl, OAuth2Provider provider, String providerId, String server, String address, String phone, boolean fv2) {
         this.username = username;
         this.password = password;
         this.name = name;
@@ -124,5 +128,9 @@ public class User {
         this.provider = provider;
         this.providerId = providerId;
         this.active = true;
+        this.server = server;
+        this.address = address;
+        this.phone = phone;
+        this.fv2 = fv2;
     }
 }

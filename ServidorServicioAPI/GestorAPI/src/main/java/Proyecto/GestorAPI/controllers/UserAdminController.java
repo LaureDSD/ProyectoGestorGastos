@@ -1,10 +1,7 @@
 package Proyecto.GestorAPI.controllers;
 
-
-import Proyecto.GestorAPI.exceptions.UserNotFoundException;
 import Proyecto.GestorAPI.models.User;
-import Proyecto.GestorAPI.modelsDTO.UserDto;
-import Proyecto.GestorAPI.security.CustomUserDetails;
+import Proyecto.GestorAPI.modelsDTO.user.UserDto;
 import Proyecto.GestorAPI.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -12,12 +9,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME;
 

@@ -1,5 +1,6 @@
 package Proyecto.GestorAPI.models;
 
+import Proyecto.GestorAPI.models.enums.ExpenseClass;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -50,4 +51,14 @@ public class Ticket extends Spent {
      */
     @Column(columnDefinition = "JSON")
     private String productsJSON;
+
+    public Ticket(String name, String description, String icon, LocalDateTime expenseDate, double total, double iva,
+                  User user, CategoryExpense category, LocalDateTime createdAt, LocalDateTime updatedAt,
+                  ExpenseClass typeExpense, String store, String productsJSON) {
+        super(name, description, icon, expenseDate, total, iva, user, category, createdAt, updatedAt, typeExpense);
+        this.store = store;
+        this.productsJSON = productsJSON;
+    }
+
+
 }

@@ -47,11 +47,14 @@ import { EditFormProfileComponent } from './components/edit-form-profile/edit-fo
 import { EditFormPasswordComponent } from './components/edit-form-password/edit-form-password.component';
 import { GastosComponent } from './pages/protected/gastos/gastos.component';
 import { ChatComponent } from './components/chat/chat.component';
-import { FormHerramientaComponent } from './components/form-herramienta/form-herramienta.component';
+import { FormHerramientaComponent } from './pages/protected/form-herramienta/form-herramienta.component';
 import { NgChartsModule } from 'ng2-charts';
-import { HerramientaComponent } from './components/herramienta/herramienta.component';
-import { FiltroHerramientaComponent } from './components/filtro-herramienta/filtro-herramienta.component';
+import { HerramientaComponent } from './pages/protected/herramienta/herramienta.component';
+import { FiltroHerramientaComponent } from './pages/protected/filtro-herramienta/filtro-herramienta.component';
 import { ToolGroupComponent } from './components/tool-group/tool-group.component';
+import { ApiModelsComponent } from './models/api-models/api-models.component';
+import { ModelsComponent } from './models/models/models.component';
+import { FormProductosComponent } from './components/form-productos/form-productos.component';
 
 @NgModule({
   declarations: [
@@ -101,6 +104,9 @@ import { ToolGroupComponent } from './components/tool-group/tool-group.component
     FiltroHerramientaComponent,
     FormHerramientaComponent,
     ToolGroupComponent,
+    ApiModelsComponent,
+    ModelsComponent,
+    FormProductosComponent,
   ],
   imports: [
     BrowserModule,
@@ -108,7 +114,7 @@ import { ToolGroupComponent } from './components/tool-group/tool-group.component
     ReactiveFormsModule,
     AppRoutingModule,
     FormsModule,
-    NgChartsModule
+    NgChartsModule,
 ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }

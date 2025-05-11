@@ -1,11 +1,9 @@
 package Proyecto.GestorAPI.controllers;
 
-import Proyecto.GestorAPI.models.Spent;
 import Proyecto.GestorAPI.models.Subscription;
 import Proyecto.GestorAPI.models.User;
-import Proyecto.GestorAPI.modelsDTO.CreateSubscriptionRequest;
-import Proyecto.GestorAPI.modelsDTO.CreateTicketRequest;
-import Proyecto.GestorAPI.modelsDTO.SubscriptionDto;
+import Proyecto.GestorAPI.modelsDTO.subscription.CreateSubscriptionRequest;
+import Proyecto.GestorAPI.modelsDTO.subscription.SubscriptionDto;
 import Proyecto.GestorAPI.security.CustomUserDetails;
 import Proyecto.GestorAPI.security.RoleServer;
 import Proyecto.GestorAPI.services.SubscriptionService;
@@ -149,7 +147,7 @@ public class SubscriptionController {
             return ResponseEntity.badRequest().build();
         }
         //Verificacion complememntaria
-        if (request.getSpent_id() == null || !request.getSpent_id().equals(subscriptionId)) {
+        if (request.getSpentId() == null || !request.getSpentId().equals(subscriptionId)) {
             return ResponseEntity.badRequest().build();
         }else {
             subscription = subscriptionService.getByID(subscriptionId).orElse(null);

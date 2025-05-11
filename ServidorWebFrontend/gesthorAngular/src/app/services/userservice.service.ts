@@ -34,8 +34,12 @@ export class UserserviceService {
     return this.http.get(`${environment.apiUrl}/api/user/me/logs`);
   }
 
+  getTotalSpents(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/api/user/me/count`);
+  }
+
   deleteUser(){
-    return this.http.delete(`${this.baseUrl}/api/user/me`);
+    return this.http.delete(`${this.baseUrl}/api/user/me/`);
   }
 
   getQuestions(){

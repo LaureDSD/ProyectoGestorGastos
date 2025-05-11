@@ -1,4 +1,4 @@
-package Proyecto.GestorAPI.modelsDTO;
+package Proyecto.GestorAPI.modelsDTO.ticket;
 
 import lombok.Data;
 
@@ -11,6 +11,7 @@ public class TicketResponse {
     private String fecha;
     private String hora;
     private Double total;
+    private Long category;
     private List<Map<String, Object>> articulos;
     private Double confianza;
 }

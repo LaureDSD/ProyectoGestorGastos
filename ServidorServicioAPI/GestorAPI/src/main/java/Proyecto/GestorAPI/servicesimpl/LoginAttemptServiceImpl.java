@@ -80,12 +80,19 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
 
 
 
+    @Override
     public List<LoginAttempt> getAll() {
         return loginAttemptRepository.findAll();
     }
 
+    @Override
     public List<LoginAttempt> getByUsernameOrEamil(String username) {
         return loginAttemptRepository.findByUsername(username);
+    }
+
+    @Override
+    public void setItem(LoginAttempt loginAttempt) {
+         loginAttemptRepository.save(loginAttempt);
     }
 }
 

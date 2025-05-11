@@ -59,4 +59,6 @@ public interface SpentService {
     boolean existsById(Long id);
 
     List<Spent> getSpentsByUserId(Long clienteId);
+
+    long countSpentsByUserId(Long userId);
 }

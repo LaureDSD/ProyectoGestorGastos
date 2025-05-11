@@ -30,7 +30,7 @@ public class Spent {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long spent_id;
+    private Long spentId;
 
     /**
      * Nombre o título del gasto.
@@ -96,6 +96,7 @@ public class Spent {
     @Column(name = "tipo", nullable = false)
     private ExpenseClass typeExpense = ExpenseClass.GASTO_GENERICO;
 
+
     /**
      * Callback de JPA que se ejecuta automáticamente antes de insertar un nuevo gasto.
      * Establece las fechas de creación y modificación.
@@ -114,4 +115,23 @@ public class Spent {
     public void preUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+
+
+    public Spent(String name, String description, String icon, LocalDateTime expenseDate, double total, double iva, User user, CategoryExpense category, LocalDateTime createdAt, LocalDateTime updatedAt, ExpenseClass typeExpense) {
+        this.name = name;
+        this.description = description;
+        this.icon = icon;
+        this.expenseDate = expenseDate;
+        this.total = total;
+        this.iva = iva;
+        this.user = user;
+        this.category = category;
+        this.createdAt = createdAt != null ? createdAt : LocalDateTime.now();
+        this.updatedAt = updatedAt != null ? updatedAt : LocalDateTime.now();
+        this.typeExpense = typeExpense != null ? typeExpense : ExpenseClass.GASTO_GENERICO;
+    }
+
+
+
 }

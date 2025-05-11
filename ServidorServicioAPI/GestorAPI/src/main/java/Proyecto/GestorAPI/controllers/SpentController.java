@@ -2,10 +2,8 @@ package Proyecto.GestorAPI.controllers;
 
 import Proyecto.GestorAPI.models.Spent;
 import Proyecto.GestorAPI.models.User;
-import Proyecto.GestorAPI.modelsDTO.CreateSpentRequest;
-import Proyecto.GestorAPI.modelsDTO.CreateTicketRequest;
-import Proyecto.GestorAPI.modelsDTO.SpentDto;
-import Proyecto.GestorAPI.modelsDTO.UpdateSpentRequest;
+import Proyecto.GestorAPI.modelsDTO.spent.CreateSpentRequest;
+import Proyecto.GestorAPI.modelsDTO.spent.SpentDto;
 import Proyecto.GestorAPI.security.CustomUserDetails;
 import Proyecto.GestorAPI.security.RoleServer;
 import Proyecto.GestorAPI.services.CategoryExpenseService;

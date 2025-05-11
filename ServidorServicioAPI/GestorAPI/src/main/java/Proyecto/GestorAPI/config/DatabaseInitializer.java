@@ -1,44 +1,37 @@
 package Proyecto.GestorAPI.config;
 
-import Proyecto.GestorAPI.models.CategoryExpense;
-import Proyecto.GestorAPI.models.User;
+import Proyecto.GestorAPI.models.*;
+import Proyecto.GestorAPI.models.enums.ExpenseClass;
 import Proyecto.GestorAPI.security.RoleServer;
 import Proyecto.GestorAPI.security.oauth2.OAuth2Provider;
+import Proyecto.GestorAPI.services.*;
 import Proyecto.GestorAPI.servicesimpl.CategoryExpenseServiceImpl;
-import Proyecto.GestorAPI.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Clase encargada de inicializar la base de datos con datos predeterminados
- * al iniciar la aplicación, como usuarios de prueba y categorías de gastos.
- *
- * Esta clase se ejecuta automáticamente al arrancar la aplicación Spring Boot.
- */
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class DatabaseInitializer implements CommandLineRunner {
 
     private final UserService userService;
+    private final SpentService spentService;
+    private final TicketService ticketService;
+    private final SubscriptionService subscriptionService;
     private final PasswordEncoder passwordEncoder;
     private final CategoryExpenseServiceImpl categoriaService;
+    private final LoginAttemptService loginAttemptService;
 
-    /**
-     * Método principal que se ejecuta al iniciar la aplicación.
-     * Inserta usuarios y categorías por defecto si no existen datos previos.
-     *
-     * @param args argumentos de línea de comandos
-     */
     @Override
     public void run(String... args) {
-        // Verificar si ya existen usuarios registrados
         if (!userService.getUsers().isEmpty()) {
             return;
         }
@@ -49,19 +42,32 @@ public class DatabaseInitializer implements CommandLineRunner {
             userService.saveUser(user);
         });
 
-        // Insertar categorías de gasto predeterminadas
+        // Insertar categorías
         CATEGORIAS.forEach(categoriaService::setItem);
 
-        log.info("Database initialized");
+        // Insertar gastos
+        SPENTS.forEach(spentService::setItem);
+
+        // Insertar tickets
+        TICKETS.forEach(ticketService::setItem);
+
+        // Insertar suscripciones
+        SUBSCRIPTIONS.forEach(subscriptionService::setItem);
+
+        //Insertar Logs
+        LOGIN_ATTEMPTS.forEach(loginAttemptService::setItem);
+
+
+        System.out.println("Database initialized");
     }
 
-    /** Lista de usuarios por defecto (admin y usuario normal). */
-    private static final List<User> USERS = Arrays.asList(
-            new User("admin", "admin", "Admin", "admin@gesthor.com", RoleServer.ADMIN, "default/profile.jpg", OAuth2Provider.LOCAL, "local-1"),
-            new User("user", "user", "User", "user@gesthor.com", RoleServer.USER, "default/profile.jpg", OAuth2Provider.LOCAL, "local-2")
+    public static final List<User> USERS = List.of(
+            new User("admin", "admin", "Admin", "admin@gesthor.com", RoleServer.ADMIN,
+                    "uploads/perfiles/default-admin.jpg", OAuth2Provider.LOCAL, "local-1", "GesThor-Admin", "admin address", "123456789", false),
+            new User("user", "user", "User", "user@gesthor.com", RoleServer.USER,
+                    "uploads/perfiles/default-user.jpg", OAuth2Provider.LOCAL, "local-2", "GesThor-User", "user address", "987654321", true)
     );
 
-    /** Lista de categorías de gastos predeterminadas. */
     private static final List<CategoryExpense> CATEGORIAS = Arrays.asList(
             new CategoryExpense("Alimentos", "Productos destinados a la nutrición y el consumo."),
             new CategoryExpense("Bebidas", "Refrescos, jugos, agua, bebidas alcohólicas, etc."),
@@ -77,28 +83,35 @@ public class DatabaseInitializer implements CommandLineRunner {
             new CategoryExpense("Varios", "Productos que no encajan en otras categorías.")
     );
 
-    /*
-    *
-    *
-    *
-        INSERT INTO gestor_bd.gastos
-        ( created_at, description, expense_date, icon, iva, name, total, tipo, updated_at, categoria_id, user_id)
-        VALUES
-        -- Gastos para user_id = 1 (Ejemplos variados)
-        ( NOW(), 'Compra en supermercado', '2025-01-15 10:30:00', '🛒', 10.5, 'Mercadona', 75.99, 'FACTURA', NOW(), 3, 1),
-        ( NOW(), 'Gasolina', '2025-01-20 14:15:00', '⛽', 21.0, 'Repsol', 45.50, 'TICKET', NOW(), 2, 1),
-        ( NOW(), 'Netflix', '2025-02-01 00:00:00', '📺', 21.0, 'Suscripción Netflix', 12.99, 'SUBSCRIPCION', NOW(), 5, 1),
-        ( NOW(), 'Regalo cumpleaños', '2025-02-10 18:00:00', '🎁', 0.0, 'Amazon', 29.99, 'GASTO_GENERICO', NOW(), 4, 1),
-        ( NOW(), 'Transferencia a hermano', '2025-02-15 09:45:00', '💸', 0.0, 'Transferencia', 100.00, 'TRANSFERENCIA', NOW(), NULL, 1),
+    public static final List<Spent> SPENTS = List.of(
+            new Spent("Compra de equipo", "Compra de equipo de oficina", "laptop-icon", LocalDateTime.now(), 1200.00, 21.0,
+                    USERS.get(0), CATEGORIAS.get(5), LocalDateTime.now(), LocalDateTime.now(), ExpenseClass.GASTO_GENERICO),
+            new Spent("Suscripción a software", "Pago mensual de suscripción a software", "software-icon", LocalDateTime.now(), 30.00, 21.0,
+                    USERS.get(0), CATEGORIAS.get(6), LocalDateTime.now(), LocalDateTime.now(), ExpenseClass.GASTO_GENERICO),
+            new Spent("Compra de alimentos", "Compra en supermercado", "food-icon", LocalDateTime.now(), 50.00, 10.0,
+                    USERS.get(1), CATEGORIAS.get(7), LocalDateTime.now(), LocalDateTime.now(), ExpenseClass.GASTO_GENERICO),
+            new Spent("Transporte", "Pago transporte público", "transport-icon", LocalDateTime.now(), 15.00, 10.0,
+                    USERS.get(1), CATEGORIAS.get(8), LocalDateTime.now(), LocalDateTime.now(), ExpenseClass.GASTO_GENERICO)
+    );
 
-        -- Gastos para user_id = 2 (Ejemplos adicionales)
-        ( NOW(), 'Cena restaurante', '2025-01-18 21:30:00', '🍽️', 10.0, 'Restaurante La Pasta', 32.75, 'FACTURA', NOW(), 1, 2),
-        ( NOW(), 'Autobús urbano', '2025-01-22 08:10:00', '🚌', 0.0, 'Billete transporte', 1.50, 'TICKET', NOW(), 6, 2),
-        ( NOW(), 'Spotify Premium', '2025-02-01 00:00:00', '🎵', 21.0, 'Suscripción Spotify', 9.99, 'SUBSCRIPCION', NOW(), 5, 2),
-        ( NOW(), 'Material oficina', '2025-02-05 11:20:00', '📎', 21.0, 'Toner impresora', 89.99, 'GASTO_GENERICO', NOW(), 7, 2),
-        ( NOW(), 'Devolución deuda', '2025-02-12 16:30:00', '↩️', 0.0, 'Transferencia a María', 50.00, 'TRANSFERENCIA', NOW(), NULL, 2);
-    *
-    *
-    * */
+    public static final List<Ticket> TICKETS = List.of(
+            new Ticket("Compra de oficina", "Compra de equipo de oficina", "laptop-icon", LocalDateTime.now(), 1200.00, 21.0,
+                    USERS.get(0), CATEGORIAS.get(0), LocalDateTime.now(), LocalDateTime.now(), ExpenseClass.GASTO_GENERICO,
+                    "Electrodomesticos", "[{\"nombre\": \"Laptop\", \"categorias\": [\"Tecnología\", \"Computación\"], \"cantidad\": 1, \"precio\": 1000.00}, {\"nombre\": \"Mochila\", \"categorias\": [\"Accesorios\"], \"cantidad\": 1, \"precio\": 200.00}]"),
+            new Ticket("Supermercado", "Compra en supermercado", "food-icon", LocalDateTime.now(), 50.00, 10.0,
+                    USERS.get(1), CATEGORIAS.get(1) , LocalDateTime.now(), LocalDateTime.now(), ExpenseClass.GASTO_GENERICO,
+                    "Supermercado", "[{\"nombre\": \"Leche\", \"categorias\": [\"Alimentos\", \"Lácteos\"], \"cantidad\": 2, \"precio\": 1.25}, {\"nombre\": \"Pan\", \"categorias\": [\"Alimentos\"], \"cantidad\": 1, \"precio\": 0.95}]")
+    );
 
+    public static final List<Subscription> SUBSCRIPTIONS = List.of(
+            new Subscription("Netflix", "Subscripción mensual de streaming", "netflix-icon", LocalDateTime.now().minusMonths(1), 10.99, 1.21, USERS.get(1), CATEGORIAS.get(3), LocalDateTime.now().minusMonths(1), LocalDateTime.now(), ExpenseClass.SUBSCRIPCION, LocalDateTime.now().minusMonths(1), null, 10.99, 1, 30, true),
+            new Subscription("Spotify", "Subscripción mensual de música", "spotify-icon", LocalDateTime.now().minusWeeks(2), 9.99, 1.10, USERS.get(0), CATEGORIAS.get(4), LocalDateTime.now().minusWeeks(2), LocalDateTime.now(), ExpenseClass.SUBSCRIPCION, LocalDateTime.now().minusWeeks(2), null, 9.99, 5, 30, true)
+    );
+
+    public static final List<LoginAttempt> LOGIN_ATTEMPTS = List.of(
+            new LoginAttempt("admin", Instant.now(), true),
+            new LoginAttempt("user", Instant.now(), false),
+            new LoginAttempt("admin", Instant.now(), true),
+            new LoginAttempt("user", Instant.now(), false)
+    );
 }
