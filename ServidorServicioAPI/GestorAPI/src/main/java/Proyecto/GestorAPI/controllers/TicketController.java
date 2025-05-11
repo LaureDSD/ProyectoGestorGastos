@@ -2,6 +2,7 @@ package Proyecto.GestorAPI.controllers;
 
 import Proyecto.GestorAPI.models.Ticket;
 import Proyecto.GestorAPI.models.User;
+import Proyecto.GestorAPI.models.enums.ExpenseClass;
 import Proyecto.GestorAPI.modelsDTO.ticket.CreateTicketRequest;
 import Proyecto.GestorAPI.modelsDTO.ticket.TicketDto;
 import Proyecto.GestorAPI.modelsDTO.ticket.UpdateTicketRequest;
@@ -36,7 +37,7 @@ public class TicketController {
     private final UserService userService;
     private final CategoryExpenseService categoriaService;
 
-    @GetMapping("/")
+    @GetMapping("")
     @Operation(
             security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
             summary = "Obtener todos los tickets filtrados por clienteId (opcional para admins)"
@@ -138,6 +139,7 @@ public class TicketController {
         ticket.setStore(request.getStore());
         ticket.setProductsJSON(request.getProductsJSON());
         ticket.setCreatedAt(LocalDateTime.now());
+        ticket.setTypeExpense(ExpenseClass.TICKET);
         return  ticket;
     }
 

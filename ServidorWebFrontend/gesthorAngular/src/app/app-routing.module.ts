@@ -51,8 +51,8 @@ const routes: Routes = [
       { path: 'tools', component: ToolsComponent },
       { path: 'gastos', component: GastosComponent },
       { path: 'tool/:tipo', component: HerramientaComponent },
-      { path: 'form/:tipo/:id', component: FormHerramientaComponent },
       { path: 'filter/:tipo', component: FiltroHerramientaComponent },
+      { path: 'form/:tipo/:id', component: FormHerramientaComponent },
   ],
       canActivate: [AuthGuard]},
 

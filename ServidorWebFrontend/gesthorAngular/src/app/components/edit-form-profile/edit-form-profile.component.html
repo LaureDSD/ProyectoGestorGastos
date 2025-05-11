@@ -3,11 +3,10 @@
 
     <img
       *ngIf="profile != undefined"
-      [src]="profile"
+      [src]="img ? (server + img) : '/icon/icons8-cuenta-de-prueba-100.png'"
       alt="Perfil"
       class="w-100 h-100 rounded shadow"
       style="object-fit: cover; border: 4px solid white;" />
-
     <button type="button"
             class="btn btn-light btn-sm position-absolute bottom-0 end-0 m-3 p-2 rounded-circle shadow"
             (click)="fileInput.click()"

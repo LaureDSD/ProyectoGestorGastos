@@ -13,7 +13,6 @@ public record UpdateSpentRequest(
         @NotNull String name,
         String description,
         String icon,
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         @NotNull LocalDateTime fechaCompra,
         @Positive double total,
         @Positive double iva,

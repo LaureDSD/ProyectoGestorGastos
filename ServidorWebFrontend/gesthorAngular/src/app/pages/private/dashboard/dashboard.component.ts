@@ -7,7 +7,7 @@ import { UserserviceService } from '../../../services/userservice.service';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
-import { LoginAttempt, UserDto } from '../../../models/api-models/api-models.component';
+import { LoginAttemptDto, UserDto } from '../../../models/api-models/api-models.component';
 
 
 @Component({
@@ -19,9 +19,8 @@ import { LoginAttempt, UserDto } from '../../../models/api-models/api-models.com
 })
 export class DashboardComponent {
 
-  server : string = `${environment.apiUrl}/`;
   totalspents : number = 0 ;
-  logs : LoginAttempt[] = []
+  logs : LoginAttemptDto[] = []
   user : UserDto = {
     id: 0,
     name: '',

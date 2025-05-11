@@ -1,6 +1,7 @@
 package Proyecto.GestorAPI.modelsDTO.ticket;
 
 import Proyecto.GestorAPI.models.Ticket;
+import Proyecto.GestorAPI.models.enums.ExpenseClass;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,6 +17,7 @@ public record TicketDto(
         double total,
         double iva,
         String icon,
+        ExpenseClass typeExpense,
         String productsJSON
 ) {
     public static TicketDto from(Ticket ticket) {
@@ -31,6 +33,7 @@ public record TicketDto(
                 ticket.getTotal(),
                 ticket.getIva(),
                 ticket.getIcon(),
+                ticket.getTypeExpense(),
                 ticket.getProductsJSON()
         );
     }

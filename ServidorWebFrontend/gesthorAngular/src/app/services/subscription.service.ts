@@ -1,33 +1,42 @@
-import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
-import { Injectable } from '@angular/core';
+import { SubscriptionDto } from '../models/api-models/api-models.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SubscriptionService {
+  private readonly baseUrl = `${environment.apiUrl}/api/subscripciones`;
 
-private baseUrl = `${environment.apiUrl}/api/tickets`;
-constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
-getSubscriptions(clienteId?: number): Observable<any[]> {
-    const url = clienteId ? `${this.baseUrl}/?clienteId=${clienteId}` : `${this.baseUrl}/`;
-    return this.http.get<any[]>(url);
+  /** Obtiene todas las subscripciones, opcionalmente filtradas por clienteId */
+  getSubscriptions(clienteId?: number): Observable<SubscriptionDto[]> {
+    let params = new HttpParams();
+    if (clienteId != null) {
+      params = params.set('clienteId', String(clienteId));
+    }
+    return this.http.get<SubscriptionDto[]>(this.baseUrl, { params });
   }
 
-  getSubscriptionById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/${id}`);
+  /** Obtiene una subscripción por su ID */
+  getSubscriptionById(id: number): Observable<SubscriptionDto> {
+    return this.http.get<SubscriptionDto>(`${this.baseUrl}/${id}`);
   }
 
-  addSubscription(subscription: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/`, subscription);
+  /** Crea una nueva subscripción */
+  addSubscription(subscription: SubscriptionDto): Observable<SubscriptionDto> {
+    return this.http.post<SubscriptionDto>(this.baseUrl, subscription);
   }
 
-  updateSubscription(id: number, subscription: any): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/${id}`, subscription);
+  /** Actualiza una subscripción existente */
+  updateSubscription(id: number, subscription: SubscriptionDto): Observable<SubscriptionDto> {
+    return this.http.put<SubscriptionDto>(`${this.baseUrl}/${id}`, subscription);
   }
 
+  /** Elimina una subscripción por su ID */
   deleteSubscription(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }

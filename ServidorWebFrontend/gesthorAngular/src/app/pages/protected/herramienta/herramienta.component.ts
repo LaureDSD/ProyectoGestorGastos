@@ -52,8 +52,7 @@ export class HerramientaComponent {
     if (this.tipo === 'ticketimagen') {
       this.ocrService.procesarTicketImagen(this.file).subscribe(
         (response: any) => {
-          // Procesar la respuesta, por ejemplo, redirigir al formulario con el ID del ticket
-          const ticketId = response.id; // Asegúrate de que el backend devuelva el ID del ticket
+          const ticketId = response.id;
           this.router.navigate(['/protected/form', 'ticket', ticketId]);
         },
         (error) => {
@@ -63,8 +62,7 @@ export class HerramientaComponent {
     } else if (this.tipo === 'ticketdigital') {
       this.ocrService.procesarTicketDigital(this.file).subscribe(
         (response: any) => {
-          // Procesar la respuesta, por ejemplo, redirigir al formulario con el ID del ticket
-          const ticketId = response.id; // Asegúrate de que el backend devuelva el ID del ticket
+          const ticketId = response.id;
           this.router.navigate(['/protected/form', 'ticketdigital', ticketId]);
         },
         (error) => {

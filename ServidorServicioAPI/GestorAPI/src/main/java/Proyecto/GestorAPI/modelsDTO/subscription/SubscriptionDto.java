@@ -1,16 +1,32 @@
 package Proyecto.GestorAPI.modelsDTO.subscription;
 
 import Proyecto.GestorAPI.models.Subscription;
+import Proyecto.GestorAPI.models.enums.ExpenseClass;
+
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public record SubscriptionDto(Long clienteId, String fechaCompra, String nombre, String descripcion, double total, double iva, String icono, String start, String end, double accumulate, int restartDay, int intervalTime, boolean activa) {
+public record SubscriptionDto(Long clienteId,
+                              LocalDateTime fechaCompra,
+                              String name,
+                              String description,
+                              double total,
+                              double iva,
+                              String icon,
+                              LocalDateTime start,
+                              LocalDateTime end,
+                              double accumulate,
+                              int restartDay,
+                              int intervalTime,
+                              ExpenseClass typeExpense,
+                              boolean activa) {
 
     public static SubscriptionDto from(Subscription subscription) {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         return new SubscriptionDto(
                 //Id
                 subscription.getUser().getId(),
-                formatter.format(subscription.getExpenseDate()),
+                subscription.getExpenseDate(),
                 //Base
                 subscription.getName(),
                 subscription.getDescription(),
@@ -18,11 +34,12 @@ public record SubscriptionDto(Long clienteId, String fechaCompra, String nombre,
                 subscription.getIva(),
                 subscription.getIcon(),
                 //Extra
-                subscription.getStart() != null ? formatter.format(subscription.getStart()) : null,
-                subscription.getEnd() != null ? formatter.format(subscription.getEnd()) : null,
+                subscription.getStart(),
+                subscription.getEnd(),
                 subscription.getAccumulate(),
                 subscription.getRestartDay(),
                 subscription.getIntervalTime(),
+                subscription.getTypeExpense(),
                 subscription.isActiva()
         );
     }

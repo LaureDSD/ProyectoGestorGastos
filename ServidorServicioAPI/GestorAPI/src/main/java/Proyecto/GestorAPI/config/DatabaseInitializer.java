@@ -63,9 +63,9 @@ public class DatabaseInitializer implements CommandLineRunner {
 
     public static final List<User> USERS = List.of(
             new User("admin", "admin", "Admin", "admin@gesthor.com", RoleServer.ADMIN,
-                    "uploads/perfiles/default-admin.jpg", OAuth2Provider.LOCAL, "local-1", "GesThor-Admin", "admin address", "123456789", false),
+                    "", OAuth2Provider.LOCAL, "local-1", "GesThor-Admin", "admin address", "123456789", false),
             new User("user", "user", "User", "user@gesthor.com", RoleServer.USER,
-                    "uploads/perfiles/default-user.jpg", OAuth2Provider.LOCAL, "local-2", "GesThor-User", "user address", "987654321", true)
+                    "", OAuth2Provider.LOCAL, "local-2", "GesThor-User", "user address", "987654321", true)
     );
 
     private static final List<CategoryExpense> CATEGORIAS = Arrays.asList(
@@ -96,10 +96,10 @@ public class DatabaseInitializer implements CommandLineRunner {
 
     public static final List<Ticket> TICKETS = List.of(
             new Ticket("Compra de oficina", "Compra de equipo de oficina", "laptop-icon", LocalDateTime.now(), 1200.00, 21.0,
-                    USERS.get(0), CATEGORIAS.get(0), LocalDateTime.now(), LocalDateTime.now(), ExpenseClass.GASTO_GENERICO,
+                    USERS.get(0), CATEGORIAS.get(0), LocalDateTime.now(), LocalDateTime.now(), ExpenseClass.TICKET,
                     "Electrodomesticos", "[{\"nombre\": \"Laptop\", \"categorias\": [\"Tecnología\", \"Computación\"], \"cantidad\": 1, \"precio\": 1000.00}, {\"nombre\": \"Mochila\", \"categorias\": [\"Accesorios\"], \"cantidad\": 1, \"precio\": 200.00}]"),
             new Ticket("Supermercado", "Compra en supermercado", "food-icon", LocalDateTime.now(), 50.00, 10.0,
-                    USERS.get(1), CATEGORIAS.get(1) , LocalDateTime.now(), LocalDateTime.now(), ExpenseClass.GASTO_GENERICO,
+                    USERS.get(1), CATEGORIAS.get(1) , LocalDateTime.now(), LocalDateTime.now(), ExpenseClass.TICKET,
                     "Supermercado", "[{\"nombre\": \"Leche\", \"categorias\": [\"Alimentos\", \"Lácteos\"], \"cantidad\": 2, \"precio\": 1.25}, {\"nombre\": \"Pan\", \"categorias\": [\"Alimentos\"], \"cantidad\": 1, \"precio\": 0.95}]")
     );
 

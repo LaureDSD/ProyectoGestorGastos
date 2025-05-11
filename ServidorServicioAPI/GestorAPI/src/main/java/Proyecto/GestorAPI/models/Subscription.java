@@ -62,7 +62,7 @@ public class Subscription extends Spent {
         super(name, description, icon, start, total, iva, user, category, createdAt, updatedAt, typeExpense);
         this.start = startDate;
         this.end = endDate;
-        this.accumulate = accumulate;
+        this.accumulate = (total * (iva/100)) + total;
         this.restartDay = restartDay;
         this.intervalTime = intervalTime;
         this.activa = active;

@@ -1,1 +1,130 @@
-<p>filtro-herramienta works!</p>
+<div class="container mt-5 text-light p-4 rounded">
+  <h2 class="text-center text-capitalize mb-4">{{ tipo }}</h2>
+
+  <div class="row">
+    <!-- Filtros -->
+    <div class="col-md-4">
+      <div class="filters-section bg-dark p-4 rounded-3 shadow-sm mb-4">
+        <form class="row g-3 " (ngSubmit)="loadItems()">
+          <!-- Buscar + Botón Filtros -->
+          <div class="col-8">
+            <label class="form-label">Buscar</label>
+            <input type="text" class="form-control bg-secondary text-light border-0 rounded-3 shadow-sm"
+                   placeholder="Buscar por texto"
+                   [(ngModel)]="filters.texto" name="texto">
+          </div>
+          <div class="col-4 d-flex align-items-end justify-content-end">
+            <button type="button" class="btn btn-sm btn-outline-light shadow-sm w-100" (click)="toggleFiltros()">
+              {{ mostrarFiltros ? 'Ocultar' : 'Filtros' }}
+            </button>
+          </div>
+
+          <!-- Filtros avanzados -->
+          <ng-container *ngIf="mostrarFiltros">
+            <div class="col-12" *ngIf="tipo !== 'ticket'">
+              <label class="form-label">Categoría</label>
+              <select class="form-select bg-secondary text-light border-0 rounded-3 shadow-sm"
+                      [(ngModel)]="filters.categoria" name="categoria">
+                <option value="">Todas</option>
+                <option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</option>
+              </select>
+            </div>
+
+            <div class="col-6">
+              <label class="form-label">Precio Mín</label>
+              <input type="number" class="form-control bg-secondary text-light border-0 rounded-3 shadow-sm"
+                     [(ngModel)]="filters.precioMin" name="precioMin">
+            </div>
+            <div class="col-6">
+              <label class="form-label">Precio Máx</label>
+              <input type="number" class="form-control bg-secondary text-light border-0 rounded-3 shadow-sm"
+                     [(ngModel)]="filters.precioMax" name="precioMax">
+            </div>
+
+            <div class="col-6">
+              <label class="form-label">Desde</label>
+              <input type="date" class="form-control bg-secondary text-light border-0 rounded-3 shadow-sm"
+                     [(ngModel)]="filters.fechaDesde" name="fechaDesde">
+            </div>
+            <div class="col-6">
+              <label class="form-label">Hasta</label>
+              <input type="date" class="form-control bg-secondary text-light border-0 rounded-3 shadow-sm"
+                     [(ngModel)]="filters.fechaHasta" name="fechaHasta">
+            </div>
+
+            <div *ngIf="tipo === 'subscripcion'" class="col-12">
+              <label class="form-label">Fin antes de</label>
+              <input type="date" class="form-control bg-secondary text-light border-0 rounded-3 shadow-sm"
+                     [(ngModel)]="filters.fechaFin" name="fechaFin">
+            </div>
+
+            <div *ngIf="tipo === 'subscripcion'" class="col-12">
+              <label class="form-label">Estado</label>
+              <select class="form-select bg-secondary text-light border-0 rounded-3 shadow-sm"
+                      [(ngModel)]="filters.estado" name="estado">
+                <option value="">Todos</option>
+                <option value="ACTIVA">Activa</option>
+                <option value="CANCELADA">Cancelada</option>
+              </select>
+            </div>
+
+            <div *ngIf="tipo === 'ticket'" class="col-12">
+              <label class="form-label">Producto</label>
+              <input type="text" class="form-control bg-secondary text-light border-0 rounded-3 shadow-sm"
+                     placeholder="Nombre del producto"
+                     [(ngModel)]="filters.productoNombre" name="productoNombre">
+            </div>
+            <div *ngIf="tipo === 'ticket'" class="col-12">
+              <label class="form-label">Categoría interna</label>
+              <input type="text" class="form-control bg-secondary text-light border-0 rounded-3 shadow-sm"
+                     placeholder="Categoría interna"
+                     [(ngModel)]="filters.categoriaInterna" name="categoriaInterna">
+            </div>
+          </ng-container>
+
+          <!-- Botón aplicar -->
+          <div class="col-12 mt-2 text-end">
+            <button class="btn btn-outline-light w-100 shadow-sm px-4 py-2 rounded-3" type="submit">
+              Buscar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Lista -->
+    <div class="col-md-8">
+      <!-- Cargando -->
+      <div *ngIf="isLoading" class="d-flex justify-content-center mt-5">
+        <div class="spinner-border text-light" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+
+      <!-- Error -->
+      <div *ngIf="!isLoading && error" class="alert alert-danger text-center rounded-3 shadow-sm">
+        {{ error }}
+      </div>
+
+      <!-- Lista de elementos -->
+      <div *ngIf="!isLoading && !error" class=" list-group bg-dark">
+        <div *ngFor="let item of filteredItems"
+             class="list-group-item list-group-item-dark d-flex justify-content-between align-items-center rounded-3 mb-3 shadow-sm">
+          <div>
+            <h5 class="mb-1">{{ item.name }}</h5>
+            <small class="text">Fecha: {{ item.fechaCompra | date:'short' }}</small>
+          </div>
+          <div>
+            <button class="btn btn-sm btn-primary me-2 shadow-sm" (click)="editItem(item.spentId)">
+              <i class="bi bi-pencil"></i> Editar
+
+            </button>
+            <button class="btn btn-sm btn-outline-danger shadow-sm" (click)="deleteItem(item.spentId)">
+              <i class="bi bi-trash"></i> Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

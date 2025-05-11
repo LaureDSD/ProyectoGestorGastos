@@ -2,6 +2,7 @@ package Proyecto.GestorAPI.controllers;
 
 import Proyecto.GestorAPI.models.Subscription;
 import Proyecto.GestorAPI.models.User;
+import Proyecto.GestorAPI.models.enums.ExpenseClass;
 import Proyecto.GestorAPI.modelsDTO.subscription.CreateSubscriptionRequest;
 import Proyecto.GestorAPI.modelsDTO.subscription.SubscriptionDto;
 import Proyecto.GestorAPI.security.CustomUserDetails;
@@ -33,7 +34,7 @@ public class SubscriptionController {
     private final SubscriptionService subscriptionService;
     private final UserService userService;
 
-    @GetMapping("/")
+    @GetMapping("")
     @Operation(
             security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
             summary = "Obtener todas las suscripciones filtradas por clienteId (opcional para admins)"
@@ -63,6 +64,33 @@ public class SubscriptionController {
                 .collect(Collectors.toList()));
     }
 
+    @GetMapping("/{subscriptionId}")
+    @Operation(
+            security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
+            summary = "Obtener una suscripción por ID"
+    )
+    public ResponseEntity<SubscriptionDto> getSubscriptionById(
+            @PathVariable Long subscriptionId,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+        Subscription subscription = subscriptionService.getByID(subscriptionId).orElse(null);
+
+        // Verificación de existencia
+        if (subscription == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Verificación de propiedad (solo admin o dueño puede ver)
+        if (user.getRole() != RoleServer.ADMIN && !subscription.getUser().getId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        System.out.println(subscription);
+        System.out.println(SubscriptionDto.from(subscription));
+
+        return ResponseEntity.ok(SubscriptionDto.from(subscription));
+    }
+
 
     @PostMapping("/")
     @Operation(
@@ -83,6 +111,8 @@ public class SubscriptionController {
             //si es admin
             subscription = mappingSubscription(request,(clienteId != null) ? clienteId : user.getId());
         }
+        //Trampita
+        subscription.setAccumulate(((request.total() * (request.iva()/100)) + request.total()));
         //Creacion
         Subscription createdSubscription = subscriptionService.setItem(subscription);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -105,6 +135,7 @@ public class SubscriptionController {
         subscription.setRestartDay(request.restartDay());
         subscription.setIntervalTime(request.intervalTime());
         subscription.setActiva(request.activa());
+        subscription.setTypeExpense(ExpenseClass.SUBSCRIPCION);
         return subscription;
     }
 

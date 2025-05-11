@@ -1,9 +1,22 @@
 package Proyecto.GestorAPI.modelsDTO.spent;
 
 import Proyecto.GestorAPI.models.Spent;
+import Proyecto.GestorAPI.models.enums.ExpenseClass;
+
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public record SpentDto(Long spent_id, Long clienteId, Long category, String fechaCompra, String nombre, String descripcion, double total, double iva, String icono) {
+public record SpentDto(
+        Long spentId,
+        Long userId,
+        Long categoriaId,
+        LocalDateTime fechaCompra,
+        String name,
+        String description,
+        double total,
+        double iva,
+        ExpenseClass typeExpense,
+        String icon) {
 
     public static SpentDto from(Spent spent) {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
@@ -11,11 +24,12 @@ public record SpentDto(Long spent_id, Long clienteId, Long category, String fech
                 spent.getSpentId(),
                 spent.getUser().getId(),
                 spent.getCategory().getId(),
-                formatter.format(spent.getExpenseDate()),
+                spent.getExpenseDate(),
                 spent.getName(),
                 spent.getDescription(),
                 spent.getTotal(),
                 spent.getIva(),
+                spent.getTypeExpense(),
                 spent.getIcon()
         );
     }

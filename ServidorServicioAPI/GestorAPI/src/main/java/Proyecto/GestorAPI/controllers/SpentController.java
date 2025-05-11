@@ -36,7 +36,7 @@ public class SpentController {
     private final UserService userService;
     private final CategoryExpenseService categoriaService;
 
-    @GetMapping("/")
+    @GetMapping("")
     @Operation(
             security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
             summary = "Obtener todos los gastos filtrados por clienteId (opcional para admins)"
@@ -65,6 +65,31 @@ public class SpentController {
                 .map(SpentDto::from)
                 .collect(Collectors.toList()));
     }
+
+    @GetMapping("/{spentId}")
+    @Operation(
+            security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
+            summary = "Obtener un gasto por ID"
+    )
+    public ResponseEntity<SpentDto> getSpentById(
+            @PathVariable Long spentId,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+        Spent spent = spentService.getByID(spentId).orElse(null);
+
+        // Verificación de existencia
+        if (spent == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Verificación de propiedad (solo admin o dueño puede ver)
+        if (user.getRole() != RoleServer.ADMIN && !spent.getUser().getId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        return ResponseEntity.ok(SpentDto.from(spent));
+    }
+
 
     @PostMapping("/")
     @Operation(

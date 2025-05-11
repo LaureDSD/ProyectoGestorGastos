@@ -7,8 +7,9 @@ import { Producto } from '../../../models/models/models.component';
 import { SpentService } from '../../../services/spent.service';
 import { SubscriptionService } from '../../../services/subscription.service';
 import { TicketService } from '../../../services/ticket.service';
-import { Category } from '../../../models/api-models/api-models.component';
+import { CategoryDto, ExpenseClass } from '../../../models/api-models/api-models.component';
 import { CategoryService } from '../../../services/categories.service';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -19,15 +20,16 @@ import { CategoryService } from '../../../services/categories.service';
 })
 export class FormHerramientaComponent implements OnInit {
   tipo: 'ticket' | 'subscripcion' | 'gasto' = 'ticket';
+   expenseTypes = Object.values(ExpenseClass);
   id!: number;
   productosLocal: Producto[] = [];
   formTicket!: FormGroup;
   formSubscripcion!: FormGroup;
   formGasto!: FormGroup;
   isLoading = true;
-  categories : Category[] = [];
+  categories : CategoryDto[] = [];
   error = '';
-
+  server = `${environment.apiUrl}/`;
 
   constructor(
     private route: ActivatedRoute,
@@ -83,10 +85,16 @@ export class FormHerramientaComponent implements OnInit {
       start: ['', Validators.required],
       end: [''],
       accumulate: [0, [Validators.required, Validators.min(0)]],
-      restartDay: ["", [Validators.required, Validators.min(1), Validators.max(31)]],
+      restartDay: ['', [Validators.required, Validators.min(1), Validators.max(31)]],
       intervalTime: [1, [Validators.required, Validators.min(1)]],
+      categoriaId: [1, Validators.required],
       activa: [true, Validators.required]
     });
+
+    this.formSubscripcion.get('total')?.valueChanges.subscribe(total => {
+      this.formSubscripcion.get('accumulate')?.setValue(total);}
+
+    );
 
     this.formGasto = this.fb.group({
       spentId: [this.id],
@@ -98,31 +106,41 @@ export class FormHerramientaComponent implements OnInit {
       fechaCompra: ['', Validators.required],
       total: [0, [Validators.required, Validators.min(0.01)]],
       iva: [0, [Validators.required, Validators.min(0)]],
-      typeExpense: ['', Validators.required]
+      typeExpense: [ExpenseClass.GASTO_GENERICO, Validators.required]
     });
   }
 
   loadData() {
   const handlers = {
     ticket: () => this.ticketService.getTicketById(this.id).subscribe({
-  next: (ticket) => {
-
-    const fechaFormateada = new Date(ticket.fechaCompra).toISOString().slice(0, 16);
-    this.formTicket.patchValue({
-      ...ticket,
-      fechaCompra: fechaFormateada
-    });
-    if (ticket.productsJSON) {
-      this.productosLocal = JSON.parse(ticket.productsJSON);
-    }
-    this.isLoading = false;
-  },
-  error: (err) => this.handleError(err)
-}),
+      next: (ticket) => {
+        const fechaFormateada = new Date(ticket.fechaCompra).toISOString().slice(0, 16);
+        this.formTicket.patchValue({
+          ...ticket,
+          fechaCompra: fechaFormateada,
+          categoriaId: ticket.categoriaId
+        });
+        if (ticket.productsJSON) {
+          this.productosLocal = JSON.parse(ticket.productsJSON);
+        }
+        this.isLoading = false;
+      },
+      error: (err) => this.handleError(err)
+    }),
 
     subscripcion: () => this.subscriptionService.getSubscriptionById(this.id).subscribe({
       next: (sub) => {
-        this.formSubscripcion.patchValue(sub);
+        const fechaFormateada = new Date(sub.fechaCompra).toISOString().slice(0, 16);
+        const start = sub.start ? new Date(sub.start).toISOString().slice(0, 10) : '';
+        const end = sub.end ? new Date(sub.end).toISOString().slice(0, 10) : '';
+
+        this.formSubscripcion.patchValue({
+          ...sub,
+          fechaCompra: fechaFormateada,
+          start,
+          end,
+          categoriaId: sub.categoriaId
+        });
         this.isLoading = false;
       },
       error: (err) => this.handleError(err)
@@ -130,14 +148,21 @@ export class FormHerramientaComponent implements OnInit {
 
     gasto: () => this.spentService.getSpentById(this.id).subscribe({
       next: (gasto) => {
-        this.formGasto.patchValue(gasto);
+        const fechaFormateada = new Date(gasto.fechaCompra).toISOString().slice(0, 16);
+        this.formGasto.patchValue({
+          ...gasto,
+          fechaCompra: fechaFormateada,
+          categoriaId: gasto.categoriaId
+        });
         this.isLoading = false;
       },
       error: (err) => this.handleError(err)
     })
   };
+
   handlers[this.tipo]();
 }
+
 
 handleError(err: any) {
   console.error(err);
@@ -274,5 +299,8 @@ handleError(err: any) {
     });
   }
 }
+
+
+
 
 }
