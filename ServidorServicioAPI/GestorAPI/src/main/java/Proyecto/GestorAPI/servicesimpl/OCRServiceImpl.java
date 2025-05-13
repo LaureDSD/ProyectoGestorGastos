@@ -46,7 +46,7 @@ public class OCRServiceImpl implements OCRService {
     }
 
     @Override
-    public Ticket processImageTicket(MultipartFile file, User user) throws IOException {
+    public CreateTicketRequest processImageTicket(MultipartFile file, User user) throws IOException {
         // 1. Guardar archivo temporalmente
         Path tempFilePath = Files.createTempFile("ticket_", "_" + file.getOriginalFilename());
         Files.copy(file.getInputStream(), tempFilePath, StandardCopyOption.REPLACE_EXISTING);
@@ -72,11 +72,11 @@ public class OCRServiceImpl implements OCRService {
         ticket.setFechaCompra(LocalDateTime.now());
 
         // Guardar el ticket en la base de datos y devolverlo
-        return ticketService.setItem(ticket);
+        return ticket;
     }
 
     @Override
-    public Ticket proccessDigitalTicket(MultipartFile file, User user) throws IOException {
+    public CreateTicketRequest proccessDigitalTicket(MultipartFile file, User user) throws IOException {
         // Guardar archivo temporalmente
         Path tempFilePath = Files.createTempFile("TicketDigital" + "_", "_" + file.getOriginalFilename());
         Files.copy(file.getInputStream(), tempFilePath, StandardCopyOption.REPLACE_EXISTING);
@@ -85,10 +85,9 @@ public class OCRServiceImpl implements OCRService {
         String ocrResult = sendFileForOCR(tempFilePath.toFile());
 
         // Crear y guardar ticket
-        Ticket ticket = new Ticket();
+        CreateTicketRequest ticket = new CreateTicketRequest();
         ticket.setProductsJSON(ocrResult);
-        ticket.setCreatedAt(LocalDateTime.now());
-        return ticketService.setItem(ticket);
+        return ticket;
     }
 
     @Override
