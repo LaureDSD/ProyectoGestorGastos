@@ -12,6 +12,6 @@ public class TicketResponse {
     private String hora;
     private Double total;
     private Long category;
-    private List<Map<String, Object>> articulos;
+    private String articulos;
     private Double confianza;
 }

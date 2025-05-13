@@ -1,24 +1,23 @@
 package Proyecto.GestorAPI.controllers;
 
 import Proyecto.GestorAPI.models.Ticket;
+import Proyecto.GestorAPI.models.User;
+import Proyecto.GestorAPI.security.CustomUserDetails;
 import Proyecto.GestorAPI.services.OCRService;
 import Proyecto.GestorAPI.services.TicketService;
+import Proyecto.GestorAPI.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
-import java.util.Objects;
 
 import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME;
 
@@ -27,13 +26,10 @@ import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME
 @Tag(name = "OCR Service", description = "Procesamiento de tickets mediante OCR")
 public class OCRController {
 
-    private final TicketService ticketService;
-    private final OCRService ocrService;
-
-    public OCRController(TicketService ticketService, OCRService ocrService) {
-        this.ticketService = ticketService;
-        this.ocrService = ocrService;
-    }
+    @Autowired
+    private OCRService ocrService;
+    @Autowired
+    private UserService userService;
 
     @PostMapping(value = "/ticket", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
@@ -47,51 +43,20 @@ public class OCRController {
                     )
             )
     )
-    public ResponseEntity<?> processTicket(
-            @RequestParam("archivo") MultipartFile file) {
-
-        // Validaciones iniciales
+    public ResponseEntity<?> processTicketImage(
+            @RequestParam("archivo") MultipartFile file,
+            @AuthenticationPrincipal CustomUserDetails currentUser
+    ) {
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+        // Validacion de archivo
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body("El archivo no puede estar vacío");
         }
-
-        if (!Objects.requireNonNull(file.getContentType()).startsWith("image/")) {
-            return ResponseEntity.badRequest().body("Solo se permiten archivos de imagen");
-        }
-
-        Path tempFilePath = null;
+        //Procesar
         try {
-            // 1. Guardar archivo temporalmente
-            tempFilePath = Files.createTempFile("ticket_", "_" + file.getOriginalFilename());
-            Files.copy(file.getInputStream(), tempFilePath, StandardCopyOption.REPLACE_EXISTING);
-
-            // 2. Procesar con OCR
-            String ocrResult = ocrService.sendFileForOCR(tempFilePath.toFile());
-
-            // 3. Crear y guardar ticket
-            Ticket ticket = new Ticket();
-            ticket.setProductsJSON(ocrResult);
-            ticket.setCreatedAt(LocalDateTime.now());
-
-            Ticket savedTicket = ticketService.setItem(ticket);
-
-            return ResponseEntity.ok(savedTicket);
-
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError()
-                    .body("Error al procesar el archivo: " + e.getMessage());
+            return ResponseEntity.ok(ocrService.processImageTicket(file,user));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body("Error en el procesamiento OCR: " + e.getMessage());
-        } finally {
-            // Limpieza del archivo temporal
-            if (tempFilePath != null) {
-                try {
-                    Files.deleteIfExists(tempFilePath);
-                } catch (IOException e) {
-                    System.err.println("Error al eliminar archivo temporal: " + e.getMessage());
-                }
-            }
+            return ResponseEntity.internalServerError().body("Error en el procesamiento OCR: " + e.getMessage());
         }
     }
 
@@ -109,51 +74,17 @@ public class OCRController {
             )
     )
     public ResponseEntity<?> processTicketDigital(
-            @RequestParam("archivo") MultipartFile file) {
-        // Lógica para procesar ticket digital
-        return processTicketLogic(file, "ticketdigital");
-    }
-
-    private ResponseEntity<?> processTicketLogic(MultipartFile file, String tipo) {
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("El archivo no puede estar vacío");
-        }
-
-        if (!Objects.requireNonNull(file.getContentType()).startsWith("image/") && tipo.equals("ticket")) {
-            return ResponseEntity.badRequest().body("Solo se permiten archivos de imagen para ticket.");
-        }
-
-        Path tempFilePath = null;
+            @RequestParam("archivo") MultipartFile file,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+        //Validacion inicial
+        if (file.isEmpty()) { return ResponseEntity.badRequest().body("El archivo no puede estar vacío");}
+        //Procesar
         try {
-            // Guardar archivo temporalmente
-            tempFilePath = Files.createTempFile(tipo + "_", "_" + file.getOriginalFilename());
-            Files.copy(file.getInputStream(), tempFilePath, StandardCopyOption.REPLACE_EXISTING);
-
-            // Procesar con OCR
-            String ocrResult = ocrService.sendFileForOCR(tempFilePath.toFile());
-
-            // Crear y guardar ticket
-            Ticket ticket = new Ticket();
-            ticket.setProductsJSON(ocrResult);
-            ticket.setCreatedAt(LocalDateTime.now());
-
-            Ticket savedTicket = ticketService.setItem(ticket);
-
-            return ResponseEntity.ok(savedTicket);
-
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError().body("Error al procesar el archivo: " + e.getMessage());
+            // Lógica para procesar ticket digital
+            return ResponseEntity.ok(ocrService.proccessDigitalTicket(file,user));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Error en el procesamiento OCR: " + e.getMessage());
-        } finally {
-            // Limpieza del archivo temporal
-            if (tempFilePath != null) {
-                try {
-                    Files.deleteIfExists(tempFilePath);
-                } catch (IOException e) {
-                    System.err.println("Error al eliminar archivo temporal: " + e.getMessage());
-                }
-            }
+            return ResponseEntity.internalServerError().body("Error en el procesamiento: " + e.getMessage());
         }
     }
 }

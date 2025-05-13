@@ -1,9 +1,16 @@
 package Proyecto.GestorAPI.services;
 
+import Proyecto.GestorAPI.models.Ticket;
+import Proyecto.GestorAPI.models.User;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.IOException;
 
 public interface OCRService {
+
+
 
     /**
      * Envía un archivo al servicio de Python para realizar el proceso de OCR (Reconocimiento Óptico de Caracteres).
@@ -17,5 +24,9 @@ public interface OCRService {
      * @throws IOException Si ocurre un error durante la lectura del archivo o al comunicarse con el servicio de Python.
      */
     String sendFileForOCR(File tempFile) throws IOException;
+
+    Ticket processImageTicket(MultipartFile file, User user) throws IOException;
+
+    Ticket proccessDigitalTicket(MultipartFile file, User user) throws IOException;
 
 }
