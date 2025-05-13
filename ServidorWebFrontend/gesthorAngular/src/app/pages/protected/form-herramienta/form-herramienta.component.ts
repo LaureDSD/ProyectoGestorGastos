@@ -1,6 +1,5 @@
-
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Producto } from '../../../models/models/models.component';
 
@@ -11,7 +10,6 @@ import { CategoryDto, ExpenseClass } from '../../../models/api-models/api-models
 import { CategoryService } from '../../../services/categories.service';
 import { environment } from '../../../environments/environment';
 
-
 @Component({
   selector: 'app-form-herramienta',
   standalone: false,
@@ -20,24 +18,22 @@ import { environment } from '../../../environments/environment';
 })
 export class FormHerramientaComponent implements OnInit {
   tipo: 'ticket' | 'subscripcion' | 'gasto' = 'ticket';
-   expenseTypes = Object.values(ExpenseClass);
+  expenseTypes = Object.values(ExpenseClass);
   id!: number;
   productosLocal: Producto[] = [];
-  formTicket!: FormGroup;
-  formSubscripcion!: FormGroup;
-  formGasto!: FormGroup;
+  form!: FormGroup;
   isLoading = true;
-  categories : CategoryDto[] = [];
+  categories: CategoryDto[] = [];
   error = '';
   server = `${environment.apiUrl}/`;
 
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private spentService : SpentService,
-    private subscriptionService : SubscriptionService,
-    private ticketService : TicketService,
-    private router : Router,
+    private spentService: SpentService,
+    private subscriptionService: SubscriptionService,
+    private ticketService: TicketService,
+    private router: Router,
     private categoryService: CategoryService
   ) {
     this.categoryService.getCategories().subscribe(categories => {
@@ -48,7 +44,7 @@ export class FormHerramientaComponent implements OnInit {
   ngOnInit(): void {
     this.tipo = this.route.snapshot.paramMap.get('tipo') as any;
     this.id = Number(this.route.snapshot.paramMap.get('id'));
-    this.initForms();
+    this.initForm();
 
     if (this.id !== 0) {
       this.loadData();
@@ -58,8 +54,8 @@ export class FormHerramientaComponent implements OnInit {
     }
   }
 
-  initForms() {
-    this.formTicket = this.fb.group({
+  initForm() {
+    this.form = this.fb.group({
       spentId: [this.id],
       userId: [1, Validators.required],
       categoriaId: [1, Validators.required],
@@ -69,127 +65,109 @@ export class FormHerramientaComponent implements OnInit {
       fechaCompra: ['', Validators.required],
       total: [0, [Validators.required, Validators.min(0.01)]],
       iva: [0, [Validators.required, Validators.min(0)]],
-      store: ['', Validators.required],
-      productsJSON: ['']
-    });
 
-    this.formSubscripcion = this.fb.group({
-      spentId: [this.id],
-      userId: [1, Validators.required],
-      name: ['', Validators.required],
-      description: [''],
-      icon: [''],
-      fechaCompra: ['', Validators.required],
-      total: [0, [Validators.required, Validators.min(0.01)]],
-      iva: [0, [Validators.required, Validators.min(0)]],
-      start: ['', Validators.required],
+      // Ticket
+      store: [''],
+      productsJSON: [''],
+
+      // Subscripción
+      start: [''],
       end: [''],
-      accumulate: [0, [Validators.required, Validators.min(0)]],
-      restartDay: ['', [Validators.required, Validators.min(1), Validators.max(31)]],
-      intervalTime: [1, [Validators.required, Validators.min(1)]],
-      categoriaId: [1, Validators.required],
-      activa: [true, Validators.required]
+      accumulate: [0],
+      restartDay: [''],
+      intervalTime: [1],
+      activa: [true],
+
+      // Gasto
+      typeExpense: [ExpenseClass.GASTO_GENERICO]
     });
 
-    this.formSubscripcion.get('total')?.valueChanges.subscribe(total => {
-      this.formSubscripcion.get('accumulate')?.setValue(total);}
-
-    );
-
-    this.formGasto = this.fb.group({
-      spentId: [this.id],
-      userId: [1, Validators.required],
-      categoriaId: [1, Validators.required],
-      name: ['', Validators.required],
-      description: [''],
-      icon: [''],
-      fechaCompra: ['', Validators.required],
-      total: [0, [Validators.required, Validators.min(0.01)]],
-      iva: [0, [Validators.required, Validators.min(0)]],
-      typeExpense: [ExpenseClass.GASTO_GENERICO, Validators.required]
+    this.form.get('total')?.valueChanges.subscribe(total => {
+      if (this.tipo === 'subscripcion') {
+        this.form.get('accumulate')?.setValue(total);
+      }
     });
   }
 
+  normalizeDataForForm(data: any): any {
+  const normalized: any = { ...data };
+
+  // ► Ya estaba así
+  if (normalized.fechaCompra) {
+    normalized.fechaCompra = new Date(normalized.fechaCompra)
+      .toISOString()
+      .slice(0, 16); 
+  }
+
+  // ► Ahora los dos iguales que fechaCompra
+  if (normalized.start) {
+    normalized.start = new Date(normalized.start)
+      .toISOString()
+      .slice(0, 16); 
+  }
+
+  if (normalized.end) {
+    normalized.end = new Date(normalized.end)
+      .toISOString()
+      .slice(0, 16);
+  }
+
+  // productsJSON para ticket
+  if (normalized.productsJSON) {
+    try {
+      this.productosLocal = JSON.parse(normalized.productsJSON);
+    } catch (e) {
+      console.error('Error parsing productsJSON', e);
+    }
+  }
+
+  return normalized;
+}
+
+
   loadData() {
-  const handlers = {
-    ticket: () => this.ticketService.getTicketById(this.id).subscribe({
-      next: (ticket) => {
-        const fechaFormateada = new Date(ticket.fechaCompra).toISOString().slice(0, 16);
-        this.formTicket.patchValue({
-          ...ticket,
-          fechaCompra: fechaFormateada,
-          categoriaId: ticket.categoriaId
-        });
-        if (ticket.productsJSON) {
-          this.productosLocal = JSON.parse(ticket.productsJSON);
-        }
+    const services = {
+      ticket: this.ticketService.getTicketById(this.id),
+      subscripcion: this.subscriptionService.getSubscriptionById(this.id),
+      gasto: this.spentService.getSpentById(this.id)
+    };
+
+    services[this.tipo].subscribe({
+      next: (data) => {
+        const normalized = this.normalizeDataForForm(data);
+        this.form.patchValue(normalized);
         this.isLoading = false;
       },
       error: (err) => this.handleError(err)
-    }),
+    });
+  }
 
-    subscripcion: () => this.subscriptionService.getSubscriptionById(this.id).subscribe({
-      next: (sub) => {
-        const fechaFormateada = new Date(sub.fechaCompra).toISOString().slice(0, 16);
-        const start = sub.start ? new Date(sub.start).toISOString().slice(0, 10) : '';
-        const end = sub.end ? new Date(sub.end).toISOString().slice(0, 10) : '';
-
-        this.formSubscripcion.patchValue({
-          ...sub,
-          fechaCompra: fechaFormateada,
-          start,
-          end,
-          categoriaId: sub.categoriaId
-        });
-        this.isLoading = false;
-      },
-      error: (err) => this.handleError(err)
-    }),
-
-    gasto: () => this.spentService.getSpentById(this.id).subscribe({
-      next: (gasto) => {
-        const fechaFormateada = new Date(gasto.fechaCompra).toISOString().slice(0, 16);
-        this.formGasto.patchValue({
-          ...gasto,
-          fechaCompra: fechaFormateada,
-          categoriaId: gasto.categoriaId
-        });
-        this.isLoading = false;
-      },
-      error: (err) => this.handleError(err)
-    })
-  };
-
-  handlers[this.tipo]();
-}
-
-
-handleError(err: any) {
-  console.error(err);
-  this.error = 'Error cargando datos';
-  this.isLoading = false;
-}
+  handleError(err: any) {
+    console.error(err);
+    this.error = 'Error cargando datos';
+    this.isLoading = false;
+  }
 
   setupAutoFields() {
     if (this.tipo !== 'subscripcion') return;
 
-    const startCtrl = this.formSubscripcion.get('start');
-    const endCtrl = this.formSubscripcion.get('end');
+    const startCtrl = this.form.get('start');
+    const endCtrl = this.form.get('end');
 
     startCtrl?.valueChanges.subscribe(startValue => {
       if (startValue) {
         const startDate = new Date(startValue);
-        this.formSubscripcion.get('restartDay')?.setValue(startDate.getDate());
+        this.form.get('restartDay')?.setValue(startDate.getDate());
 
         const endValue = endCtrl?.value;
         if (endValue) {
           const endDate = new Date(endValue);
           const interval = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
           if (interval > 0) {
-            this.formSubscripcion.get('intervalTime')?.setValue(interval);
+            this.form.get('intervalTime')?.setValue(interval);
           }
         } else {
-          this.formSubscripcion.get('intervalTime')?.setValue(30);
+          this.form.get('intervalTime')?.setValue(30);
         }
       }
     });
@@ -201,106 +179,88 @@ handleError(err: any) {
         const endDate = new Date(endValue);
         const interval = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
         if (interval > 0) {
-          this.formSubscripcion.get('intervalTime')?.setValue(interval);
+          this.form.get('intervalTime')?.setValue(interval);
         }
       }
     });
   }
 
- onSubmit() {
-  const form = this.getCurrentForm();
-  if (!form.valid) {
-    form.markAllAsTouched();
-    return;
-  }
+  onSubmit() {
+    if (!this.form.valid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
-  const data = form.value;
-  const isEdit = this.id !== 0;
+    const data = this.form.value;
+    const isEdit = this.id !== 0;
 
-  const actions = {
-    ticket: () => {
-      if (isEdit) {
-        this.ticketService.updateTicket(this.id, data).subscribe({
-          next: () => alert('Ticket actualizado'),
-          error: (err) => this.handleError(err)
-        });
-      } else {
-        this.ticketService.addTicket(data).subscribe({
-          next: () => alert('Ticket creado'),
+    const actions = {
+      ticket: () => {
+        const op = isEdit
+          ? this.ticketService.updateTicket(this.id, data)
+          : this.ticketService.addTicket(data);
+
+        op.subscribe({
+          next: () => alert(`Ticket ${isEdit ? 'actualizado' : 'creado'}`),
           error: (err) => {
             if (err.error === "El campo de productos no puede estar vacío.") {
               alert("Sin productos..");
             } else {
-              alert("Error al guardar.");
+              this.handleError(err);
             }
           }
         });
-      }
-    },
+      },
 
-    subscripcion: () => {
-      if (isEdit) {
-        this.subscriptionService.updateSubscription(this.id, data).subscribe({
-          next: () => alert('Subscripción actualizada'),
-          error: (err) => this.handleError(err)
-        });
-      } else {
-        this.subscriptionService.addSubscription(data).subscribe({
-          next: () => alert('Subscripción creada'),
-          error: (err) => this.handleError(err)
-        });
-      }
-    },
+      subscripcion: () => {
+        const op = isEdit
+          ? this.subscriptionService.updateSubscription(this.id, data)
+          : this.subscriptionService.addSubscription(data);
 
-    gasto: () => {
-      if (isEdit) {
-        this.spentService.updateSpent(this.id, data).subscribe({
-          next: () => alert('Gasto actualizado'),
+        op.subscribe({
+          next: () => alert(`Subscripción ${isEdit ? 'actualizada' : 'creada'}`),
           error: (err) => this.handleError(err)
         });
-      } else {
-        this.spentService.addSpent(data).subscribe({
-          next: () => alert('Gasto creado'),
+      },
+
+      gasto: () => {
+        const op = isEdit
+          ? this.spentService.updateSpent(this.id, data)
+          : this.spentService.addSpent(data);
+
+        op.subscribe({
+          next: () => alert(`Gasto ${isEdit ? 'actualizado' : 'creado'}`),
           error: (err) => this.handleError(err)
         });
       }
-    }
-  };
+    };
 
-  actions[this.tipo]();
-}
+    actions[this.tipo]();
+  }
 
   getCurrentForm(): FormGroup {
-    switch (this.tipo) {
-      case 'ticket': return this.formTicket;
-      case 'subscripcion': return this.formSubscripcion;
-      case 'gasto': return this.formGasto;
-    }
+    return this.form;
   }
 
   hasError(controlName: string, error: string) {
-    const control = this.getCurrentForm().get(controlName);
+    const control = this.form.get(controlName);
     return control?.touched && control?.hasError(error);
   }
 
   onProductosConfirmados(productos: Producto[]) {
     this.productosLocal = productos;
-    this.formTicket.get('productsJSON')?.setValue(JSON.stringify(productos));
+    this.form.get('productsJSON')?.setValue(JSON.stringify(productos));
   }
 
   onDelete() {
-  if (confirm('¿Estás seguro de que quieres eliminar este ticket?')) {
-    this.ticketService.deleteTicket(this.id).subscribe({
-      next: () => {
-        alert('Ticket eliminado');
-        this.router.navigate(['/protected/tools']);
-      },
-      error: (err) => this.handleError(err)
-    });
+    if (confirm('¿Estás seguro de que quieres eliminar este ticket?')) {
+      this.ticketService.deleteTicket(this.id).subscribe({
+        next: () => {
+          alert('Ticket eliminado');
+          this.router.navigate(['/protected/tools']);
+        },
+        error: (err) => this.handleError(err)
+      });
+    }
   }
-}
-
-
-
-
 }

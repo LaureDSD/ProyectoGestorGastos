@@ -114,15 +114,8 @@
       <app-form-productos *ngIf="tipo === 'ticket'" [productos]="productosLocal" (productosConfirmados)="onProductosConfirmados($event)"></app-form-productos>
     </div>
 
-    <div class="col-md-6 " *ngIf="formTicket.value.icon">
-          <img [src]="server+formTicket.value.icon" alt="Vista previa" class="img-fluid w-100" />
-        </div>
 
   </div>
 
 
-
-     <pre style="color: aliceblue;">{{ formTicket.value | json }}</pre>
-      <pre style="color: aliceblue;">{{ formSubscripcion.value | json }}</pre>
-       <pre style="color: aliceblue;">{{ formGasto.value | json }}</pre>
 </div>

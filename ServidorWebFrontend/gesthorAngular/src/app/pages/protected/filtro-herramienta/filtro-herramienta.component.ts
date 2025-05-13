@@ -25,6 +25,19 @@ export class FiltroHerramientaComponent implements OnInit {
 
   mostrarFiltros: boolean = false;
 
+  get tipoCategoria(): string {
+  switch (this.tipo) {
+    case 'ticket':
+      return 'tickets';
+    case 'subscripcion':
+      return 'subscripciones';
+    case 'gasto':
+      return 'gastos';
+    default:
+      return '';
+  }
+}
+
   filters: any = {
     texto: '',
     fechaDesde: undefined,
@@ -47,6 +60,7 @@ export class FiltroHerramientaComponent implements OnInit {
     private subscriptionService: SubscriptionService,
     private spentService: SpentService
   ) {}
+
 
 
 toggleFiltros(): void {
@@ -99,7 +113,37 @@ toggleFiltros(): void {
     const fechaCompra = new Date(item.fechaCompra);
 
     // 1. Texto general (en todo el objeto)
-    const matchTexto = !f.texto || JSON.stringify(item).toLowerCase().includes(texto);
+    /*let matchTexto = true;
+      if (f.texto) {
+        const textoLower = f.texto.toLowerCase();
+
+        if ('name' in item && item.name?.toLowerCase().includes(textoLower)) {
+          matchTexto = true;
+        } 
+        else if ('description' in item && item.description?.toLowerCase().includes(textoLower)) {
+          matchTexto = true;
+        } else if ('productsJSON' in item) {
+          try {
+            const productos = JSON.parse(item.productsJSON);
+            matchTexto = productos.some((p: any) =>
+              p.nombre?.toLowerCase().includes(textoLower)
+            )
+          } catch (e) {
+            matchTexto = false;
+          }
+        } else {
+          matchTexto = false;
+        }
+
+      }*/
+      // 1. Filtro solo por nombre
+      let matchTexto = true;
+      if (f.texto) {
+        const textoLower = f.texto.toLowerCase();
+        matchTexto = 'name' in item && item.name?.toLowerCase().includes(textoLower);
+      }
+
+
 
     // 2. Categoría principal
     const matchCategoria = !f.categoria || ExpenseClass[item.typeExpense] === f.categoria;

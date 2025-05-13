@@ -62,7 +62,7 @@ export class ToolsComponent {
     {
       nombre: 'Gestionar Gastos',
       icono: '/icon/icons8-buscar-100.png',
-      descripcion: 'Visualiza y edita los gastos registrados manual o automáticamente.',
+      descripcion: 'Visualiza y edita todos los gastos registrados manual o automáticamente.',
       accion: 'Gestionar',
       ruta: '/protected/tool/editargasto'
     },

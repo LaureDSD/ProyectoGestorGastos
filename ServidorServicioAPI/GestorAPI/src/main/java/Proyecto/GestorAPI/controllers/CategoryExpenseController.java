@@ -36,7 +36,7 @@ public class CategoryExpenseController {
      *
      * @return Lista de categorías de gasto.
      */
-    @GetMapping("/")
+    @GetMapping("")
     @Operation(
             security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
             summary = "Obtener todas las categorías de gasto"
@@ -44,12 +44,6 @@ public class CategoryExpenseController {
     public ResponseEntity<List<CategoryExpenseDto>> getAllCategories(
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
-
-        // Solo los admins pueden obtener todas las categorías.
-        if (user.getRole() != RoleServer.ADMIN) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
         List<CategoryExpense> categories = categoryExpenseService.getAll();
 
         if (categories.isEmpty()) {
