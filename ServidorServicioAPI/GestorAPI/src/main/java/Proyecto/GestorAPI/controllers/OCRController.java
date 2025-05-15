@@ -3,6 +3,7 @@ package Proyecto.GestorAPI.controllers;
 import Proyecto.GestorAPI.exceptions.ErrorPharseJsonException;
 import Proyecto.GestorAPI.models.Ticket;
 import Proyecto.GestorAPI.models.User;
+import Proyecto.GestorAPI.modelsDTO.ticket.TicketDto;
 import Proyecto.GestorAPI.security.CustomUserDetails;
 import Proyecto.GestorAPI.services.OCRService;
 import Proyecto.GestorAPI.services.TicketService;
@@ -55,7 +56,7 @@ public class OCRController {
         }
         //Procesar
         try {
-            return ResponseEntity.ok(ocrService.processImageTicket(file,user));
+            return ResponseEntity.ok(TicketDto.from(ocrService.processImageTicket(file,user)));
         } catch (Exception | ErrorPharseJsonException e) {
             return ResponseEntity.internalServerError().body("Error en el procesamiento OCR: " + e.getMessage());
         }
@@ -83,7 +84,7 @@ public class OCRController {
         //Procesar
         try {
             // Lógica para procesar ticket digital
-            return ResponseEntity.ok(ocrService.proccessDigitalTicket(file,user));
+            return ResponseEntity.ok(TicketDto.from(ocrService.proccessDigitalTicket(file,user)));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Error en el procesamiento: " + e.getMessage());
         }

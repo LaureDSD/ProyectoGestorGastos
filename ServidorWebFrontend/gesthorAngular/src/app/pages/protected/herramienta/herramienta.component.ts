@@ -8,14 +8,16 @@ import { OcrService } from '../../../services/ocr.service';
   templateUrl: './herramienta.component.html'
 })
 export class HerramientaComponent {
- tipo: string = '';
+  tipo: string = '';
   file?: File;
   imagePreview: string | ArrayBuffer | null = null;
+  loading: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private ocrService : OcrService) {}
+    private ocrService: OcrService
+  ) {}
 
   ngOnInit() {
     this.tipo = this.route.snapshot.paramMap.get('tipo') || '';
@@ -49,28 +51,44 @@ export class HerramientaComponent {
   subirArchivoYEditar() {
     if (!this.file) return;
 
+    this.loading = true;
+
     if (this.tipo === 'ticketimagen') {
       this.ocrService.procesarTicketImagen(this.file).subscribe(
         (response: any) => {
-          const ticketId = response.id;
-          this.router.navigate(['/protected/form', 'ticket', ticketId]);
+          const ticketId = response.spentId;
+          this.loading = false;
+
+          if (ticketId) {
+            console.log('Ticket ID:', ticketId);
+            this.router.navigate(['/protected/form', 'ticket', ticketId]);
+          } else {
+            console.error('No se recibió un ID válido del ticket');
+          }
         },
         (error) => {
+          this.loading = false;
           console.error('Error al procesar el archivo de imagen:', error);
         }
       );
     } else if (this.tipo === 'ticketdigital') {
       this.ocrService.procesarTicketDigital(this.file).subscribe(
         (response: any) => {
-          const ticketId = response.id;
-          this.router.navigate(['/protected/form', 'ticketdigital', ticketId]);
+          const ticketId = response.spentId;
+          this.loading = false;
+
+          if (ticketId) {
+            console.log('Ticket Digital ID:', ticketId);
+            this.router.navigate(['/protected/form', 'ticketdigital', ticketId]);
+          } else {
+            console.error('No se recibió un ID válido del ticket digital');
+          }
         },
         (error) => {
+          this.loading = false;
           console.error('Error al procesar el archivo digital:', error);
         }
       );
     }
   }
-
 }
-

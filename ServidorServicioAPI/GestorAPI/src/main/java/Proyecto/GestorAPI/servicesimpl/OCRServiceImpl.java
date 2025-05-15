@@ -41,6 +41,9 @@ public class OCRServiceImpl implements OCRService {
     @Autowired
     private TicketService ticketService;
 
+    @Autowired
+    private StorageServiceImpl storageService;
+
     private final RestTemplate restTemplate;
 
     public OCRServiceImpl(RestTemplate restTemplate) {
@@ -60,6 +63,9 @@ public class OCRServiceImpl implements OCRService {
 
         // 3. Crear y guardar el ticket
         ticket = ticketService.mappingCreateTicketbyOCR(ocrResult,user);
+
+        // 3.1 Agregar imagen guardada
+        //ticket.setIcon(storageService.saveImageData());
 
         // 4. Guardar el ticket en la base de datos y devolverlo
         ticket = ticketService.setItem(ticket);
