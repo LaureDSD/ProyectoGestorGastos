@@ -9,7 +9,8 @@ export class ModelsComponent {}
 
 export interface Producto {
   nombre: string;
-  categorias: string[];
+  categorias?: string[];
   cantidad: number;
   precio: number;
+  subtotal?: number;
 }

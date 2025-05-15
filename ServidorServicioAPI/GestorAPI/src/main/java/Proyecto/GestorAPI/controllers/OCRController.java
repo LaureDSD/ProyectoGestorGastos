@@ -1,5 +1,6 @@
 package Proyecto.GestorAPI.controllers;
 
+import Proyecto.GestorAPI.exceptions.ErrorPharseJsonException;
 import Proyecto.GestorAPI.models.Ticket;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.security.CustomUserDetails;
@@ -55,7 +56,7 @@ public class OCRController {
         //Procesar
         try {
             return ResponseEntity.ok(ocrService.processImageTicket(file,user));
-        } catch (Exception e) {
+        } catch (Exception | ErrorPharseJsonException e) {
             return ResponseEntity.internalServerError().body("Error en el procesamiento OCR: " + e.getMessage());
         }
     }

@@ -1,5 +1,7 @@
 package Proyecto.GestorAPI.servicesimpl;
 
+import Proyecto.GestorAPI.exceptions.ErrorPharseJsonException;
+import Proyecto.GestorAPI.models.CategoryExpense;
 import Proyecto.GestorAPI.models.Ticket;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.models.enums.ExpenseClass;
@@ -46,37 +48,29 @@ public class OCRServiceImpl implements OCRService {
     }
 
     @Override
-    public CreateTicketRequest processImageTicket(MultipartFile file, User user) throws IOException {
+    public Ticket processImageTicket(MultipartFile file, User user) throws IOException, ErrorPharseJsonException {
         // 1. Guardar archivo temporalmente
         Path tempFilePath = Files.createTempFile("ticket_", "_" + file.getOriginalFilename());
         Files.copy(file.getInputStream(), tempFilePath, StandardCopyOption.REPLACE_EXISTING);
+        Ticket ticket = new Ticket();
+
 
         // 2. Procesar el archivo con OCR
         String ocrResult = sendFileForOCR(tempFilePath.toFile());
-        System.out.println("OCR Result 1: " + ocrResult);
-        ObjectMapper mapper = new ObjectMapper();
-        System.out.println("OK");
-        TicketResponse ticketOCR = mapper.readValue(ocrResult, TicketResponse.class);
-        System.out.println("OCR Result 2: " + ticketOCR);
 
         // 3. Crear y guardar el ticket
-        CreateTicketRequest ticket = new CreateTicketRequest();
-        ticket.setUserId(user.getId());
-        ticket.setIcon("");
-        ticket.setCategoriaId(0L);
-        ticket.setStore(ticketOCR.getEstablecimiento());
-        ticket.setProductsJSON(ticketOCR.getArticulos());
-        ticket.setTotal(ticketOCR.getTotal());
-        ticket.setName("");
-        ticket.setDescription("");
-        ticket.setFechaCompra(LocalDateTime.now());
+        ticket = ticketService.mappingCreateTicketbyOCR(ocrResult,user);
 
-        // Guardar el ticket en la base de datos y devolverlo
+        // 4. Guardar el ticket en la base de datos y devolverlo
+        ticket = ticketService.setItem(ticket);
+
+        //System.out.println("Info: "+ticket.getSpentId());
+
         return ticket;
     }
 
     @Override
-    public CreateTicketRequest proccessDigitalTicket(MultipartFile file, User user) throws IOException {
+    public Ticket proccessDigitalTicket(MultipartFile file, User user) throws IOException {
         // Guardar archivo temporalmente
         Path tempFilePath = Files.createTempFile("TicketDigital" + "_", "_" + file.getOriginalFilename());
         Files.copy(file.getInputStream(), tempFilePath, StandardCopyOption.REPLACE_EXISTING);
@@ -85,7 +79,7 @@ public class OCRServiceImpl implements OCRService {
         String ocrResult = sendFileForOCR(tempFilePath.toFile());
 
         // Crear y guardar ticket
-        CreateTicketRequest ticket = new CreateTicketRequest();
+        Ticket ticket = new Ticket();
         ticket.setProductsJSON(ocrResult);
         return ticket;
     }

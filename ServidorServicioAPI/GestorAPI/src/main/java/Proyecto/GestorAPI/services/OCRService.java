@@ -1,5 +1,6 @@
 package Proyecto.GestorAPI.services;
 
+import Proyecto.GestorAPI.exceptions.ErrorPharseJsonException;
 import Proyecto.GestorAPI.models.Ticket;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.modelsDTO.ticket.CreateTicketRequest;
@@ -26,8 +27,8 @@ public interface OCRService {
      */
     String sendFileForOCR(File tempFile) throws IOException;
 
-    CreateTicketRequest processImageTicket(MultipartFile file, User user) throws IOException;
+    Ticket processImageTicket(MultipartFile file, User user) throws IOException, ErrorPharseJsonException;
 
-    CreateTicketRequest proccessDigitalTicket(MultipartFile file, User user) throws IOException;
+    Ticket proccessDigitalTicket(MultipartFile file, User user) throws IOException;
 
 }

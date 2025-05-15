@@ -46,7 +46,8 @@ def ocr():
         "fecha": "2025-05-13",
         "hora": "17:30",
         "total": 3500.0,
-        "category": 2,
+        "iva": 21,
+        "categoria": 2,
         "articulos": [
             {
                 "nombre": "Coca-Cola",

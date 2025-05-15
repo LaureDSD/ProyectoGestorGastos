@@ -41,7 +41,7 @@ export class FormProductosComponent {
 
 editarProducto(index: number) {
   this.productoActual = { ...this.productos[index] };
-  this.categoriaTexto = this.productoActual.categorias.join(', ');
+  this.categoriaTexto = this.productoActual.categorias?.join(', ') || '';
   this.editIndex = index;
 }
 

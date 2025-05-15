@@ -2,7 +2,6 @@ package Proyecto.GestorAPI.controllers;
 
 import Proyecto.GestorAPI.models.Ticket;
 import Proyecto.GestorAPI.models.User;
-import Proyecto.GestorAPI.models.enums.ExpenseClass;
 import Proyecto.GestorAPI.modelsDTO.ticket.CreateTicketRequest;
 import Proyecto.GestorAPI.modelsDTO.ticket.TicketDto;
 import Proyecto.GestorAPI.modelsDTO.ticket.UpdateTicketRequest;
@@ -21,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -95,7 +93,7 @@ public class TicketController {
         return ResponseEntity.ok(TicketDto.from(ticket));
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     @Operation(
             security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
             summary = "Crear un nuevo ticket"
@@ -108,40 +106,24 @@ public class TicketController {
         Ticket ticket;
         if(user.getRole()!= RoleServer.ADMIN){
             //si no es admin
-            ticket = mappingTicket(request, user.getId());
+            ticket = ticketService.mappingCreateTicket(request, user.getId());
         }else{
             //si es admin
-            ticket = mappingTicket(request,(clienteId != null) ? clienteId : user.getId());
+            ticket = ticketService.mappingCreateTicket(request,(clienteId != null) ? clienteId : user.getId());
         }
 
-        System.out.println(request);
         if (ticket.getProductsJSON() == null || ticket.getProductsJSON().isEmpty()) {
             return ResponseEntity.badRequest().body("El campo de productos no puede estar vacío.");
         }
+
         //Creacion
-        System.out.println("Creando");
         Ticket createdTicket = ticketService.setItem(ticket);
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(TicketDto.from(createdTicket));
     }
 
-    private Ticket mappingTicket(CreateTicketRequest request , Long clienteId) {
-        // Crear el ticket con referencias por ID
-        Ticket ticket = new Ticket();
 
-        ticket.setUser(userService.getUserById(clienteId).orElse(new User()));
-        ticket.setCategory(categoriaService.getByID(request.getCategoriaId()).orElse(null));
-        ticket.setExpenseDate(request.getFechaCompra());
-        ticket.setTotal(request.getTotal());
-        ticket.setIcon(request.getIcon());
-        ticket.setDescription(request.getDescription());
-        ticket.setName(request.getName());
-        ticket.setStore(request.getStore());
-        ticket.setProductsJSON(request.getProductsJSON());
-        ticket.setCreatedAt(LocalDateTime.now());
-        ticket.setTypeExpense(ExpenseClass.TICKET);
-        return  ticket;
-    }
 
     @DeleteMapping("/{ticketId}")
     @Operation(
@@ -189,23 +171,16 @@ public class TicketController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
+        //Mapping
+         ticket = ticketService.mappingUpdateTicket(request, ticket);
 
-
-        // Actualización
-        ticket.setCategory(categoriaService.getByID(request.getCategoriaId()).orElse(null));
-        ticket.setStore(request.getStore());
-        ticket.setExpenseDate(request.getFechaCompra());
-        ticket.setName(request.getName());
-        ticket.setDescription(request.getDescription());
-        ticket.setTotal(request.getTotal());
-        ticket.setIva(request.getIva());
-        ticket.setIcon(request.getIcon());
-        ticket.setIcon(request.getIcon());
-        ticket.setProductsJSON(request.getProductsJSON());
-
-        // Guardamos los cambios
+        //Save
         Ticket updatedTicket = ticketService.setItem(ticket);
+
+        //Return
         return ResponseEntity.ok(TicketDto.from(updatedTicket));
     }
+
+
 
 }

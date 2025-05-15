@@ -1,14 +1,27 @@
 package Proyecto.GestorAPI.servicesimpl;
 
+import Proyecto.GestorAPI.exceptions.ErrorPharseJsonException;
+import Proyecto.GestorAPI.models.User;
+import Proyecto.GestorAPI.models.enums.ExpenseClass;
+import Proyecto.GestorAPI.modelsDTO.ticket.CreateTicketRequest;
+import Proyecto.GestorAPI.modelsDTO.ticket.TicketResponse;
+import Proyecto.GestorAPI.modelsDTO.ticket.UpdateTicketRequest;
 import Proyecto.GestorAPI.repositories.TicketRepository;
 import Proyecto.GestorAPI.services.TicketService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import Proyecto.GestorAPI.models.Ticket;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+
+import static java.time.LocalTime.now;
 
 @RequiredArgsConstructor
 @Service
@@ -17,6 +30,12 @@ public class TicketServiceImpl implements TicketService {
     // Inyección del repositorio de Ticket para realizar operaciones en la base de datos.
     @Autowired
     private TicketRepository repository;
+
+    @Autowired
+    private UserServiceImpl userService;
+
+    @Autowired
+    private CategoryExpenseServiceImpl categoriaService;
 
     /**
      * Obtiene todos los tickets registrados.
@@ -97,5 +116,75 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public List<Ticket> getTicketsByUserId(Long id) {
         return repository.findByUserId(id);
+    }
+
+    @Override
+    public Ticket mappingCreateTicket(CreateTicketRequest request, Long clienteId) {
+        // Crear el ticket con referencias por ID
+        Ticket ticket = new Ticket();
+
+        ticket.setUser(userService.getUserById(clienteId).orElse(new User()));
+        ticket.setCategory(categoriaService.getByID(request.getCategoriaId()).orElse(null));
+        ticket.setExpenseDate(request.getFechaCompra());
+        ticket.setTotal(request.getTotal());
+        ticket.setIcon(request.getIcon());
+        ticket.setDescription(request.getDescription());
+        ticket.setName(request.getName());
+        ticket.setStore(request.getStore());
+        ticket.setProductsJSON(request.getProductsJSON());
+        ticket.setCreatedAt(LocalDateTime.now());
+        ticket.setTypeExpense(ExpenseClass.TICKET);
+        return  ticket;
+    }
+
+    @Override
+    public Ticket mappingUpdateTicket(UpdateTicketRequest request, Ticket ticket) {
+        // Actualización
+        ticket.setCategory(categoriaService.getByID(request.getCategoriaId()).orElse(null));
+        ticket.setStore(request.getStore());
+        ticket.setExpenseDate(request.getFechaCompra());
+        ticket.setName(request.getName());
+        ticket.setDescription(request.getDescription());
+        ticket.setTotal(request.getTotal());
+        ticket.setIva(request.getIva());
+        ticket.setIcon(request.getIcon());
+        ticket.setIcon(request.getIcon());
+        ticket.setProductsJSON(request.getProductsJSON());
+        return ticket;
+    }
+
+    @Override
+    public Ticket mappingCreateTicketbyOCR(String ocrResult, User user) throws ErrorPharseJsonException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        TicketResponse ticketOCR;
+        String articulosJson;
+
+        try{
+            ticketOCR = mapper.readValue(ocrResult, TicketResponse.class);
+            articulosJson = mapper.writeValueAsString(ticketOCR.getArticulos());
+        } catch (Exception e) {
+            throw new ErrorPharseJsonException("Error al cargar ocr desde Python" + e);
+        }
+
+        Ticket ticket = new Ticket();
+        ticket.setUser(user);
+        ticket.setIcon("");
+        ticket.setStore(ticketOCR.getEstablecimiento());
+        ticket.setProductsJSON(articulosJson);
+        ticket.setTotal(ticketOCR.getTotal());
+        ticket.setIva(ticketOCR.getIva());
+        ticket.setName(ticketOCR.getEstablecimiento());
+        ticket.setDescription("Sin descripción..");
+        ticket.setCategory(categoriaService.getByID(ticketOCR.getCategoria()).orElse(null));
+        ticket.setTotal(ticketOCR.getTotal());
+        ticket.setStore(ticketOCR.getEstablecimiento());
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalDate date = LocalDate.parse(ticketOCR.getFecha(), dateFormatter);
+        LocalTime time = LocalTime.parse(ticketOCR.getHora(), timeFormatter);
+        ticket.setExpenseDate(LocalDateTime.of(date, time));
+        ticket.setTypeExpense(ExpenseClass.TICKET);
+        return ticket;
     }
 }

@@ -1,6 +1,11 @@
 package Proyecto.GestorAPI.services;
 
+import Proyecto.GestorAPI.exceptions.ErrorPharseJsonException;
 import Proyecto.GestorAPI.models.Ticket;
+import Proyecto.GestorAPI.models.User;
+import Proyecto.GestorAPI.modelsDTO.ticket.CreateTicketRequest;
+import Proyecto.GestorAPI.modelsDTO.ticket.TicketResponse;
+import Proyecto.GestorAPI.modelsDTO.ticket.UpdateTicketRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -68,4 +73,10 @@ public interface TicketService {
      * @return Una lista de objetos `Ticket` asociados al cliente indicado.
      */
     List<Ticket> getTicketsByUserId(Long clienteId);
+
+    Ticket mappingCreateTicket(CreateTicketRequest request, Long clienteId);
+
+    Ticket mappingUpdateTicket(UpdateTicketRequest request, Ticket ticket);
+
+    Ticket mappingCreateTicketbyOCR(String ocrResult, User user) throws ErrorPharseJsonException;
 }
