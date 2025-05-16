@@ -41,7 +41,7 @@
         </li>
 
         <li *ngIf="hayToken() && profile!=null">
-          <img [src]="profile ? (server + profile) : '/icon/icons8-cuenta-de-prueba-100.png'" alt="Preview"  class=" ms-2 mt-1" style="border-radius: 50%; height:35px ; width:35px" [routerLink]="'/private/dashboard'" />
+          <img [src]="profile ? (server + 'uploads/' + profile) : '/icon/icons8-cuenta-de-prueba-100.png'" alt="Preview"  class=" ms-2 mt-1" style="border-radius: 50%; height:35px ; width:35px" [routerLink]="'/private/dashboard'" />
         </li>
 
     </ul>

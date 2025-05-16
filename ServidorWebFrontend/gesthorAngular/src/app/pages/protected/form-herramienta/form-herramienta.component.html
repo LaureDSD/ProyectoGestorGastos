@@ -8,7 +8,7 @@
     <div class="col-md-12">
 
       <form *ngIf="!isLoading" [formGroup]="getCurrentForm()" (ngSubmit)="onSubmit()" class="card bg-dark text-light p-4 shadow-lg mb-3">
-        <h2 class="card-title mb-4 text-capitalize">Formulario de {{ tipo }}</h2>
+        <h2 class="card-title mb-4 text-capitalize">Formulario de {{ tipo }} (#{{id}} )</h2>
 
         <ng-container [ngSwitch]="tipo">
           <div class="mb-3">
@@ -104,16 +104,23 @@
       </form>
 
         <button *ngIf="id !== 0" (click)="onDelete()" class="btn btn-danger mt-3 w-100 card bg-dark text-light mb-3">Eliminar</button>
-
-
-
     </div>
+
+    
 
     <!-- Editor de productos a la derecha -->
     <div class="col-md-12 ">
       <app-form-productos *ngIf="tipo === 'ticket'" [productos]="productosLocal" (productosConfirmados)="onProductosConfirmados($event)"></app-form-productos>
     </div>
 
+    <app-edit-form-profile
+        [img]="img"
+        field="imageUrl"
+        icon = "icon/icons8-pencil.gif"
+        (save)="updateImg($event)"
+        [spent]="id"
+        
+    ></app-edit-form-profile>
 
   </div>
 

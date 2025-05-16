@@ -46,7 +46,7 @@ public class UserController {
     @Autowired
     private LoginAttemptServiceImpl loginAttemptService;
 
-    private static final String STORAGE_BASE_PATH = "uploads/perfiles/";
+    private static final String STORAGE_BASE_PATH = "perfiles/";
 
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @GetMapping("/me")
@@ -79,6 +79,10 @@ public class UserController {
             String oldUrl = user.getImageUrl();
             String newUrl = storageService.saveImageData(STORAGE_BASE_PATH, file);
             storageService.deleteImageData(oldUrl);
+
+            //Actualizar usuario
+            user.setImageUrl(newUrl);
+            userService.saveUser(user);
 
             return ResponseEntity.ok(Map.of("url", newUrl));
         } catch (IOException e) {
@@ -157,6 +161,7 @@ public class UserController {
     @GetMapping("/me/count")
     @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     public ResponseEntity<Long> countMySpents(@AuthenticationPrincipal CustomUserDetails currentUser) {
+        //Puedo optimizarlo , si, pero no funciona con otras bd si lo hago
         Long userId = userService.validateAndGetUserByUsername(currentUser.getUsername()).getId();
         long count = spentService.countSpentsByUserId(userId);
         return ResponseEntity.ok(count);

@@ -85,7 +85,7 @@ public class SecurityConfig {
                         // Acceso público a recursos estáticos y ciertas rutas
                         .requestMatchers(
                                 //"/admin/dashboard",
-                                "/uploads/perfiles/**",
+
                                 "/uploads/**",
                                 "/auth/**",
                                 "/static/**",
@@ -105,7 +105,9 @@ public class SecurityConfig {
 
                         // Acceso restringido a los usuarios con roles ADMIN o USER
                         .requestMatchers(
-                                "/api/**")
+                                "/api/**",
+                                "/uploads/perfiles/**",
+                                "/uploads/gastos/**")
                         .hasAnyAuthority(ADMIN,USER)
 
                         //Solo admins

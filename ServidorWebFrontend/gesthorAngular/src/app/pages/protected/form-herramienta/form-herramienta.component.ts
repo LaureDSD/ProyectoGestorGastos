@@ -21,6 +21,7 @@ export class FormHerramientaComponent implements OnInit {
   expenseTypes = Object.values(ExpenseClass);
   id!: number;
   productosLocal: Producto[] = [];
+  img : string = '';
   form!: FormGroup;
   isLoading = true;
   categories: CategoryDto[] = [];
@@ -92,14 +93,13 @@ export class FormHerramientaComponent implements OnInit {
   normalizeDataForForm(data: any): any {
   const normalized: any = { ...data };
 
-  // ► Ya estaba así
   if (normalized.fechaCompra) {
     normalized.fechaCompra = new Date(normalized.fechaCompra)
       .toISOString()
       .slice(0, 16); 
   }
 
-  // ► Ahora los dos iguales que fechaCompra
+
   if (normalized.start) {
     normalized.start = new Date(normalized.start)
       .toISOString()
@@ -112,7 +112,7 @@ export class FormHerramientaComponent implements OnInit {
       .slice(0, 16);
   }
 
-  // productsJSON para ticket
+
   if (normalized.productsJSON) {
     try {
       this.productosLocal = JSON.parse(normalized.productsJSON);
@@ -137,6 +137,7 @@ export class FormHerramientaComponent implements OnInit {
         const normalized = this.normalizeDataForForm(data);
         this.form.patchValue(normalized);
         this.isLoading = false;
+        this.img = normalized.icon;
       },
       error: (err) => this.handleError(err)
     });
@@ -184,6 +185,11 @@ export class FormHerramientaComponent implements OnInit {
       }
     });
   }
+
+  updateImg(event: { field: string; value: string }) {
+    this.img = event.value;
+  }
+
 
   onSubmit() {
     if (!this.form.valid) {
@@ -253,14 +259,16 @@ export class FormHerramientaComponent implements OnInit {
   }
 
   onDelete() {
-    if (confirm('¿Estás seguro de que quieres eliminar este ticket?')) {
+    if (confirm('¿Estás seguro de que quieres eliminar?')) {
       this.ticketService.deleteTicket(this.id).subscribe({
         next: () => {
           alert('Ticket eliminado');
-          this.router.navigate(['/protected/tools']);
+          this.router.navigate(['/protected/filter/',this.tipo]);
         },
         error: (err) => this.handleError(err)
       });
     }
   }
+
+
 }

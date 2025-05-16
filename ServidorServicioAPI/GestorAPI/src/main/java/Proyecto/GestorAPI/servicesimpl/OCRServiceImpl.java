@@ -32,6 +32,8 @@ import java.time.LocalDateTime;
 @Service
 public class OCRServiceImpl implements OCRService {
 
+    private static final String STORAGE_BASE_PATH = "gastos/";
+
     @Value("${python.server.url}")
     private String pythonServerUrl;
 
@@ -51,28 +53,31 @@ public class OCRServiceImpl implements OCRService {
     }
 
     @Override
-    public Ticket processImageTicket(MultipartFile file, User user) throws IOException, ErrorPharseJsonException {
-        // 1. Guardar archivo temporalmente
-        Path tempFilePath = Files.createTempFile("ticket_", "_" + file.getOriginalFilename());
-        Files.copy(file.getInputStream(), tempFilePath, StandardCopyOption.REPLACE_EXISTING);
+    public Ticket processImageTicket(MultipartFile file, User user)  {
         Ticket ticket = new Ticket();
+        try {
+            // 1. Guardar archivo temporalmente
+            Path tempFilePath = Files.createTempFile("ticket_", "_" + file.getOriginalFilename());
+            Files.copy(file.getInputStream(), tempFilePath, StandardCopyOption.REPLACE_EXISTING);
 
+            // 2. Procesar el archivo con OCR
+            String ocrResult = sendFileForOCR(tempFilePath.toFile());
 
-        // 2. Procesar el archivo con OCR
-        String ocrResult = sendFileForOCR(tempFilePath.toFile());
+            // 3. Crear y guardar el ticket
+            ticket = ticketService.mappingCreateTicketbyOCR(ocrResult, user);
 
-        // 3. Crear y guardar el ticket
-        ticket = ticketService.mappingCreateTicketbyOCR(ocrResult,user);
+            // 3.1 Agregar imagen del ticket al ticket y guardarla
+            ticket.setIcon(storageService.saveImageData(STORAGE_BASE_PATH, file));
 
-        // 3.1 Agregar imagen guardada
-        //ticket.setIcon(storageService.saveImageData());
+            // 4. Guardar el ticket en la base de datos y devolverlo
+            ticket = ticketService.setItem(ticket);
 
-        // 4. Guardar el ticket en la base de datos y devolverlo
-        ticket = ticketService.setItem(ticket);
+            return ticket;
 
-        //System.out.println("Info: "+ticket.getSpentId());
-
-        return ticket;
+        } catch (Exception | ErrorPharseJsonException e) {
+            storageService.deleteImageData(ticket.getIcon());
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

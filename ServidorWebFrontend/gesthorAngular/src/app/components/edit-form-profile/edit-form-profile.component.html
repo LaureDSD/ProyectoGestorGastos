@@ -1,12 +1,17 @@
-<li class="list-group-item bg-dark text-light d-flex justify-content-center align-items-center border-secondary" >
+<li class="list-group-item bg-dark text-light d-flex justify-content-center align-items-center border-secondary">
   <div class="position-relative mt-4 mb-4" style="width: 250px; height: 250px;">
 
+    <!-- Imagen clickeable -->
     <img
-      *ngIf="profile != undefined"
-      [src]="img ? (server + img) : '/icon/icons8-cuenta-de-prueba-100.png'"
+      *ngIf="profile !== undefined"
+      [src]="img ? (server + 'uploads/' + img) : defaultImg"
       alt="Perfil"
       class="w-100 h-100 rounded shadow"
-      style="object-fit: cover; border: 4px solid white;" />
+      style="object-fit: cover; border: 4px solid white; cursor: pointer;"
+      (click)="openImageModal()" />
+
+      
+    <!-- Botón de edición -->
     <button type="button"
             class="btn btn-light btn-sm position-absolute bottom-0 end-0 m-3 p-2 rounded-circle shadow"
             (click)="fileInput.click()"
@@ -17,3 +22,33 @@
     <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept="image/*" />
   </div>
 </li>
+
+<!-- Modal -->
+<div *ngIf="isImageModalOpen" class="image-modal-overlay" (click)="closeImageModal()">
+  <div class="image-modal-content" (click)="$event.stopPropagation()">
+    <!-- Botones arriba derecha -->
+    <div class="image-modal-controls">
+      <button type="button" class="btn btn-sm btn-light me-2" (click)="closeImageModal()">Cerrar</button>
+      
+      <a
+        [href]="img ? (server + 'uploads/' + img) : defaultImg"
+        download
+        class="btn btn-sm btn-light me-2"
+        (click)="$event.stopPropagation()">
+        Descargar
+      </a>
+
+      <button type="button" class="btn btn-sm btn-light" (click)="fileInput.click(); $event.stopPropagation()">
+        Editar
+      </button>
+    </div>
+
+    <!-- Imagen ampliada -->
+    <img [src]="img ? (server + 'uploads/' + img) : defaultImg" alt="Imagen ampliada" class="image-modal-img" />
+
+    <p>{{img}}</p>
+    <!-- Input oculto para subir nueva imagen -->
+    <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept="image/*" />
+  </div>
+</div>
+

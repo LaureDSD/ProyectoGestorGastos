@@ -14,7 +14,7 @@ import java.nio.file.Path;
 @Service
 public class StorageServiceImpl implements StorageService {
 
-    private String STORAGE_PATH = "C:/";
+    private String STORAGE_PATH = "C:/uploads/";
 
     @Override
     public String saveImageData(String folderPath, MultipartFile imagen) throws IOException {

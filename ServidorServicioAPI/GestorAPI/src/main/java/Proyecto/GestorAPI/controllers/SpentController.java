@@ -9,19 +9,26 @@ import Proyecto.GestorAPI.security.RoleServer;
 import Proyecto.GestorAPI.services.CategoryExpenseService;
 import Proyecto.GestorAPI.services.SpentService;
 import Proyecto.GestorAPI.services.UserService;
+import Proyecto.GestorAPI.servicesimpl.StorageServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME;
@@ -32,9 +39,18 @@ import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME
 @Tag(name = "Spent Management (Verify control) ", description = "Operaciones sobre los gastos registrados")
 public class SpentController {
 
-    private final SpentService spentService;
-    private final UserService userService;
-    private final CategoryExpenseService categoriaService;
+    @Autowired
+    private  SpentService spentService;
+
+    @Autowired
+    private  UserService userService;
+
+    @Autowired
+    private  CategoryExpenseService categoriaService;
+
+    @Autowired
+    private StorageServiceImpl storageService;
+    private static final String STORAGE_BASE_PATH = "gastos/";
 
     @GetMapping("")
     @Operation(
@@ -180,4 +196,44 @@ public class SpentController {
         spent.setCreatedAt(LocalDateTime.now());
         return  spent;
     }
+
+    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
+    @PutMapping(value = "/me/uploadSpenseImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadSpenseImageWithData(
+            @RequestPart("image") MultipartFile file,
+            @RequestParam("spentId") Long spentId,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+
+        if (file == null || file.isEmpty()) {
+            return ResponseEntity.badRequest().body("No se envió ninguna imagen.");
+        }
+
+        try {
+            // Aquí podrías validar o procesar el ticket
+            System.out.println("Ticket recibido: ");
+
+            // Procesar el usuario
+            User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+            Spent spent = spentService.getByID(Long.valueOf(spentId)).orElse(null);
+            String oldUrl = spent.getIcon();
+            String newUrl = storageService.saveImageData(STORAGE_BASE_PATH, file);
+
+            if (oldUrl != null && !oldUrl.isEmpty()) {
+                storageService.deleteImageData(oldUrl);
+            }
+
+            spent.setIcon( newUrl );
+
+            spentService.setItem(spent);
+
+
+
+            return ResponseEntity.ok(Map.of("url", newUrl));
+
+        } catch (IOException e) {return ResponseEntity.internalServerError().body("Error al guardar la imagen.");
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error inesperado: " + e.getMessage());
+        }
+    }
+
 }
