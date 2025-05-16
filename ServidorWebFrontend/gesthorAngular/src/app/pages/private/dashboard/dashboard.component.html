@@ -12,7 +12,8 @@
         [img]="user.imageUrl"
         field="imageUrl"
         icon = "icon/icons8-pencil.gif"
-        (save)="guardarCampo($event)"
+        (save)="updateImg($event)"
+        defaultImg ='/icon/icons8-cuenta-de-prueba-100.png'
       ></app-edit-form-profile>
 
       <!--Datos de perfil-->

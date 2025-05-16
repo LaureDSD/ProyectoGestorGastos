@@ -45,10 +45,17 @@ export class DashboardComponent {
     private route : Router) {
     this.cargarUsuario()
     this.cargarLogs()
+    this.cargarGastos()
   }
 
   cargarUsuario(){
     this.userService.getFullCurrentUser().subscribe(u => this.user = u);
+  }
+
+  updateImg(event: { field: string; value: string }) {
+    if (event.field === 'imageUrl') {
+      this.user.imageUrl = event.value;
+    }
   }
 
   guardarCampo(event: { field: string; value: string }) {
@@ -63,6 +70,7 @@ export class DashboardComponent {
           alert('Error al actualizar el usuario: ' + err);
           this.cargarUsuario()
           this.cargarLogs()
+          this.cargarGastos()
         }
       });
     }

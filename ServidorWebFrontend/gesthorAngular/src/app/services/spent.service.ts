@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
-import { SpentDto } from '../models/api-models/api-models.component';
+import { SpentDto, TicketDto } from '../models/api-models/api-models.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SpentService {
+  
+
   private readonly baseUrl = `${environment.apiUrl}/api/gastos`;
 
   constructor(private http: HttpClient) {}
@@ -40,4 +42,14 @@ export class SpentService {
   deleteSpent(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
+
+
+  subirFotoGasto(spentId: number, image: File): Observable<any> {
+  const formData = new FormData();
+  formData.append('image', image);
+  formData.append('spentId', spentId.toString()); 
+  return this.http.put<any>(`${this.baseUrl}/me/uploadSpenseImage`, formData);
+}
+
+  
 }
