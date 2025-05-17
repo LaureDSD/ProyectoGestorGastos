@@ -60,7 +60,7 @@ export class AdminDashboardComponent {
     this.fetchStats();
 
     // Refrescar cada 10s
-    interval(50).subscribe(() => {
+    interval(2500).subscribe(() => {
       this.fetchStats();
     });
   }
@@ -99,7 +99,7 @@ updateDonut(info: ServerInfoDto) {
   this.storageValue = usedGB;
 }
 
-  
+
 
 updateHistory(info: ServerInfoDto) {
   const now = new Date();

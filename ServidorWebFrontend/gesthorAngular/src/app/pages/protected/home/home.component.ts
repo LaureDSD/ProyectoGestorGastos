@@ -35,10 +35,10 @@ export class HomeComponent implements OnInit {
   monthlyChartData: ChartConfiguration<'bar'>['data'] = {
     labels: [],
     datasets: [
-      { 
-        label: 'Gastos (€)', 
-        data: [], 
-        backgroundColor: [] 
+      {
+        label: 'Gastos (€)',
+        data: [],
+        backgroundColor: []
       }
     ]
   };
@@ -93,12 +93,12 @@ export class HomeComponent implements OnInit {
   showFullCategories = false;
 
   constructor(
-    private spentService: SpentService, 
-    private authService: AuthService, 
+    private spentService: SpentService,
+    private authService: AuthService,
     private categoryService: CategoryService
   ) {}
 
-  ngOnInit() {  
+  ngOnInit() {
     this.cargarDatos();
   }
 
@@ -106,7 +106,7 @@ export class HomeComponent implements OnInit {
     // Cargar categorías primero
     this.categoryService.getCategories().subscribe(cats => {
       this.categorias = cats;
-      
+
       // Luego cargar gastos
       this.spentService.getSpents().subscribe(gastos => {
         this.ultimosGastos = gastos;
@@ -125,26 +125,31 @@ export class HomeComponent implements OnInit {
   actualizarDonutChart(gastos: BaseSpentDto[]) {
     const sieteDiasAtras = new Date();
     sieteDiasAtras.setDate(sieteDiasAtras.getDate() - 7);
-    
-    const gastosSemana = gastos.filter(g => 
+
+    const gastosSemana = gastos.filter(g =>
       new Date(g.fechaCompra) >= sieteDiasAtras
     );
-    
+
     const totalSemanal = gastosSemana.reduce((sum, g) => sum + g.total, 0);
     const mediaSemanal = totalSemanal / 7;
-    
-    this.donutChartData = {
-      ...this.donutChartData,
-      datasets: [{
-        ...this.donutChartData.datasets[0],
-        data: [mediaSemanal, totalSemanal]
-      }]
-    };
+
+this.donutChartData = {
+  ...this.donutChartData,
+  datasets: [{
+    ...this.donutChartData.datasets[0],
+    data: [mediaSemanal, totalSemanal],
+    backgroundColor: ['#555', '#bb86fc'], // Ejemplo de colores modernos
+    hoverBackgroundColor: ['#2C9AB7', '#CC527A']
+  }]
+};
+
+
+
   }
 
   actualizarMonthlyChart(gastos: BaseSpentDto[]) {
     const gastosPorCategoria: {[key: number]: {total: number, name: string}} = {};
-    
+
     // Inicializar todas las categorías conocidas
     this.categorias.forEach(cat => {
       gastosPorCategoria[cat.id] = {
@@ -152,7 +157,7 @@ export class HomeComponent implements OnInit {
         name: cat.name
       };
     });
-    
+
     // Sumar gastos por categoría
     gastos.forEach(gasto => {
       if (gastosPorCategoria[gasto.categoriaId]) {
@@ -164,27 +169,27 @@ export class HomeComponent implements OnInit {
         };
       }
     });
-    
+
     // Ordenar por total y separar top 6 y otros
     const categoriasOrdenadas = Object.values(gastosPorCategoria)
       .sort((a, b) => b.total - a.total);
-    
+
     const topCategorias = categoriasOrdenadas.slice(0, 6);
     const otrasCategorias = categoriasOrdenadas.slice(6);
     const totalOtros = otrasCategorias.reduce((sum, cat) => sum + cat.total, 0);
-    
+
     // Preparar datos para el gráfico
     const labels = topCategorias.map(c => c.name);
     const data = topCategorias.map(c => c.total);
     const backgroundColors = topCategorias.map((_, i) => this.getChartColor(i));
-    
-    // Agregar "Otros" si hay más categorías
+
+
     if (otrasCategorias.length > 0) {
       labels.push('Otros');
       data.push(totalOtros);
       backgroundColors.push('#6c757d'); // Color gris para "Otros"
     }
-    
+
     this.monthlyChartData = {
       labels: labels,
       datasets: [{
@@ -197,14 +202,14 @@ export class HomeComponent implements OnInit {
 
   actualizarFullCategoriesChart(gastos: BaseSpentDto[]) {
     const gastosPorCategoria: {[key: number]: {total: number, name: string}} = {};
-    
+
     this.categorias.forEach(cat => {
       gastosPorCategoria[cat.id] = {
         total: 0,
         name: cat.name
       };
     });
-    
+
     gastos.forEach(gasto => {
       if (gastosPorCategoria[gasto.categoriaId]) {
         gastosPorCategoria[gasto.categoriaId].total += gasto.total;
@@ -215,10 +220,10 @@ export class HomeComponent implements OnInit {
         };
       }
     });
-    
+
     const categoriasOrdenadas = Object.values(gastosPorCategoria)
       .sort((a, b) => b.total - a.total);
-    
+
     this.fullCategoriesChartData = {
       labels: categoriasOrdenadas.map(c => c.name),
       datasets: [{
@@ -233,17 +238,17 @@ export class HomeComponent implements OnInit {
     const hoy = new Date();
     const diasSemana = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
     const gastosPorDia: {[key: string]: number} = {};
-    
+
     for (let i = 6; i >= 0; i--) {
       const fecha = new Date(hoy);
       fecha.setDate(fecha.getDate() - i);
       const diaStr = diasSemana[fecha.getDay()];
       gastosPorDia[diaStr] = 0;
     }
-    
+
     const sieteDiasAtras = new Date();
     sieteDiasAtras.setDate(sieteDiasAtras.getDate() - 7);
-    
+
     gastos
       .filter(g => new Date(g.fechaCompra) >= sieteDiasAtras)
       .forEach(g => {
@@ -251,7 +256,7 @@ export class HomeComponent implements OnInit {
         const diaStr = diasSemana[fechaGasto.getDay()];
         gastosPorDia[diaStr] += g.total;
       });
-    
+
     const diasOrdenados = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
     this.weeklyChartData = {
       ...this.weeklyChartData,
@@ -290,7 +295,7 @@ export class HomeComponent implements OnInit {
 
   getChartColor(index: number): string {
     const colors = [
-      '#0d6efd', '#198754', '#fd7e14', '#dc3545', 
+      '#0d6efd', '#198754', '#fd7e14', '#dc3545',
       '#6f42c1', '#20c997', '#6610f2', '#d63384',
       '#0dcaf0', '#ffc107', '#adb5bd', '#6c757d'
     ];

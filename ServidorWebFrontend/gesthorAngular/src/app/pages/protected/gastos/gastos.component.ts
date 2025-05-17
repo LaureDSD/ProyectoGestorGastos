@@ -1,47 +1,110 @@
-import { Component } from '@angular/core';
-import { ChartConfiguration } from 'chart.js';
+// Angular + Bootstrap Dashboard avanzado con filtros dinámicos y gráficos
+// Requiere instalar: ngx-bootstrap, chart.js, ng2-charts
+
+import { Component, OnInit } from '@angular/core';
+import { SpentService } from './../../../services/spent.service';
+import { SpentFullDto, ExpenseClass } from '../../../models/api-models/api-models.component';
+import { ChartConfiguration, ChartType } from 'chart.js';
+
 
 @Component({
   selector: 'app-gastos',
-  standalone: false,
+    standalone: false,
   templateUrl: './gastos.component.html',
-  styleUrl: './gastos.component.css'
+  styleUrls: ['./gastos.component.css']
 })
-export class GastosComponent {
+export class GastosComponent implements OnInit {
+ spents: SpentFullDto[] = [];
+  filteredSpents: SpentFullDto[] = [];
 
-    // Monthly bar chart
-    monthlyChartData: ChartConfiguration<'bar'>['data'] = {
-      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May',"Jun","Jul","Ago","Sep","Nov","Dic"],
-      datasets: [
-        { label: 'Gastos (€)', data: [20, 50, 3, 10, 10], backgroundColor: '#0d6efd' }
-      ]
-    };
+  activeYear: number = new Date().getFullYear();
+  availableYears: number[] = [];
 
-    // Dark mode chart options
-  darkChartOptions: ChartConfiguration['options'] = {
-    responsive: true,
-    plugins: {
-      legend: {
-        labels: {
-          color: '#ffffff'
-        }
-      }
-    },
-    scales: {
-      x: {
-        ticks: { color: '#ffffff' },
-        grid: { color: '#444' }
-      },
-      y: {
-        ticks: { color: '#ffffff' },
-        grid: { color: '#444' },
-        beginAtZero: true
-      }
-    }
+  activeType: string = 'ALL';
+  typeExpenses: string[] = ['ALL', 'TICKET', 'SUBSCRIPCION', 'TRANSFERENCIA', 'GASTO_GENERICO'];
+  searchTerm: string = '';
+
+  chartData: ChartConfiguration<'bar'>['data'] = {
+    labels: [],
+    datasets: [
+      { data: [], label: 'Gasto Mensual' }
+    ]
   };
 
+  constructor(private spentService: SpentService) {}
 
-  //PETICIONDE TODOS LOS GATSO DEL USUARIO DEL ULTIMO ANO (DEFAULT)
-  //PEICIONES AL APLICAR FILTROS
+  ngOnInit(): void {
+    this.spentService.getFullSpents().subscribe({
+      next: (data) => {
+        this.spents = data;
+        this.availableYears = [...new Set(this.spents.map(s => new Date(s.fechaCompra).getFullYear()))];
+        this.availableYears.sort((a, b) => a - b);
+        this.updateFiltered();
+      },
+      error: (err) => console.error('Error al cargar los gastos', err)
+    });
+  }
 
+  updateFiltered() {
+    let spentsByYear = this.spents.filter(s => new Date(s.fechaCompra).getFullYear() === this.activeYear);
+
+    if (this.activeType !== 'ALL') {
+      spentsByYear = spentsByYear.filter(s => s.typeExpense === this.activeType);
+    }
+
+    if (this.searchTerm.trim()) {
+      const term = this.searchTerm.toLowerCase();
+      spentsByYear = spentsByYear.filter(s => {
+        const json = this.parseProducts(s.productsJSON ?? null);
+        const prodMatch = json?.some(p => p.nombre?.toLowerCase().includes(term) || p.categorias?.some((c: string) => c?.toLowerCase().includes(term)));
+        return (
+          s.name?.toLowerCase().includes(term) ||
+          s.description?.toLowerCase().includes(term) ||
+          prodMatch
+        );
+      });
+    }
+
+    this.filteredSpents = spentsByYear;
+    this.updateChart();
+  }
+
+  updateChart() {
+    const months = Array(12).fill(0);
+    this.filteredSpents.forEach(s => {
+      const month = new Date(s.fechaCompra).getMonth();
+      months[month] += s.total;
+    });
+
+    this.chartData.labels = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    this.chartData.datasets[0].data = months;
+  }
+
+  parseProducts(productsJSON: string | null): any[] {
+    try {
+      return productsJSON ? JSON.parse(productsJSON) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  changeYear(delta: number) {
+    const index = this.availableYears.indexOf(this.activeYear);
+    const newIndex = index + delta;
+    if (newIndex >= 0 && newIndex < this.availableYears.length) {
+      this.activeYear = this.availableYears[newIndex];
+      this.updateFiltered();
+    }
+  }
+
+  canNavigateYear(delta: number): boolean {
+    const index = this.availableYears.indexOf(this.activeYear);
+    const newIndex = index + delta;
+    return newIndex >= 0 && newIndex < this.availableYears.length;
+  }
+
+  setType(type: string) {
+    this.activeType = type;
+    this.updateFiltered();
+  }
 }

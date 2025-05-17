@@ -125,12 +125,38 @@ export interface SubscriptionDto extends BaseSpentDto {
 }
 
 /**
- * Gasto genérico: no tiene campos extra, reusa BaseSpentDto
+ * Para uso especial
  */
 export type SpentDto = BaseSpentDto;
 
+export interface SpentFullDto {
+  // Comunes
+  spentId: number;
+  userId: number;
+  categoriaId: number;
+  name: string;
+  description?: string;
+  icon?: string;
+  fechaCompra: string;
+  total: number;
+  iva: number;
+  typeExpense: ExpenseClass;
+
+  //específicos (opcionales)
+  store?: string;
+  productsJSON?: string;
+
+  start?: string;
+  end?: string | null;
+  accumulate?: number;
+  restartDay?: number;
+  intervalTime?: number;
+  activa?: boolean;
+}
+
+
 // ----------------------------------
-// Unión discriminada si la necesitas
+// Unión discriminada
 // ----------------------------------
 
 export type AnySpentDto

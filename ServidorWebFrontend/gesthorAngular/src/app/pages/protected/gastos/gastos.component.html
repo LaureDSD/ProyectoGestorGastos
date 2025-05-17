@@ -1,68 +1,65 @@
-<!-- <div class="container py-4">
-  <h2 class="mb-4">Gastos Semanales</h2>
-  <canvas baseChart
-          [datasets]="lineChartData"
-          [labels]="lineChartLabels"
-          [chartType]="'line'">
-  </canvas>
-</div>
-
-// gastos-barras.component.html
-<div class="container py-4">
-  <h2 class="mb-4">Gastos Mensuales</h2>
-  <canvas baseChart
-          [datasets]="barChartData"
-          [labels]="barChartLabels"
-          [chartType]="'bar'">
-  </canvas>
-</div>
-
--->
 
 
+<!-- <h1>Gastos JSON</h1>
+<pre>{{ spents | json }}</pre> -->
 
 
-<div class="container py-4 mb-5 mt-5">
-
-  <h3 class="text-light">Historial</h3>
-
-  <div class="row">
-<!-- Columna derecha -->
-    <div class="col-md-6 mt-3">
-      <!-- Columna derecha: Barras -->
-      <div class="card shadow-sm bg-dark text-white mb-3">
-        <div class="card-body">
-          <h5 class="card-title">Gastos por Mes 2025</h5>
-          <canvas baseChart
-                  [data]="monthlyChartData"
-                  [options]="darkChartOptions"
-                  [type]="'bar'">
-          </canvas>
-        </div>
+ <div class="container mt-5">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <button class="btn btn-outline-primary" (click)="changeYear(-1)" [disabled]="!canNavigateYear(-1)">&larr;</button>
+        <h3 class="mx-3">Año {{ activeYear }}</h3>
+        <button class="btn btn-outline-primary" (click)="changeYear(1)" [disabled]="!canNavigateYear(1)">&rarr;</button>
       </div>
 
+      <canvas baseChart
+              [data]="chartData"
+              [type]="'bar'"
+              [options]="{ responsive: true }">
+      </canvas>
+
+      <ul class="nav nav-tabs mt-5">
+        <li class="nav-item" *ngFor="let type of typeExpenses">
+          <a class="nav-link" [class.active]="activeType === type" (click)="setType(type)">{{ type }}</a>
+        </li>
+      </ul>
 
 
-    </div>
 
-    <!-- Columna derecha -->
-    <div class="col-md-6 mt-3">
-      <!-- Columna derecha: Barras -->
-      <div class="card shadow-sm bg-dark text-white mb-3">
-        <div class="card-body">
-          <h5 class="card-title">Gastos por Mes 2024</h5>
-          <canvas baseChart
-                  [data]="monthlyChartData"
-                  [options]="darkChartOptions"
-                  [type]="'bar'">
-          </canvas>
-        </div>
+
+      <div class="form-group mt-4" *ngIf="activeType !== 'ALL'">
+        <span>Buscar en todos los campos:</span>
+        <input type="text" class="form-control" placeholder="Buscar por nombre, descripción o producto..." [(ngModel)]="searchTerm" (input)="updateFiltered()">
       </div>
 
+      <table class="table table-striped mt-3" *ngIf="filteredSpents.length">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Total</th>
+            <th>Tipo</th>
+            <th>Detalle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of filteredSpents">
+            <td>{{ s.fechaCompra | date: 'shortDate' }}</td>
+            <td>{{ s.name }}</td>
+            <td>{{ s.description }}</td>
+            <td>{{ s.total | currency:'USD' }}</td>
+            <td>{{ s.typeExpense }}</td>
+            <td>
+              <ul *ngIf="s.typeExpense === 'TICKET'">
+                <li *ngFor="let p of parseProducts(s.productsJSON ?? null)">
+                  {{ p.nombre }} - {{ p.precio }} x {{ p.cantidad }}
+                </li>
+              </ul>
+              <span *ngIf="s.typeExpense !== 'TICKET'">N/A</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-
+      <p *ngIf="!filteredSpents.length" class="text-center">No hay datos para mostrar.</p>
     </div>
-
-
-  </div>
-</div>

@@ -2,6 +2,8 @@
   <div class="row">
     <!-- Columna izquierda: Gráfico de Rosca -->
     <div class="col-md-4 mb-6 mt-3">
+
+
       <h3 class="text-light">Información de la semana</h3>
       <div class="card shadow-sm bg-dark text-white mb-3">
         <div class="card-body">
@@ -14,7 +16,7 @@
         </div>
       </div>
 
-        
+
 
       <!-- Columna derecha: línea -->
       <div class="card shadow-sm bg-dark text-white">
@@ -28,7 +30,7 @@
         </div>
       </div>
 
-      
+
 
     </div>
 
@@ -74,26 +76,15 @@
                 <div>
                 <strong>{{gasto.typeExpense}} - {{ gasto.name }}</strong> - <small>{{ gasto.fechaCompra | date }}</small>
               </div>
-              <span class="fw-bold text-warning">€{{ gasto.total.toFixed(2) }}</span>
+              <span class="fw-bold text">€{{ gasto.total.toFixed(2) }}</span>
             </li>
           </ul>
         </div>
       </div>
 
-
-
-
-
-
-      
-    </div>
-
-
-    <!-- Columna derecha -->
-    <div class="col-md-4 mt-3">
     </div>
 
   </div>
 </div>
 
-<h1 style="color: aliceblue;" >{{ultimosGastos | json }}</h1>
+<!-- <h1 style="color: aliceblue;" >{{ultimosGastos | json }}</h1> -->

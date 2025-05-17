@@ -1,10 +1,13 @@
 package Proyecto.GestorAPI.controllers;
 
 import Proyecto.GestorAPI.models.Spent;
+import Proyecto.GestorAPI.models.Subscription;
+import Proyecto.GestorAPI.models.Ticket;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.models.enums.ExpenseClass;
 import Proyecto.GestorAPI.modelsDTO.spent.CreateSpentRequest;
 import Proyecto.GestorAPI.modelsDTO.spent.SpentDto;
+import Proyecto.GestorAPI.modelsDTO.spent.SpentFullDto;
 import Proyecto.GestorAPI.modelsDTO.spent.UpdateSpentRequest;
 import Proyecto.GestorAPI.security.CustomUserDetails;
 import Proyecto.GestorAPI.security.RoleServer;
@@ -30,7 +33,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME;
@@ -83,6 +85,74 @@ public class SpentController {
                 .map(SpentDto::from)
                 .collect(Collectors.toList()));
     }
+
+    @GetMapping("/fullspents")
+    @Operation(
+            security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
+            summary = "Obtener todos los gastos )"
+    )
+    public ResponseEntity<List<SpentFullDto>> getAllSpents(
+               @RequestParam(value = "clienteId", required = false) Long clienteId,
+               @AuthenticationPrincipal CustomUserDetails currentUser) {
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+        List<Spent> spents = new ArrayList<>();
+
+        if(user.getRole() != RoleServer.ADMIN){
+            //si no es admin
+            spents = spentService.getSpentsByUserId(user.getId());
+        }else{
+            //si es admin
+            spents = (clienteId != null)
+                    ? spentService.getSpentsByUserId(clienteId)
+                    : spentService.getAll();
+        }
+        //Verificacion de existencia
+        if (spents.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        List<SpentFullDto> result = mappingSpentFullDtosList(spents);
+
+        return ResponseEntity.ok(result);
+    }
+
+    private static List<SpentFullDto> mappingSpentFullDtosList(List<Spent> spents) {
+        List<SpentFullDto> result = new ArrayList<>();
+        for (Spent gasto : spents) {
+            result.add(mappingSpentFullDto(gasto));
+        }
+        return result;
+    }
+
+    private static SpentFullDto mappingSpentFullDto(Spent gasto) {
+        SpentFullDto dto = new SpentFullDto();
+        dto.setSpentId(gasto.getSpentId());
+        dto.setUserId(gasto.getUser().getId());
+        dto.setCategoriaId(gasto.getCategory().getId());
+        dto.setName(gasto.getName());
+        dto.setDescription(gasto.getDescription());
+        dto.setIcon(gasto.getIcon());
+        dto.setFechaCompra(gasto.getExpenseDate());
+        dto.setTotal(gasto.getTotal());
+        dto.setIva(gasto.getIva());
+        dto.setTypeExpense(gasto.getTypeExpense());
+
+        if (gasto instanceof Ticket ticket) {
+            dto.setStore(ticket.getStore());
+            dto.setProductsJSON(ticket.getProductsJSON());
+        }
+
+        if (gasto instanceof Subscription sub) {
+            dto.setStart(sub.getStart());
+            dto.setEnd(sub.getEnd());
+            dto.setAccumulate(sub.getAccumulate());
+            dto.setRestartDay(sub.getRestartDay());
+            dto.setIntervalTime(sub.getIntervalTime());
+            dto.setActiva(sub.isActiva());
+        }
+        return dto;
+    }
+
 
     @GetMapping("/{spentId}")
     @Operation(

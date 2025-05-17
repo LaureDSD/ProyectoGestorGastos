@@ -8,7 +8,7 @@ import { SpentDto, TicketDto } from '../models/api-models/api-models.component';
   providedIn: 'root'
 })
 export class SpentService {
-  
+
 
   private readonly baseUrl = `${environment.apiUrl}/api/gastos`;
 
@@ -22,6 +22,16 @@ export class SpentService {
     }
     return this.http.get<SpentDto[]>(this.baseUrl, { params });
   }
+
+  /** Obtiene todos los gastos completos, opcionalmente filtrados por clienteId */
+  getFullSpents(clienteId?: number): Observable<SpentDto[]> {
+    let params = new HttpParams();
+    if (clienteId != null) {
+      params = params.set('clienteId', String(clienteId));
+    }
+    return this.http.get<SpentDto[]>(`${this.baseUrl}/fullspents`, { params });
+  }
+
 
   /** Obtiene un gasto por su ID */
   getSpentById(id: number): Observable<SpentDto> {
@@ -47,9 +57,9 @@ export class SpentService {
   subirFotoGasto(spentId: number, image: File): Observable<any> {
   const formData = new FormData();
   formData.append('image', image);
-  formData.append('spentId', spentId.toString()); 
+  formData.append('spentId', spentId.toString());
   return this.http.put<any>(`${this.baseUrl}/me/uploadSpenseImage`, formData);
 }
 
-  
+
 }
