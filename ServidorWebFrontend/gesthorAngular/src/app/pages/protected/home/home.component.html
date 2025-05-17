@@ -14,17 +14,7 @@
         </div>
       </div>
 
-        <!-- Columna derecha: Barras -->
-        <div class="card shadow-sm bg-dark text-white mb-3">
-        <div class="card-body">
-          <h5 class="card-title">Gastos por Categoria</h5>
-          <canvas baseChart
-                  [data]="monthlyChartData"
-                  [options]="darkChartOptions"
-                  [type]="'bar'">
-          </canvas>
-        </div>
-      </div>
+        
 
       <!-- Columna derecha: línea -->
       <div class="card shadow-sm bg-dark text-white">
@@ -38,25 +28,64 @@
         </div>
       </div>
 
+      
+
     </div>
 
 
     <div class="col-md-8 mt-3">
+
+           <!-- Gráfico de barras (top 6 + otros) -->
+      <div class="card shadow-sm bg-dark text-white mb-3">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title mb-0">Top 6 Categorías + Otros</h5>
+            <button (click)="toggleFullCategories()" class="btn btn-sm btn-outline-light">
+              {{ showFullCategories ? 'Ocultar Detalle' : 'Ver Todas las Categorías' }}
+            </button>
+          </div>
+          <canvas baseChart
+                  [data]="monthlyChartData"
+                  [options]="darkChartOptions"
+                  [type]="'bar'">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- Gráfico de dona completo (solo se muestra cuando showFullCategories es true) -->
+      <div *ngIf="showFullCategories" class="card shadow-sm bg-dark text-white mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Todas las Categorías</h5>
+          <canvas baseChart
+                  [data]="fullCategoriesChartData"
+                  [options]="darkChartOptions"
+                  [type]="'doughnut'">
+          </canvas>
+        </div>
+      </div>
+
       <!-- Lista de gastos abajo -->
       <div class="card shadow-sm bg-dark text-white">
         <div class="card-body">
           <h5 class="card-title">Últimos 20 Gastos</h5>
           <ul class="list-group list-group-flush">
-            <li *ngFor="let gasto of ultimosGastos"
+            <li *ngFor="let gasto of ultimosGastos.slice(0, 20)"
                 class="list-group-item bg-dark text-white d-flex justify-content-between">
-              <div>
-                <strong>{{ gasto.tienda }}</strong> — <small>{{ gasto.fecha | date }}</small>
+                <div>
+                <strong>{{gasto.typeExpense}} - {{ gasto.name }}</strong> - <small>{{ gasto.fechaCompra | date }}</small>
               </div>
               <span class="fw-bold text-warning">€{{ gasto.total.toFixed(2) }}</span>
             </li>
           </ul>
         </div>
       </div>
+
+
+
+
+
+
+      
     </div>
 
 
@@ -66,3 +95,5 @@
 
   </div>
 </div>
+
+<h1 style="color: aliceblue;" >{{ultimosGastos | json }}</h1>

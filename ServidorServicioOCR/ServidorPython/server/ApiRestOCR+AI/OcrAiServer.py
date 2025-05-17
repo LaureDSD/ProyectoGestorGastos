@@ -81,6 +81,13 @@ def conversar():
 
     return jsonify({"respuesta": respuesta}), 200
 
+# ========== ENDPOINT 3: Información del servidor ==========
+
+@app.route("/status", methods=["GET"])
+def health():
+    return jsonify({"status": "ok"}), 200
+
+
 # ========== INICIO DEL SERVIDOR ==========
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

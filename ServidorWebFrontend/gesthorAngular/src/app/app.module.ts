@@ -24,7 +24,7 @@ import { SpinningComponent } from './components/spinning/spinning.component';
 import { DetailComponent } from './pages/protected/detail/detail.component';
 import { PublicComponent } from './pages/public/public.component';
 import { ToolsComponent } from './pages/protected/tools/tools.component';
-import { AdminDashboardComponent } from './pages/private/admin-dashboard/admin-dashboard.component';
+import { AdminDashboardComponent, SecondsToHmsPipe } from './pages/private/admin-dashboard/admin-dashboard.component';
 import { ProtectedComponent } from './pages/protected/protected.component';
 import { PrivateComponent } from './pages/private/private.component';
 import { HeroComponent } from './components/hero/hero.component';
@@ -115,6 +115,7 @@ import { FormProductosComponent } from './components/form-productos/form-product
     AppRoutingModule,
     FormsModule,
     NgChartsModule,
+    SecondsToHmsPipe
 ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }

@@ -1,83 +1,114 @@
-<!-- <div class="container mt-5">
-  <div class="row">
+<div class="container" style="margin-top: 8%; margin-bottom: 18%">
 
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-body text-center">
-          <img src="/git2.png" class="rounded-circle mb-3" alt="Imagen de perfil" style="background-color: black;" width="200px" >
-          <h5 class="card-title"> Usuario: {{ userl.name }}</h5>
-          <p class="card-text">Nombre :{{ userl.username }}</p>
-          <p class="text-muted">Permiso: {{ userl.role }}</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-8">
-      <div class="card">
-        <div class="card-body">
-          <h2>Dashboard</h2>
-          <p class="lead">¡Autenticado exitosamente!</p>
-          <hr>
-          <h5>Detalles del Token:</h5>
-          <p><strong>Token:</strong> {{ token }}</p>
-          <hr>
-          <h5>Detalles del Usuario:</h5>
-          <pre>{{ userl | json }}</pre>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
--->
-
-<div class="container " style="margin-top: 8%; margin-bottom: 18%">
-
-
-
+  <!-- Métricas principales -->
   <div class="row text-white text-center mb-4">
     <div class="col" *ngFor="let m of metrics">
-      <div class="p-3 rounded shadow" [ngClass]="m.bg">
+      <div class="p-3 rounded shadow" [ngClass]="m.bg" style="min-width: 120px;">
         <h4 class="mb-0">{{ m.value }}</h4>
         <small>{{ m.label }}</small>
       </div>
     </div>
   </div>
 
+  <!-- Gráficos CPU y almacenamiento con info técnica debajo -->
   <div class="row mb-3">
 
+    <!-- Almacenamiento + info sistema -->
     <div class="col-md-4 mb-3">
-      <div class="card p-3 shadow">
+      <div class="card p-3 shadow mb-3">
         <h6>Almacenamiento</h6>
         <canvas baseChart
             [data]="donutData"
             [options]="donutOptions"
-          [type]="'doughnut'">
+            [type]="'doughnut'">
         </canvas>
         <div class="text-center mt-2">{{ storageValue }} GB usados</div>
       </div>
+
+      <div class="card p-3 shadow bg-light">
+        <h6 class="mb-3">Información del Servidor</h6>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex justify-content-between">
+            <strong>Nombre:</strong> <span>{{serverInfo.name}}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <strong>Usuarios:</strong> <span>{{serverInfo.users}}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <strong>Gastos registrados:</strong> <span>{{serverInfo.spenses}}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <strong>OCR activo:</strong> <span>{{serverInfo.activeocr ? 'Sí' : 'No'}}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <strong>API activo:</strong> <span>{{serverInfo.activeapi ? 'Sí' : 'No'}}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <strong>Sistema operativo:</strong> <span>{{serverInfo.os}}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <strong>Tiempo activo:</strong> <span>{{serverInfo.uptimeSeconds | secondsToHms}}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <strong>Creado:</strong> <span>{{serverInfo.createdAt}}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <strong>Última actualización:</strong> <span>{{serverInfo.updatedAt}}</span>
+          </li>
+        </ul>
+      </div>
     </div>
 
-
+    <!-- CPU + info RAM -->
     <div class="col-md-8">
-      <div class="card p-3 shadow">
-        <h6>Accesos</h6>
+      <div class="card p-3 shadow mb-3">
+        <h6>CPU</h6>
         <canvas baseChart
           [data]="lineData"
           [options]="lineOptions"
           [type]="'line'">
         </canvas>
       </div>
+
+      <div class="card p-3 shadow bg-light">
+        <h6 class="mb-3">Información de Memoria RAM</h6>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex justify-content-between">
+            <strong>Carga CPU:</strong> <span>{{serverInfo.cpuLoad | number:'1.2-2'}}%</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <strong>Temperatura CPU:</strong> <span>{{serverInfo.cpuTemperature | number:'1.1-1'}} °C</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <strong>Memoria total:</strong> <span>{{bytesToGB(serverInfo.totalMemory)}} GB</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <strong>Memoria usada:</strong> <span>{{bytesToGB(serverInfo.usedMemory)}} GB</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <strong>Disco total:</strong> <span>{{bytesToGB(serverInfo.totalDisk)}} GB</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <strong>Disco usado:</strong> <span>{{bytesToGB(serverInfo.usedDisk)}} GB</span>
+          </li>
+        </ul>
+      </div>
+
+
+      <!-- Gráfico de actividad RAM -->
+      <div class="card p-3 shadow mt-3 mb-4">
+        <h6>Actividad</h6>
+        <canvas baseChart
+          [data]="barData"
+          [options]="barOptions"
+          [type]="'bar'">
+        </canvas>
+      </div>
+
     </div>
+
   </div>
 
+  
 
-  <div class="card p-3 shadow">
-    <h6>Actividad</h6>
-    <canvas baseChart
-      [data]="barData"
-      [options]="barOptions"
-      [type]="'bar'">
-    </canvas>
-  </div>
 </div>
-
