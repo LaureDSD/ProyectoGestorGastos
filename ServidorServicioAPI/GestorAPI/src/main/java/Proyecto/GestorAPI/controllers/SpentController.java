@@ -2,8 +2,10 @@ package Proyecto.GestorAPI.controllers;
 
 import Proyecto.GestorAPI.models.Spent;
 import Proyecto.GestorAPI.models.User;
+import Proyecto.GestorAPI.models.enums.ExpenseClass;
 import Proyecto.GestorAPI.modelsDTO.spent.CreateSpentRequest;
 import Proyecto.GestorAPI.modelsDTO.spent.SpentDto;
+import Proyecto.GestorAPI.modelsDTO.spent.UpdateSpentRequest;
 import Proyecto.GestorAPI.security.CustomUserDetails;
 import Proyecto.GestorAPI.security.RoleServer;
 import Proyecto.GestorAPI.services.CategoryExpenseService;
@@ -107,7 +109,7 @@ public class SpentController {
     }
 
 
-    @PostMapping("/")
+    @PostMapping("")
     @Operation(
             security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
             summary = "Crear un nuevo gasto"
@@ -162,11 +164,12 @@ public class SpentController {
     )
     public ResponseEntity<SpentDto> updateSpent(
             @PathVariable Long spentId,
-            @Valid @RequestBody CreateSpentRequest request,
+            @Valid @RequestBody UpdateSpentRequest request,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
         Spent spent = spentService.getByID(spentId).orElse(null);;
 
+        System.out.println("dhvkdsfkdsbfkdfdsahdsh " + request.spentId());
         //Veriificacion existencia
         if (spent == null) {
             return ResponseEntity.notFound().build();
@@ -178,8 +181,25 @@ public class SpentController {
         }
 
         //Actualizacion
-        Spent updatedSpent = spentService.setItem(mappingSpent(request, spent.getUser().getId()));
+        Spent updatedSpent = spentService.setItem(mappingUpdateSpent(request, spent.getUser().getId()));
         return ResponseEntity.ok(SpentDto.from(updatedSpent));
+    }
+
+    private Spent mappingUpdateSpent (UpdateSpentRequest request , Long clienteId){
+        // Crear el gasto con referencias por ID
+        Spent spent = new Spent();
+        spent.setSpentId(request.spentId());
+        spent.setUser(userService.getUserById(clienteId).orElse(new User()));
+        spent.setCategory(categoriaService.getByID(request.categoriaId()).orElse(null));
+        spent.setExpenseDate(request.fechaCompra());
+        spent.setTypeExpense(ExpenseClass.valueOf(request.typeExpense()));
+        spent.setTotal(request.total());
+        spent.setIva(request.iva());
+        spent.setName(request.name());
+        spent.setDescription(request.description());
+        spent.setIcon(request.icon());
+        spent.setCreatedAt(LocalDateTime.now());
+        return  spent;
     }
 
     private Spent mappingSpent (CreateSpentRequest request , Long clienteId){
@@ -188,6 +208,7 @@ public class SpentController {
         spent.setUser(userService.getUserById(clienteId).orElse(new User()));
         spent.setCategory(categoriaService.getByID(request.categoriaId()).orElse(null));
         spent.setExpenseDate(request.fechaCompra());
+        spent.setTypeExpense(ExpenseClass.valueOf(request.typeExpense()));
         spent.setTotal(request.total());
         spent.setIva(request.iva());
         spent.setName(request.name());

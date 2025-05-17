@@ -1,5 +1,6 @@
 package Proyecto.GestorAPI.controllers;
 
+import Proyecto.GestorAPI.services.SpentService;
 import Proyecto.GestorAPI.services.TicketService;
 import Proyecto.GestorAPI.services.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -7,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
 
 /**
  * Controlador público que proporciona información general sobre la aplicación.
@@ -22,6 +25,7 @@ public class PublicController {
 
     private final UserService userService;
     private final TicketService ticketService;
+    private final SpentService spentService;
 
     /**
      * Endpoint para obtener el número total de usuarios registrados en la aplicación.
@@ -52,12 +56,12 @@ public class PublicController {
 
     @GetMapping("/subscripcionesTop")
     public String getTopSubscription() {
-        return "Amazon";
+        return "Tienda1";
     }
 
     @GetMapping("/tiendasTop")
     public String getTopShops() {
-        return "Amazon";
+        return "Tienda2";
     }
 
     @GetMapping("/productosTop")

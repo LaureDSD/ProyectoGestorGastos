@@ -126,4 +126,16 @@ public class OCRServiceImpl implements OCRService {
             throw new IOException("Error al procesar OCR. Código: " + ex.getStatusCode() + " - " + ex.getResponseBodyAsString());
         }
     }
+
+    public boolean getStatus() {
+        try {
+            String url = pythonServerUrl + "/status"; // ejemplo: http://localhost:5000/health
+            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+            return response.getStatusCode().is2xxSuccessful();
+        } catch (Exception e) {
+            System.out.println("Servidor Python no disponible: " + e.getMessage());
+            return false;
+        }
+    }
+
 }

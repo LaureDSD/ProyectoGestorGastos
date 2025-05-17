@@ -53,7 +53,7 @@ export class UserserviceService {
     return this.http.delete<void>(this.baseUrl);
   }
 
-  /** Preguntas frecuentes locales */
+  /** Preguntas frecuentes locales (Simulada carga , ultima modificacion) */
   getQuestions(): { pregunta: string; respuesta: string }[] {
     return [
       {

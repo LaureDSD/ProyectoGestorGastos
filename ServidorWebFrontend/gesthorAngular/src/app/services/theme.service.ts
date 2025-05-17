@@ -5,6 +5,8 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class ThemeService {
+
+  //Gesion de tema, ultima modificacion
   private themeSignal = signal<'light' | 'dark'>('light');
 
   get theme() {

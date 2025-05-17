@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
+import { ServerInfoDto } from '../models/api-models/api-models.component';
 
 @Injectable({
   providedIn: 'root'
@@ -15,18 +16,29 @@ export class ApiserviceService {
   constructor(
     private http: HttpClient) { }
 
+  /** Obtiene todos los usuarios */
   getTotalUsers() {
     return this.http.get(`${environment.apiUrl}/usuarios`);
   }
 
-  //Falta crear endpoint
+  /** Obtiene todos los gastos públicos */
+  getPublicSpents(): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/gastos`);
+  }
+
+  /** Obtiene todos los tickets públicos */
+  getPublicTickets(): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/tickets`);
+  }
+
+  /**Envia formulario al */
   enviarMensaje(contacto: Contacto) {
     return this.http.post(`${environment.apiUrl}/forms`, contacto);
   }
 
-  //Falta crear endpoint
-  getApiServer(): any {
-    return { name: "GESTHOR1" , activity: "12321"}
+  //Falta crear endpoint /server
+  getApiServer(): Observable<ServerInfoDto> {
+  return this.http.get<ServerInfoDto>(`${environment.apiUrl}/public/server`);
   }
 
   

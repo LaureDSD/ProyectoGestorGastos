@@ -79,14 +79,15 @@ public class OCRController {
             @RequestParam("archivo") MultipartFile file,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
-        //Validacion inicial
-        if (file.isEmpty()) { return ResponseEntity.badRequest().body("El archivo no puede estar vacío");}
+        // Validacion de archivo
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("El archivo no puede estar vacío");
+        }
         //Procesar
         try {
-            // Lógica para procesar ticket digital
-            return ResponseEntity.ok(TicketDto.from(ocrService.proccessDigitalTicket(file,user)));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Error en el procesamiento: " + e.getMessage());
+            return ResponseEntity.ok(TicketDto.from(ocrService.processImageTicket(file,user)));
+        } catch (Exception | ErrorPharseJsonException e) {
+            return ResponseEntity.internalServerError().body("Error en el procesamiento OCR: " + e.getMessage());
         }
     }
 }

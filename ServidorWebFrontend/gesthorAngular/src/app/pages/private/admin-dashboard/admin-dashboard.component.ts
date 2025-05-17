@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, Pipe, PipeTransform } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
 import { ChartOptions, CoreChartOptions, DatasetChartOptions, DoughnutControllerChartOptions, ElementChartOptions, PluginChartOptions, ScaleChartOptions } from 'chart.js';
+import { ServerInfoDto } from '../../../models/api-models/api-models.component';
+import { ServerStatsService } from '../../../services/server-stats.service';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -9,78 +12,167 @@ import { ChartOptions, CoreChartOptions, DatasetChartOptions, DoughnutController
   styleUrl: './admin-dashboard.component.css'
 })
 export class AdminDashboardComponent {
-  token: string | null = null;
+  serverInfo!: ServerInfoDto;
+  load: boolean = false;
 
-  userl: any;
+  // Historial dinámico
+  cpuHistory: number[] = [];
+  ramUsedHistory: number[] = [];
+  ramFreeHistory: number[] = [];
+  timestamps: string[] = [];
+  maxPoints = 10;
 
-  metrics = [
-    { label: 'Gastos', value: '2,2 mil', bg: 'bg-primary' },
-    { label: 'Ficheros', value: '1,6 mil', bg: 'bg-info' },
-    { label: 'Usuarios', value: '215,0', bg: 'bg-secondary' },
-    { label: 'Accesos', value: '4,8', bg: 'bg-warning' }
-  ];
+  // Métricas principales
+  metrics: any[] = [];
 
   // Almacenamiento
-  storageValue = 2;
-  donutData = {
+  storageValue = 0;
+  donutData: {
+    labels: string[],
+    datasets: { data: number[], backgroundColor: string[] }[]
+  } = {
     labels: ['Usado', 'Libre'],
-    datasets: [{
-      data: [2, 98],
-      backgroundColor: ['#C2185B', '#ECEFF1']
-    }]
+    datasets: [{ data: [], backgroundColor: ['#ffce33', '#ECEFF1'] }]
   };
+  donutOptions = { responsive: true };
 
-  // Accesos
-  lineData = {
-    labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
-    datasets: [
-      {
-        label: 'Correctos',
-        data: [10, 25, 40, 30, 20, 15, 30],
-        fill: false,
-        borderColor: '#42A5F5'
-      },
-      {
-        label: 'Fallidos',
-        data: [5, 10, 20, 10, 15, 5, 10],
-        fill: false,
-        borderColor: '#EC407A'
-      }
-    ]
-  };
+
+
+  // Gráfico de línea (uso CPU)
+  lineData: any = {};
   lineOptions: ChartOptions = {
     responsive: true,
     plugins: { legend: { display: true } }
   };
 
-  // Actividad
-  barData = {
-    labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
-    datasets: [
-      {
-        label: 'Eventos A',
-        data: [200, 180, 150, 130, 100, 90, 80],
-        backgroundColor: '#8E24AA'
-      },
-      {
-        label: 'Eventos B',
-        data: [160, 170, 140, 120, 110, 70, 60],
-        backgroundColor: '#1E88E5'
-      }
-    ]
-  };
+  // Gráfico de barras (uso RAM)
+  barData: any = {};
   barOptions: ChartOptions = {
     responsive: true,
     plugins: { legend: { display: true } },
     scales: { x: {}, y: { beginAtZero: true } }
   };
-donutOptions: Partial<CoreChartOptions<"doughnut"> & ElementChartOptions<"doughnut"> & PluginChartOptions<"doughnut"> & DatasetChartOptions<"doughnut"> & ScaleChartOptions<"doughnut"> & DoughnutControllerChartOptions> | undefined;
 
-  constructor(private authService: AuthService) { }
+  constructor(private serverStatsService: ServerStatsService) {}
 
   ngOnInit() {
-    this.token = this.authService.getToken();
-    this.authService.getLoadUser();
+    this.load = true;
+    this.fetchStats();
+
+    // Refrescar cada 10s
+    interval(50).subscribe(() => {
+      this.fetchStats();
+    });
   }
 
+  fetchStats() {
+    this.serverStatsService.getServerInfo().subscribe(info => {
+      this.serverInfo = info;
+      this.updateMetrics();
+      this.updateDonut(info);
+      this.updateHistory(info);
+      this.load = false;
+    });
+  }
+
+  updateMetrics() {
+    this.metrics = [
+      { label: 'Gastos', value: this.serverInfo.spenses ?? 0, bg: 'bg-primary' },
+      { label: 'Usuarios', value: this.serverInfo.users, bg: 'bg-secondary' },
+      { label: 'SPRING', value: this.serverInfo.activeapi ? 'Activo' : 'Inactivo', bg: 'bg-info' },
+      { label: 'OCR', value: this.serverInfo.activeocr ? 'Activo' : 'Inactivo', bg: 'bg-success' }
+    ];
+  }
+
+updateDonut(info: ServerInfoDto) {
+  const usedGB = this.bytesToGB(info.usedDisk);
+  const totalGB = this.bytesToGB(info.totalDisk);
+
+  this.donutData = {
+    labels: ['Usado', 'Libre'],
+    datasets: [{
+      data: [usedGB, totalGB - usedGB],
+      backgroundColor: ['#C2185B', '#ECEFF1']
+    }]
+  };
+
+  this.storageValue = usedGB;
+}
+
+  
+
+updateHistory(info: ServerInfoDto) {
+  const now = new Date();
+  const label = now.toLocaleTimeString();
+
+  const usedGB = this.bytesToGB(info.usedMemory);
+  const totalGB = this.bytesToGB(info.totalMemory);
+  const freeGB = totalGB - usedGB;
+
+  if (this.cpuHistory.length >= this.maxPoints) {
+    this.cpuHistory.shift();
+    this.ramUsedHistory.shift();
+    this.ramFreeHistory.shift();
+    this.timestamps.shift();
+  }
+
+  this.cpuHistory.push(Number(info.cpuLoad.toFixed(2)));
+  this.ramUsedHistory.push(usedGB);
+  this.ramFreeHistory.push(freeGB);
+  this.timestamps.push(label);
+
+  this.lineData = {
+    labels: this.timestamps,
+    datasets: [{
+      label: 'Uso CPU (%)',
+      data: this.cpuHistory,
+      fill: false,
+      borderColor: '#000000'
+    }]
+  };
+
+  this.barData = {
+    labels: this.timestamps,
+    datasets: [
+      {
+        label: 'RAM usada (GB)',
+        data: this.ramUsedHistory,
+        backgroundColor: '#8E24AA'
+      },
+      {
+        label: 'RAM libre (GB)',
+        data: this.ramFreeHistory,
+        backgroundColor: '#4CAF50'
+      },
+      {
+        label: 'RAM total (GB)',
+        data: Array(this.timestamps.length).fill(totalGB),
+        type: 'line',
+        borderColor: '#FF9800',
+        borderWidth: 2,
+        fill: false,
+        pointRadius: 0,
+        tension: 0.1
+      }
+    ]
+  };
+}
+  // Convertir bytes a GB
+  bytesToGB(bytes: number): number {
+    return Math.round((bytes / (1024 ** 3)) * 100) / 100;
+  }
+}
+
+// Pipe para convertir segundos a formato h:m:s
+@Pipe({name: 'secondsToHms'})
+export class SecondsToHmsPipe implements PipeTransform {
+  transform(value: number): string {
+    if (!value) return '0s';
+    const secNum = Number(value);
+    const hours = Math.floor(secNum / 3600);
+    const minutes = Math.floor((secNum % 3600) / 60);
+    const seconds = secNum % 60;
+
+    return `${hours}h ${minutes}m ${seconds}s`;
+  }
 }

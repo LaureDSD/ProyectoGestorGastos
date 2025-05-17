@@ -42,11 +42,28 @@ export interface CategoryDto {
 }
 
 export interface ServerInfoDto {
+  // Datos generales del servidor
   name: string;
   users: number;
+  activeocr: boolean;
   spenses: number;
-  active: boolean;
+  activeapi: boolean;
+  storage: number;        // en GB
+  usedStorage: number;    // en GB
+  createdAt: string;
+  updatedAt: string;
+
+  // Estadísticas del sistema
+  os: string;
+  cpuLoad: number;        // porcentaje (0-100)
+  uptimeSeconds: number;
+  totalMemory: number;    // en bytes
+  usedMemory: number;     // en bytes
+  totalDisk: number;      // en bytes
+  usedDisk: number;       // en bytes
+  cpuTemperature: number; // en °C
 }
+
 
 // ----------------------------------
 // ExpenseClass y filtros
@@ -56,6 +73,13 @@ export enum ExpenseClass {
   TICKET           = 'TICKET',
   FACTURA          = 'FACTURA',
   SUBSCRIPCION     = 'SUBSCRIPCION',
+  GASTO_GENERICO   = 'GASTO_GENERICO',
+  TRANSFERENCIA    = 'TRANSFERENCIA'
+}
+
+
+export enum ExpenseFilterClass {
+  FACTURA          = 'FACTURA',
   GASTO_GENERICO   = 'GASTO_GENERICO',
   TRANSFERENCIA    = 'TRANSFERENCIA'
 }
@@ -85,7 +109,7 @@ export interface BaseSpentDto {
  */
 export interface TicketDto extends BaseSpentDto {
   store: string;
-  productsJSON:string; // JSON string o bien array tipado si prefieres
+  productsJSON:string;
 }
 
 /**

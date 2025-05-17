@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Producto } from '../../../models/models/models.component';
-
 import { SpentService } from '../../../services/spent.service';
 import { SubscriptionService } from '../../../services/subscription.service';
 import { TicketService } from '../../../services/ticket.service';
-import { CategoryDto, ExpenseClass } from '../../../models/api-models/api-models.component';
+import { CategoryDto, ExpenseClass, ExpenseFilterClass } from '../../../models/api-models/api-models.component';
 import { CategoryService } from '../../../services/categories.service';
 import { environment } from '../../../environments/environment';
 
@@ -18,7 +17,7 @@ import { environment } from '../../../environments/environment';
 })
 export class FormHerramientaComponent implements OnInit {
   tipo: 'ticket' | 'subscripcion' | 'gasto' = 'ticket';
-  expenseTypes = Object.values(ExpenseClass);
+  expenseTypes = Object.values(ExpenseFilterClass);
   id!: number;
   productosLocal: Producto[] = [];
   img : string = '';
@@ -52,18 +51,21 @@ export class FormHerramientaComponent implements OnInit {
     } else {
       this.isLoading = false;
       this.setupAutoFields();
+      // Establecer fecha actual solo para nuevos registros
+      if (this.tipo === 'gasto') {
+        this.form.get('fechaCompra')?.setValue(new Date().toISOString().slice(0, 16));
+      }
     }
   }
 
   initForm() {
-    this.form = this.fb.group({
+    const formConfig: any = {
       spentId: [this.id],
       userId: [1, Validators.required],
       categoriaId: [1, Validators.required],
       name: ['', Validators.required],
       description: [''],
       icon: [''],
-      fechaCompra: ['', Validators.required],
       total: [0, [Validators.required, Validators.min(0.01)]],
       iva: [0, [Validators.required, Validators.min(0)]],
 
@@ -77,11 +79,19 @@ export class FormHerramientaComponent implements OnInit {
       accumulate: [0],
       restartDay: [''],
       intervalTime: [1],
-      activa: [true],
+      activa: [true]
+    };
 
-      // Gasto
-      typeExpense: [ExpenseClass.GASTO_GENERICO]
-    });
+    // Solo agregar fechaCompra y typeExpense si es gasto
+    if (this.tipo === 'gasto') {
+      formConfig.fechaCompra = [this.id === 0 ? '' : '', Validators.required];
+      formConfig.typeExpense = [ExpenseFilterClass.GASTO_GENERICO, Validators.required];
+    } else {
+      // Para ticket y subscripción, fechaCompra es editable
+      formConfig.fechaCompra = ['', Validators.required];
+    }
+
+    this.form = this.fb.group(formConfig);
 
     this.form.get('total')?.valueChanges.subscribe(total => {
       if (this.tipo === 'subscripcion') {
@@ -91,39 +101,36 @@ export class FormHerramientaComponent implements OnInit {
   }
 
   normalizeDataForForm(data: any): any {
-  const normalized: any = { ...data };
+    const normalized: any = { ...data };
 
-  if (normalized.fechaCompra) {
-    normalized.fechaCompra = new Date(normalized.fechaCompra)
-      .toISOString()
-      .slice(0, 16); 
-  }
-
-
-  if (normalized.start) {
-    normalized.start = new Date(normalized.start)
-      .toISOString()
-      .slice(0, 16); 
-  }
-
-  if (normalized.end) {
-    normalized.end = new Date(normalized.end)
-      .toISOString()
-      .slice(0, 16);
-  }
-
-
-  if (normalized.productsJSON) {
-    try {
-      this.productosLocal = JSON.parse(normalized.productsJSON);
-    } catch (e) {
-      console.error('Error parsing productsJSON', e);
+    if (normalized.fechaCompra) {
+      normalized.fechaCompra = new Date(normalized.fechaCompra)
+        .toISOString()
+        .slice(0, 16); 
     }
+
+    if (normalized.start) {
+      normalized.start = new Date(normalized.start)
+        .toISOString()
+        .slice(0, 16); 
+    }
+
+    if (normalized.end) {
+      normalized.end = new Date(normalized.end)
+        .toISOString()
+        .slice(0, 16);
+    }
+
+    if (normalized.productsJSON) {
+      try {
+        this.productosLocal = JSON.parse(normalized.productsJSON);
+      } catch (e) {
+        console.error('Error parsing productsJSON', e);
+      }
+    }
+
+    return normalized;
   }
-
-  return normalized;
-}
-
 
   loadData() {
     const services = {
@@ -190,7 +197,6 @@ export class FormHerramientaComponent implements OnInit {
     this.img = event.value;
   }
 
-
   onSubmit() {
     if (!this.form.valid) {
       this.form.markAllAsTouched();
@@ -199,6 +205,11 @@ export class FormHerramientaComponent implements OnInit {
 
     const data = this.form.value;
     const isEdit = this.id !== 0;
+
+    // Para nuevos gastos, asegurar que la fecha es la actual
+    if (this.tipo === 'gasto' && !isEdit) {
+      data.fechaCompra = new Date().toISOString();
+    }
 
     const actions = {
       ticket: () => {
@@ -242,6 +253,8 @@ export class FormHerramientaComponent implements OnInit {
     };
 
     actions[this.tipo]();
+
+    this.router.navigate(['/protected/filter/', this.tipo]);
   }
 
   getCurrentForm(): FormGroup {
@@ -270,5 +283,13 @@ export class FormHerramientaComponent implements OnInit {
     }
   }
 
-
+  // Método para mostrar nombres legibles de tipos de gasto
+  getTypeName(type: string): string {
+    switch(type) {
+      case ExpenseFilterClass.GASTO_GENERICO: return 'Gasto Genérico';
+      case ExpenseClass.TICKET: return 'Ticket';
+      case ExpenseClass.SUBSCRIPCION: return 'Suscripción';
+      default: return type;
+    }
+  }
 }

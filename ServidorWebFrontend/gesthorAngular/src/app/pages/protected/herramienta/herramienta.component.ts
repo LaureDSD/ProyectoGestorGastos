@@ -79,7 +79,7 @@ export class HerramientaComponent {
 
           if (ticketId) {
             console.log('Ticket Digital ID:', ticketId);
-            this.router.navigate(['/protected/form', 'ticketdigital', ticketId]);
+            this.router.navigate(['/protected/form', 'ticket', ticketId]);
           } else {
             console.error('No se recibió un ID válido del ticket digital');
           }
