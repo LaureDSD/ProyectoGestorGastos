@@ -1,15 +1,10 @@
 package Proyecto.GestorAPI.servicesimpl;
 
 import Proyecto.GestorAPI.exceptions.ErrorPharseJsonException;
-import Proyecto.GestorAPI.models.CategoryExpense;
 import Proyecto.GestorAPI.models.Ticket;
 import Proyecto.GestorAPI.models.User;
-import Proyecto.GestorAPI.models.enums.ExpenseClass;
-import Proyecto.GestorAPI.modelsDTO.ticket.CreateTicketRequest;
-import Proyecto.GestorAPI.modelsDTO.ticket.TicketResponse;
 import Proyecto.GestorAPI.services.OCRService;
 import Proyecto.GestorAPI.services.TicketService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -27,7 +22,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
 
 @Service
 public class OCRServiceImpl implements OCRService {
@@ -56,12 +50,13 @@ public class OCRServiceImpl implements OCRService {
     public Ticket processImageTicket(MultipartFile file, User user)  {
         Ticket ticket = new Ticket();
         try {
+            System.out.println("Imagen");
             // 1. Guardar archivo temporalmente
             Path tempFilePath = Files.createTempFile("ticket_", "_" + file.getOriginalFilename());
             Files.copy(file.getInputStream(), tempFilePath, StandardCopyOption.REPLACE_EXISTING);
 
             // 2. Procesar el archivo con OCR
-            String ocrResult = sendFileForOCR(tempFilePath.toFile());
+            String ocrResult = sendFileForOCR(tempFilePath.toFile(),true);
 
             // 3. Crear y guardar el ticket
             ticket = ticketService.mappingCreateTicketbyOCR(ocrResult, user);
@@ -86,8 +81,9 @@ public class OCRServiceImpl implements OCRService {
         Path tempFilePath = Files.createTempFile("TicketDigital" + "_", "_" + file.getOriginalFilename());
         Files.copy(file.getInputStream(), tempFilePath, StandardCopyOption.REPLACE_EXISTING);
 
+        System.out.println("Digital");
         // Procesar con OCR
-        String ocrResult = sendFileForOCR(tempFilePath.toFile());
+        String ocrResult = sendFileForOCR(tempFilePath.toFile(),false);
 
         // Crear y guardar ticket
         Ticket ticket = new Ticket();
@@ -96,7 +92,7 @@ public class OCRServiceImpl implements OCRService {
     }
 
     @Override
-    public String sendFileForOCR(File file) throws IOException {
+    public String sendFileForOCR(File file, boolean imagen) throws IOException {
         // Crear multipart
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("file", new FileSystemResource(file));
@@ -104,13 +100,14 @@ public class OCRServiceImpl implements OCRService {
         // Crear headers con API Key
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        headers.set("Authorization", "Bearer " + pythonServerApiKey); // Usar API Key como Bearer token
+        headers.set("Authorization", "Bearer " + pythonServerApiKey);
 
         // Armar entidad HTTP
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
         // Enviar solicitud al servidor Python
-        String url = pythonServerUrl + "/ocr";
+        String url = imagen ? pythonServerUrl + "/ocr" : pythonServerUrl + "/ocr-file";
+
         try {
             ResponseEntity<String> response = restTemplate.exchange(
                     url,

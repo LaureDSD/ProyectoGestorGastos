@@ -21,14 +21,15 @@ public interface OCRService {
      * que ejecuta un algoritmo de OCR para extraer texto del archivo. Se espera que el servicio de Python
      * devuelva el texto extraído del archivo en formato de cadena.
      *
-     * @param tempFile El archivo que se enviará para ser procesado por el servicio OCR.
+     * @param file El archivo que se enviará para ser procesado por el servicio OCR.
      * @return Una cadena de texto que representa los resultados del OCR del archivo procesado.
      * @throws IOException Si ocurre un error durante la lectura del archivo o al comunicarse con el servicio de Python.
      */
-    String sendFileForOCR(File tempFile) throws IOException;
+    String sendFileForOCR(File file, boolean imagen) throws IOException;
 
     Ticket processImageTicket(MultipartFile file, User user) throws IOException, ErrorPharseJsonException;
 
     Ticket proccessDigitalTicket(MultipartFile file, User user) throws IOException;
+
 
 }

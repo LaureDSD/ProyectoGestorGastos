@@ -83,8 +83,8 @@ public class OCRController {
         }
         //Procesar
         try {
-            return ResponseEntity.ok(TicketDto.from(ocrService.processImageTicket(file,user)));
-        } catch (Exception | ErrorPharseJsonException e) {
+            return ResponseEntity.ok(TicketDto.from(ocrService.proccessDigitalTicket(file,user)));
+        } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Error en el procesamiento OCR: " + e.getMessage());
         }
     }
