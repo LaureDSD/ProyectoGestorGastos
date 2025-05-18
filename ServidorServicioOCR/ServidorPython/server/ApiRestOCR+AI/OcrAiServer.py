@@ -25,23 +25,86 @@ def require_api_key(func):
     return wrapper
 
 # ========== ENDPOINT 1: Procesamiento de imagen OCR ==========
+
+    # ========== ENDPOINT OCR IMAGEN ==========
+
 @app.route("/ocr", methods=["POST"])
 @require_api_key
 def ocr():
-    if 'file' not in request.files:
-        return jsonify({"error": "No se encontró archivo"}), 400
+    try:
+        if 'file' not in request.files:
+            return jsonify({"error": "No se encontró archivo"}), 400
 
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({"error": "Nombre de archivo vacío"}), 400
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({"error": "Nombre de archivo vacío"}), 400
 
-    #filename = secure_filename(file.filename)
-    #save_path = os.path.join("uploads", filename)
-    #os.makedirs("uploads", exist_ok=True)
-    #file.save(save_path)
+        resultado = procesar_ocr_imagen(file)
+        return jsonify(resultado), 200
 
-    # Simulación de procesamiento OCR
-    resultado = {
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        return jsonify({"error": "Error interno al procesar imagen OCR"}), 500
+    
+    # ========== ENDPOINT OCR ARCHIVO ==========
+
+@app.route("/ocr-file", methods=["POST"])
+@require_api_key
+def ocr_archivo():
+    try:
+        if 'file' not in request.files:
+            return jsonify({"error": "No se encontró archivo"}), 400
+
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({"error": "Nombre de archivo vacío"}), 400
+
+        resultado = procesar_ocr_archivo(file)
+        return jsonify(resultado), 200
+
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        return jsonify({"error": "Error interno al procesar archivo OCR"}), 500
+
+
+
+# ========== ENDPOINT 2: Comunicación con IA ==========
+
+@app.route("/aichat", methods=["POST"])
+@require_api_key
+def conversar():
+    try:
+        data = request.get_json()
+        if not data or "mensaje" not in data:
+            return jsonify({"error": "Debe enviar un campo 'mensaje' en JSON"}), 400
+
+        mensaje = data["mensaje"]
+        resultado = responder_chat(mensaje)
+        return jsonify(resultado), 200
+
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        return jsonify({"error": "Error interno al generar respuesta"}), 500
+
+
+# ========== ENDPOINT 3: Información del servidor ==========
+
+@app.route("/status", methods=["GET"])
+def health():
+    return jsonify({"status": "ok"}), 200
+
+# ===================== FUNCIONES AUXILIARES =====================
+
+def procesar_ocr_imagen(file):
+
+    if not file:
+        raise ValueError("Archivo inválido o no proporcionado.")
+
+    # Simulación de OCR
+    return {
         "establecimiento": "Supermercado ABC",
         "fecha": "2025-05-13",
         "hora": "17:30",
@@ -65,27 +128,29 @@ def ocr():
         "confianza": 0.95
     }
 
-    #return jsonify({"error": "OCR fallido"}), 422
-    return jsonify(resultado), 200
 
-# ========== ENDPOINT 2: Comunicación con IA ==========
-@app.route("/aichat", methods=["POST"])
-@require_api_key
-def conversar():
-    data = request.get_json()
-    if not data or "mensaje" not in data:
-        return jsonify({"error": "Debe enviar un campo 'mensaje' en JSON"}), 400
+def procesar_ocr_archivo(file):
 
-    mensaje = data["mensaje"]
-    respuesta = f"Recibido: '{mensaje}'. Esta es una respuesta simulada."
+    if not file:
+        raise ValueError("Archivo inválido o no proporcionado.")
 
-    return jsonify({"respuesta": respuesta}), 200
+    return {
+        "tipo": "archivo",
+        "contenido_extraido": "Este es el contenido simulado de un archivo.",
+        "paginas": 3,
+        "confianza": 0.88
+    }
 
-# ========== ENDPOINT 3: Información del servidor ==========
 
-@app.route("/status", methods=["GET"])
-def health():
-    return jsonify({"status": "ok"}), 200
+def responder_chat(mensaje: str):
+
+    if not mensaje:
+        raise ValueError("Mensaje vacío.")
+
+    return {
+        "respuesta": f"Recibido: '{mensaje}'. Esta es una respuesta simulada."
+    }
+
 
 
 # ========== INICIO DEL SERVIDOR ==========
