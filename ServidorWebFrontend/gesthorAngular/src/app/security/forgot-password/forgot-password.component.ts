@@ -5,7 +5,7 @@ import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-forgot-password',
-  standalone: false,  
+  standalone: false,
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.css']
 })
@@ -32,20 +32,26 @@ export class ForgotPasswordComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.resetPasswordForm.invalid) return;
+  if (this.resetPasswordForm.invalid) return;
 
-    this.isLoading = true;
-    const { email } = this.resetPasswordForm.value;
+  this.isLoading = true;
+  this.error = '';
+  this.success = '';
 
-    this.auth.forgotPassword(email).subscribe({
-      next: () => {
-        this.success = 'Hemos enviado un enlace para restablecer tu contraseña a tu correo electrónico.';
-        this.isLoading = false;
-      },
-      error: err => {
-        this.error = 'Hubo un error al enviar el enlace. Intenta nuevamente más tarde.';
-        this.isLoading = false;
-      }
-    });
-  }
+  const { email } = this.resetPasswordForm.value;
+
+  this.auth.forgotPassword(email).subscribe({
+    next: () => {
+      this.success = 'Hemos enviado un enlace para restablecer tu contraseña a tu correo electrónico.';
+      this.isLoading = false;
+      this.resetPasswordForm.reset(); 
+    },
+    error: err => {
+      this.error = 'Hubo un error al enviar el enlace. Intenta nuevamente más tarde.';
+      console.error(err);
+      this.isLoading = false;
+    }
+  });
+}
+
 }

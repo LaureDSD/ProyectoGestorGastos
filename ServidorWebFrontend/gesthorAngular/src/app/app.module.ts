@@ -1,4 +1,6 @@
 // Duplicate import removed
+
+
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -55,6 +57,8 @@ import { ToolGroupComponent } from './components/tool-group/tool-group.component
 import { ApiModelsComponent } from './models/api-models/api-models.component';
 import { ModelsComponent } from './models/models/models.component';
 import { FormProductosComponent } from './components/form-productos/form-productos.component';
+import { GastoDetalleComponent } from './components/gasto-detalle/gasto-detalle.component';
+import { Spinning2Component } from './components/spinning2/spinning2.component';
 
 @NgModule({
   declarations: [
@@ -107,6 +111,8 @@ import { FormProductosComponent } from './components/form-productos/form-product
     ApiModelsComponent,
     ModelsComponent,
     FormProductosComponent,
+    GastoDetalleComponent,
+    Spinning2Component,
   ],
   imports: [
     BrowserModule,

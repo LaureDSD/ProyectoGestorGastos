@@ -1,7 +1,7 @@
 package Proyecto.GestorAPI.repositories;
 
 import Proyecto.GestorAPI.models.User;
-import Proyecto.GestorAPI.security.oauth2.OAuth2Provider;
+import Proyecto.GestorAPI.config.security.oauth2.OAuth2Provider;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

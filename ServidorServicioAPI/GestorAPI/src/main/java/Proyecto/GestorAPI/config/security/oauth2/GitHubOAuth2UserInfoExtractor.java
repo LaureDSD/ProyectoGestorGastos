@@ -1,7 +1,7 @@
-package Proyecto.GestorAPI.security.oauth2;
+package Proyecto.GestorAPI.config.security.oauth2;
 
-import Proyecto.GestorAPI.security.CustomUserDetails;
-import Proyecto.GestorAPI.security.SecurityConfig;
+import Proyecto.GestorAPI.config.security.CustomUserDetails;
+import Proyecto.GestorAPI.config.SecurityConfig;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;

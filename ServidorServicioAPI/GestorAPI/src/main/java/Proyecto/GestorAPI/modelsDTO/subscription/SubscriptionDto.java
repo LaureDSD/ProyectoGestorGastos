@@ -6,27 +6,34 @@ import Proyecto.GestorAPI.models.enums.ExpenseClass;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public record SubscriptionDto(Long clienteId,
-                              LocalDateTime fechaCompra,
-                              String name,
-                              String description,
-                              double total,
-                              double iva,
-                              String icon,
-                              LocalDateTime start,
-                              LocalDateTime end,
-                              double accumulate,
-                              int restartDay,
-                              int intervalTime,
-                              ExpenseClass typeExpense,
-                              boolean activa) {
+public record SubscriptionDto(
+        Long spentId,
+        Long clienteId,
+        Long categoriaId ,
+        LocalDateTime fechaCompra,
+        String name,
+        String description,
+        double total,
+        double iva,
+        String icon,
+        LocalDateTime start,
+        LocalDateTime end,
+        double accumulate,
+        int restartDay,
+        int intervalTime,
+        ExpenseClass typeExpense,
+        boolean activa
+) {
 
     public static SubscriptionDto from(Subscription subscription) {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         return new SubscriptionDto(
                 //Id
+                subscription.getSpentId(),
                 subscription.getUser().getId(),
+                subscription.getCategory().getId(),
                 subscription.getExpenseDate(),
+
                 //Base
                 subscription.getName(),
                 subscription.getDescription(),

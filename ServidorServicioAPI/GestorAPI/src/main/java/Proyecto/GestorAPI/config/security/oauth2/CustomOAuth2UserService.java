@@ -1,8 +1,8 @@
-package Proyecto.GestorAPI.security.oauth2;
+package Proyecto.GestorAPI.config.security.oauth2;
 
 import Proyecto.GestorAPI.models.User;
-import Proyecto.GestorAPI.security.CustomUserDetails;
-import Proyecto.GestorAPI.security.RoleServer;
+import Proyecto.GestorAPI.config.security.CustomUserDetails;
+import Proyecto.GestorAPI.config.security.RoleServer;
 import Proyecto.GestorAPI.services.UserService;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

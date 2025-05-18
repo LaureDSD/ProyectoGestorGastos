@@ -1,12 +1,10 @@
 package Proyecto.GestorAPI.controllers;
 
 import Proyecto.GestorAPI.exceptions.ErrorPharseJsonException;
-import Proyecto.GestorAPI.models.Ticket;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.modelsDTO.ticket.TicketDto;
-import Proyecto.GestorAPI.security.CustomUserDetails;
+import Proyecto.GestorAPI.config.security.CustomUserDetails;
 import Proyecto.GestorAPI.services.OCRService;
-import Proyecto.GestorAPI.services.TicketService;
 import Proyecto.GestorAPI.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

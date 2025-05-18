@@ -1,4 +1,4 @@
-package Proyecto.GestorAPI.security;
+package Proyecto.GestorAPI.config.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

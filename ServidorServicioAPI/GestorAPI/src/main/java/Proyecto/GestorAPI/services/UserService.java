@@ -1,8 +1,7 @@
 package Proyecto.GestorAPI.services;
 
 import Proyecto.GestorAPI.models.User;
-import jakarta.validation.Valid;
-import org.springframework.web.multipart.MultipartFile;
+import Proyecto.GestorAPI.config.security.oauth2.OAuth2Provider;
 
 import java.util.List;
 import java.util.Optional;
@@ -128,4 +127,5 @@ public interface UserService {
      */
     Optional<User> getUserByUsernameOrEmail(String user);
 
+    long countByProvider(OAuth2Provider oAuth2Provider);
 }

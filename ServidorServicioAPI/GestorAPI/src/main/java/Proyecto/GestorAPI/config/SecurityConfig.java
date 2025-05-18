@@ -1,7 +1,10 @@
-package Proyecto.GestorAPI.security;
+package Proyecto.GestorAPI.config;
 
-import Proyecto.GestorAPI.security.oauth2.CustomAuthenticationSuccessHandler;
-import Proyecto.GestorAPI.security.oauth2.CustomOAuth2UserService;
+import Proyecto.GestorAPI.config.security.JwtAuthenticationFilter;
+import Proyecto.GestorAPI.config.security.RoleServer;
+import Proyecto.GestorAPI.config.security.TokenProvider;
+import Proyecto.GestorAPI.config.security.oauth2.CustomAuthenticationSuccessHandler;
+import Proyecto.GestorAPI.config.security.oauth2.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -85,7 +88,6 @@ public class SecurityConfig {
                         // Acceso público a recursos estáticos y ciertas rutas
                         .requestMatchers(
                                 //"/admin/dashboard",
-
                                 "/uploads/**",
                                 "/auth/**",
                                 "/static/**",
@@ -112,7 +114,8 @@ public class SecurityConfig {
 
                         //Solo admins
                         .requestMatchers(
-                                //falta logas
+                                "/api/contacto",
+                                "/api/contacto/**",
                                 "/api/users",
                                 "/api/users/**",
                                 "/admin/**")

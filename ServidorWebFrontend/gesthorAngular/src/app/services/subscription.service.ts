@@ -28,11 +28,13 @@ export class SubscriptionService {
 
   /** Crea una nueva subscripción */
   addSubscription(subscription: SubscriptionDto): Observable<SubscriptionDto> {
+    //subscription.accumulate = subscription.total + (subscription.total * (subscription.iva / 100));
     return this.http.post<SubscriptionDto>(this.baseUrl, subscription);
   }
 
   /** Actualiza una subscripción existente */
   updateSubscription(id: number, subscription: SubscriptionDto): Observable<SubscriptionDto> {
+    //subscription.accumulate = subscription.total + (subscription.total * (subscription.iva / 100));
     return this.http.put<SubscriptionDto>(`${this.baseUrl}/${id}`, subscription);
   }
 

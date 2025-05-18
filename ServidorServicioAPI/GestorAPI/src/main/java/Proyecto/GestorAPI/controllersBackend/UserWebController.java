@@ -1,7 +1,7 @@
 package Proyecto.GestorAPI.controllersBackend;
 
 import Proyecto.GestorAPI.models.User;
-import Proyecto.GestorAPI.security.RoleServer;
+import Proyecto.GestorAPI.config.security.RoleServer;
 import Proyecto.GestorAPI.servicesimpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

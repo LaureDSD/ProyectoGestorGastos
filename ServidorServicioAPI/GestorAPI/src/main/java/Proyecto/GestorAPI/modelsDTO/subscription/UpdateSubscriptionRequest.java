@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public record UpdateSubscriptionRequest(
         @NotNull Long spentId,
         @NotNull Long userId,
+        Long categoriaId ,
         @NotNull String name,
         String description,
         String icon,
@@ -20,4 +21,5 @@ public record UpdateSubscriptionRequest(
         @Positive int restartDay,
         @Positive int intervalTime,
         @NotNull boolean activa
+
 ) {}

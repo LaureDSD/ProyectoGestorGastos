@@ -1,4 +1,4 @@
-package Proyecto.GestorAPI.security;
+package Proyecto.GestorAPI.config.security;
 
 /**
  * Enumeración que define los roles de usuario en el sistema.

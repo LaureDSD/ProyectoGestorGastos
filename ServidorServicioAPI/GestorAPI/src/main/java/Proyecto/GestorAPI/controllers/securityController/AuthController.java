@@ -3,13 +3,9 @@ package Proyecto.GestorAPI.controllers.securityController;
 import Proyecto.GestorAPI.exceptions.DuplicatedUserInfoException;
 import Proyecto.GestorAPI.exceptions.UserBlockedException;
 import Proyecto.GestorAPI.exceptions.UserNotFoundException;
-import Proyecto.GestorAPI.models.User;
-import Proyecto.GestorAPI.security.RoleServer;
 import Proyecto.GestorAPI.modelsDTO.authDTO.AuthResponse;
 import Proyecto.GestorAPI.modelsDTO.authDTO.LoginRequest;
 import Proyecto.GestorAPI.modelsDTO.authDTO.SignUpRequest;
-import Proyecto.GestorAPI.security.TokenProvider;
-import Proyecto.GestorAPI.security.oauth2.OAuth2Provider;
 import Proyecto.GestorAPI.services.UserService;
 import Proyecto.GestorAPI.servicesimpl.AuthServiceImpl;
 import Proyecto.GestorAPI.servicesimpl.LoginAttemptServiceImpl;
@@ -22,14 +18,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 /**
  * Controlador encargado de gestionar la autenticación y el registro de usuarios.
@@ -117,6 +107,5 @@ public class AuthController {
         String token = authService.authenticateAndGetToken(signUpRequest.username(), signUpRequest.password());
         return new AuthResponse(token);
     }
-
 
 }

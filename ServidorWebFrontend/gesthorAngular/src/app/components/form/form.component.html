@@ -1,21 +1,28 @@
 <div class="container">
-<form id="formContacto" class="mx-auto" style="max-width: 600px;">
-  <div class="mb-3">
-    <label for="nombre" class="form-label">Nombre completo</label>
-    <input type="text" class="form-control" id="nombre" placeholder="Introduce tu nombre">
-  </div>
-  <div class="mb-3">
-    <label for="correo" class="form-label">Correo electrónico</label>
-    <input type="email" class="form-control" id="correo" placeholder="tucorreo@example.com">
-  </div>
-  <div class="mb-3">
-    <label for="asunto" class="form-label">Asunto</label>
-    <input type="text" class="form-control" id="asunto" placeholder="Motivo de tu consulta">
-  </div>
-  <div class="mb-3">
-    <label for="mensaje" class="form-label">Mensaje</label>
-    <textarea class="form-control" id="mensaje" rows="5" placeholder="Cuéntanos en qué podemos ayudarte..."></textarea>
-  </div>
-  <button type="submit" class="btn btn-outline-light w-100">Enviar mensaje</button>
-</form>
+  <form id="formContacto" class="mx-auto" style="max-width: 600px;" (ngSubmit)="enviarFormulario()" #form="ngForm">
+    <div class="mb-3">
+      <label for="nombre" class="form-label">Nombre completo</label>
+      <input type="text" class="form-control" id="nombre" name="nombre" [(ngModel)]="contacto.nombre" placeholder="Introduce tu nombre" required>
+    </div>
+    <div class="mb-3">
+      <label for="correo" class="form-label">Correo electrónico</label>
+      <input type="email" class="form-control" id="correo" name="correo" [(ngModel)]="contacto.correo" placeholder="tucorreo@example.com" required>
+    </div>
+    <div class="mb-3">
+      <label for="asunto" class="form-label">Asunto</label>
+      <input type="text" class="form-control" id="asunto" name="asunto" [(ngModel)]="contacto.asunto" placeholder="Motivo de tu consulta" required>
+    </div>
+    <div class="mb-3">
+      <label for="mensaje" class="form-label">Mensaje</label>
+      <textarea class="form-control" id="mensaje" name="mensaje" [(ngModel)]="contacto.mensaje" rows="5" placeholder="Cuéntanos en qué podemos ayudarte..." required></textarea>
+    </div>
+    <button type="submit" class="btn btn-outline-light w-100">Enviar mensaje</button>
+
+    <div *ngIf="enviado" class="alert alert-success mt-3">
+      ¡Mensaje enviado correctamente!
+    </div>
+    <div *ngIf="error" class="alert alert-danger mt-3">
+      {{ error }}
+    </div>
+  </form>
 </div>

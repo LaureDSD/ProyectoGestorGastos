@@ -6,7 +6,7 @@ import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.modelsDTO.user.UserDto;
 import Proyecto.GestorAPI.modelsDTO.user.UserMeInDto;
 import Proyecto.GestorAPI.modelsDTO.user.UserMeOutDto;
-import Proyecto.GestorAPI.security.CustomUserDetails;
+import Proyecto.GestorAPI.config.security.CustomUserDetails;
 import Proyecto.GestorAPI.services.SpentService;
 import Proyecto.GestorAPI.services.StorageService;
 import Proyecto.GestorAPI.services.UserService;

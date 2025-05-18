@@ -43,7 +43,7 @@ export class ToolsComponent {
       ruta: '/protected/tool/creargasto'
     },
     {
-      nombre: 'Crear Subs',
+      nombre: 'Crear Subscripciones',
       icono: '/icon/icons8-crear-nuevo-100.png',
       descripcion: 'Añade una nueva suscripción periódica (como Netflix o Spotify).',
       accion: 'Crear',

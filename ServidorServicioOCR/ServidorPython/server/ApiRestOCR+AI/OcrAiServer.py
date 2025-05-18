@@ -69,7 +69,7 @@ def ocr():
     return jsonify(resultado), 200
 
 # ========== ENDPOINT 2: Comunicación con IA ==========
-@app.route("/conversar", methods=["POST"])
+@app.route("/aichat", methods=["POST"])
 @require_api_key
 def conversar():
     data = request.get_json()

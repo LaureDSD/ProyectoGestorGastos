@@ -2,12 +2,15 @@ package Proyecto.GestorAPI.servicesimpl;
 
 import Proyecto.GestorAPI.exceptions.UserBlockedException;
 import Proyecto.GestorAPI.exceptions.UserNotFoundException;
+import Proyecto.GestorAPI.models.Contacto;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.modelsDTO.authDTO.SignUpRequest;
-import Proyecto.GestorAPI.security.RoleServer;
-import Proyecto.GestorAPI.security.TokenProvider;
-import Proyecto.GestorAPI.security.oauth2.OAuth2Provider;
+import Proyecto.GestorAPI.config.security.RoleServer;
+import Proyecto.GestorAPI.config.security.TokenProvider;
+import Proyecto.GestorAPI.config.security.oauth2.OAuth2Provider;
 import Proyecto.GestorAPI.services.AuthService;
+import Proyecto.GestorAPI.services.ContactoService;
+import Proyecto.GestorAPI.services.UserService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,7 +30,10 @@ public class AuthServiceImpl implements AuthService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
+
+    @Autowired
+    private ContactoService contactoService;
 
     final AuthenticationManager authenticationManager;
     final TokenProvider tokenProvider;
@@ -90,4 +96,26 @@ public class AuthServiceImpl implements AuthService {
         return user;
     }
 
+    @Override
+    public void processForgotPassword(String email) throws Exception {
+        /*Optional<User> optionalUser = userService.getUserByEmail(email);
+
+        if (optionalUser.isEmpty()) {
+            return;
+        }*/
+
+        //Por no implementar el emailservice
+        Contacto contacto = new Contacto();
+        contacto.setAsunto("RECUPERACION");
+        contacto.setRevisado(Boolean.FALSE);
+        contacto.setCorreo(email);
+        contacto.setMensaje("RECUPERACION{" +
+                "mail{"+email+"}" +
+                //optionalUser +
+                "}");
+
+        contactoService.setItem(contacto);
+
+        System.out.println("Recuperación para " + email );
+    }
 }

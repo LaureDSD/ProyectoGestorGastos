@@ -95,8 +95,8 @@ export class DashboardComponent {
     this.route.navigate(["/login"])
   }
 
-  redirectTo() {
-    this.route.navigate(["/private/setings"])
+  redirectTo(ruta: string) {
+    this.route.navigate([ruta])
   }
 
 }

@@ -54,7 +54,18 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      */
     @Override
     public Subscription setItem(Subscription o) {
-        return repository.save(o);
+        //System.out.println("ANTES DE SAVE (ServiceImpl):");
+        //System.out.println("Activa: " + o.isActiva());
+        //System.out.println("Start: " + o.getStart());
+
+        Subscription saved = repository.save(o);
+
+        //System.out.println("DESPUÉS DE SAVE (ServiceImpl):");
+        //System.out.println("Activa: " + saved.isActiva());
+        //System.out.println("Start: " + saved.getStart());
+
+        return saved;
+
     }
 
     /**

@@ -14,3 +14,10 @@ export interface Producto {
   precio: number;
   subtotal?: number;
 }
+
+export interface Contacto {
+  nombre: string;
+  correo: string;
+  asunto: string;
+  mensaje: string;
+}

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 public record CreateSubscriptionRequest(
         @NotNull Long userId,
         @NotNull String name,
+        Long categoriaId ,
         String description,
         String icon,
         @NotNull LocalDateTime fechaCompra,

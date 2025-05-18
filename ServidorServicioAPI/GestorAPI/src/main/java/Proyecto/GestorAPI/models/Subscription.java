@@ -55,17 +55,26 @@ public class Subscription extends Spent {
      */
     private boolean activa;
 
-    public Subscription(String name, String description, String icon, LocalDateTime start, double total, double iva,
-                        User user, CategoryExpense category, LocalDateTime createdAt, LocalDateTime updatedAt,
-                        ExpenseClass typeExpense, LocalDateTime startDate, LocalDateTime endDate, double accumulate,
-                        int restartDay, int intervalTime, boolean active) {
-        super(name, description, icon, start, total, iva, user, category, createdAt, updatedAt, typeExpense);
+    public Subscription(String name, String description, String icon,
+                        LocalDateTime expenseDate, double total, double iva,
+                        User user, CategoryExpense category,
+                        LocalDateTime createdAt, LocalDateTime updatedAt,
+                        ExpenseClass typeExpense,
+                        LocalDateTime startDate, LocalDateTime endDate,
+                        int restartDay, int intervalTime, boolean active)
+{
+
+        super(name, description, icon, expenseDate, total, iva, user, category, createdAt, updatedAt, typeExpense);
+
         this.start = startDate;
         this.end = endDate;
-        this.accumulate = (total * (iva/100)) + total;
+        this.accumulate = accumulate;
         this.restartDay = restartDay;
         this.intervalTime = intervalTime;
         this.activa = active;
     }
+
+
+
 
 }

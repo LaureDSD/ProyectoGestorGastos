@@ -1,4 +1,4 @@
-package Proyecto.GestorAPI.security;
+package Proyecto.GestorAPI.config.security;
 
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.services.UserService;

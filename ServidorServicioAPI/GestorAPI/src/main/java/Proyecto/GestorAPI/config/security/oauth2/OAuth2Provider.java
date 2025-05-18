@@ -1,4 +1,4 @@
-package Proyecto.GestorAPI.security.oauth2;
+package Proyecto.GestorAPI.config.security.oauth2;
 
 /**
  * Enum que define los proveedores de OAuth2 soportados.

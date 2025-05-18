@@ -1,6 +1,6 @@
-package Proyecto.GestorAPI.security.oauth2;
+package Proyecto.GestorAPI.config.security.oauth2;
 
-import Proyecto.GestorAPI.security.TokenProvider;
+import Proyecto.GestorAPI.config.security.TokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

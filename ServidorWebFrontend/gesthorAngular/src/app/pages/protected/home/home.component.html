@@ -1,7 +1,7 @@
-<div class="container py-4 mb-5 mt-5">
+<div class="container py-4 mb-5 mt-5 pb-5">
   <div class="row">
     <!-- Columna izquierda: Gráfico de Rosca -->
-    <div class="col-md-4 mb-6 mt-3">
+    <div class="col-md-4  mt-3">
 
 
       <h3 class="text-light">Información de la semana</h3>
@@ -74,9 +74,9 @@
             <li *ngFor="let gasto of ultimosGastos.slice(0, 20)"
                 class="list-group-item bg-dark text-white d-flex justify-content-between">
                 <div>
-                <strong>{{gasto.typeExpense}} - {{ gasto.name }}</strong> - <small>{{ gasto.fechaCompra | date }}</small>
+                {{gasto.typeExpense}} - <strong class="text-info">{{ gasto.name }}</strong> - <small>{{ gasto.fechaCompra | date }}</small>
               </div>
-              <span class="fw-bold text">€{{ gasto.total.toFixed(2) }}</span>
+              <span class="fw-bold text">{{ gasto.total.toFixed(2) }}€</span>
             </li>
           </ul>
         </div>

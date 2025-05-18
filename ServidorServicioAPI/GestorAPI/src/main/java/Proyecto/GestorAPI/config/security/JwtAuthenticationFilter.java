@@ -1,4 +1,4 @@
-package Proyecto.GestorAPI.security;
+package Proyecto.GestorAPI.config.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

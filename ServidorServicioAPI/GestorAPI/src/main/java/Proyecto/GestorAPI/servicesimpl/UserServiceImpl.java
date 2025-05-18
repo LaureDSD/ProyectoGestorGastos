@@ -3,7 +3,7 @@ package Proyecto.GestorAPI.servicesimpl;
 import Proyecto.GestorAPI.exceptions.UserNotFoundException;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.repositories.UserRepository;
-import Proyecto.GestorAPI.security.oauth2.OAuth2Provider;
+import Proyecto.GestorAPI.config.security.oauth2.OAuth2Provider;
 import Proyecto.GestorAPI.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -177,6 +177,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
     public long countByProvider(OAuth2Provider oAuth2Provider) {
         return userRepository.countByProvider(oAuth2Provider);
     }

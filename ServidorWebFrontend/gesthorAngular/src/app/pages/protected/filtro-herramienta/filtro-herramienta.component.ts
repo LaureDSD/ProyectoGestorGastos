@@ -119,7 +119,7 @@ toggleFiltros(): void {
 
         if ('name' in item && item.name?.toLowerCase().includes(textoLower)) {
           matchTexto = true;
-        } 
+        }
         else if ('description' in item && item.description?.toLowerCase().includes(textoLower)) {
           matchTexto = true;
         } else if ('productsJSON' in item) {

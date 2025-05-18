@@ -2,8 +2,8 @@ package Proyecto.GestorAPI.config;
 
 import Proyecto.GestorAPI.models.*;
 import Proyecto.GestorAPI.models.enums.ExpenseClass;
-import Proyecto.GestorAPI.security.RoleServer;
-import Proyecto.GestorAPI.security.oauth2.OAuth2Provider;
+import Proyecto.GestorAPI.config.security.RoleServer;
+import Proyecto.GestorAPI.config.security.oauth2.OAuth2Provider;
 import Proyecto.GestorAPI.services.*;
 import Proyecto.GestorAPI.servicesimpl.CategoryExpenseServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -86,27 +86,74 @@ public class DatabaseInitializer implements CommandLineRunner {
     public static final List<Spent> SPENTS = List.of(
             new Spent("Compra de equipo", "Compra de equipo de oficina", "", LocalDateTime.now(), 1200.00, 21.0,
                     USERS.get(0), CATEGORIAS.get(5), LocalDateTime.now(), LocalDateTime.now(), ExpenseClass.GASTO_GENERICO),
-            new Spent("Suscripción a software", "Pago mensual de suscripción a software", "", LocalDateTime.now(), 30.00, 21.0,
-                    USERS.get(0), CATEGORIAS.get(6), LocalDateTime.now(), LocalDateTime.now(), ExpenseClass.GASTO_GENERICO),
-            new Spent("Compra de alimentos", "Compra en supermercado", "", LocalDateTime.now(), 50.00, 10.0,
-                    USERS.get(1), CATEGORIAS.get(7), LocalDateTime.now(), LocalDateTime.now(), ExpenseClass.GASTO_GENERICO),
-            new Spent("Transporte", "Pago transporte público", "", LocalDateTime.now(), 15.00, 10.0,
-                    USERS.get(1), CATEGORIAS.get(8), LocalDateTime.now(), LocalDateTime.now(), ExpenseClass.GASTO_GENERICO)
+            new Spent("Suscripción a software", "Pago mensual de suscripción a software", "", LocalDateTime.now().minusMonths(2), 30.00, 21.0,
+                    USERS.get(0), CATEGORIAS.get(6), LocalDateTime.now().minusMonths(2), LocalDateTime.now(), ExpenseClass.GASTO_GENERICO),
+            new Spent("Compra de alimentos", "Compra en supermercado", "", LocalDateTime.now().minusMonths(4), 50.00, 10.0,
+                    USERS.get(1), CATEGORIAS.get(7), LocalDateTime.now().minusMonths(4), LocalDateTime.now(), ExpenseClass.GASTO_GENERICO),
+            new Spent("Transporte", "Pago transporte público", "", LocalDateTime.now().minusMonths(21), 15.00, 10.0,
+                    USERS.get(1), CATEGORIAS.get(8), LocalDateTime.now().minusMonths(20), LocalDateTime.now(), ExpenseClass.GASTO_GENERICO),
+
+
+            new Spent("Compra de equipo 2", "Compra de equipo de oficina", "", LocalDateTime.now().minusMonths(1), 600.00, 21.0,
+            USERS.get(0), CATEGORIAS.get(5), LocalDateTime.now(), LocalDateTime.now(), ExpenseClass.GASTO_GENERICO),
+            new Spent("Suscripción a software 2", "Pago mensual de suscripción a software", "", LocalDateTime.now().minusMonths(2), 30.00, 21.0,
+            USERS.get(0), CATEGORIAS.get(6), LocalDateTime.now().minusMonths(5), LocalDateTime.now(), ExpenseClass.GASTO_GENERICO),
+            new Spent("Compra de alimentos 2", "Compra en supermercado", "", LocalDateTime.now().minusMonths(15), 50.00, 10.0,
+            USERS.get(1), CATEGORIAS.get(7), LocalDateTime.now().minusMonths(4), LocalDateTime.now(), ExpenseClass.GASTO_GENERICO),
+            new Spent("Transporte 2", "Pago transporte público", "", LocalDateTime.now().minusMonths(3), 15.00, 10.0,
+            USERS.get(1), CATEGORIAS.get(8), LocalDateTime.now().minusMonths(3), LocalDateTime.now(), ExpenseClass.GASTO_GENERICO)
     );
 
     public static final List<Ticket> TICKETS = List.of(
-            new Ticket("Compra de oficina", "Compra de equipo de oficina", "", LocalDateTime.now(), 1200.00, 21.0,
-                    USERS.get(0), CATEGORIAS.get(0), LocalDateTime.now(), LocalDateTime.now(), ExpenseClass.TICKET,
+            new Ticket("Compra de oficina", "Compra de equipo de oficina", "", LocalDateTime.now().minusMonths(6), 1200.00, 21.0,
+                    USERS.get(0), CATEGORIAS.get(0), LocalDateTime.now().minusMonths(5), LocalDateTime.now(), ExpenseClass.TICKET,
                     "Electrodomesticos", "[{\"nombre\": \"Laptop\", \"categorias\": [\"Tecnología\", \"Computación\"], \"cantidad\": 1, \"precio\": 1000.00}, {\"nombre\": \"Mochila\", \"categorias\": [\"Accesorios\"], \"cantidad\": 1, \"precio\": 200.00}]"),
-            new Ticket("Supermercado", "Compra en supermercado", "", LocalDateTime.now(), 50.00, 10.0,
-                    USERS.get(1), CATEGORIAS.get(1) , LocalDateTime.now(), LocalDateTime.now(), ExpenseClass.TICKET,
+            new Ticket("Supermercado", "Compra en supermercado", "", LocalDateTime.now().minusMonths(12), 50.00, 10.0,
+                    USERS.get(1), CATEGORIAS.get(1) , LocalDateTime.now().minusMonths(11), LocalDateTime.now(), ExpenseClass.TICKET,
+                    "Supermercado", "[{\"nombre\": \"Leche\", \"categorias\": [\"Alimentos\", \"Lácteos\"], \"cantidad\": 2, \"precio\": 1.25}, {\"nombre\": \"Pan\", \"categorias\": [\"Alimentos\"], \"cantidad\": 1, \"precio\": 0.95}]"),
+            new Ticket("Compra de oficina 2", "Compra de equipo de oficina", "", LocalDateTime.now().minusMonths(6), 1200.00, 21.0,
+                    USERS.get(0), CATEGORIAS.get(0), LocalDateTime.now().minusMonths(4), LocalDateTime.now(), ExpenseClass.TICKET,
+                    "Electrodomesticos", "[{\"nombre\": \"Laptop\", \"categorias\": [\"Tecnología\", \"Computación\"], \"cantidad\": 1, \"precio\": 1000.00}, {\"nombre\": \"Mochila\", \"categorias\": [\"Accesorios\"], \"cantidad\": 1, \"precio\": 200.00}]"),
+            new Ticket("Supermercado 2", "Compra en supermercado", "", LocalDateTime.now().minusMonths(12), 50.00, 10.0,
+                    USERS.get(1), CATEGORIAS.get(1) , LocalDateTime.now().minusMonths(6), LocalDateTime.now(), ExpenseClass.TICKET,
                     "Supermercado", "[{\"nombre\": \"Leche\", \"categorias\": [\"Alimentos\", \"Lácteos\"], \"cantidad\": 2, \"precio\": 1.25}, {\"nombre\": \"Pan\", \"categorias\": [\"Alimentos\"], \"cantidad\": 1, \"precio\": 0.95}]")
     );
 
     public static final List<Subscription> SUBSCRIPTIONS = List.of(
-            new Subscription("Netflix", "Subscripción mensual de streaming", "", LocalDateTime.now().minusMonths(1), 10.99, 1.21, USERS.get(1), CATEGORIAS.get(3), LocalDateTime.now().minusMonths(1), LocalDateTime.now(), ExpenseClass.SUBSCRIPCION, LocalDateTime.now().minusMonths(1), null, 10.99, 1, 30, true),
-            new Subscription("Spotify", "Subscripción mensual de música", "", LocalDateTime.now().minusWeeks(2), 9.99, 1.10, USERS.get(0), CATEGORIAS.get(4), LocalDateTime.now().minusWeeks(2), LocalDateTime.now(), ExpenseClass.SUBSCRIPCION, LocalDateTime.now().minusWeeks(2), null, 9.99, 5, 30, true)
+            new Subscription("Netflix", "Subscripción mensual de streaming", "",
+                    LocalDateTime.now().minusMonths(23), 10.99, 1.21,
+                    USERS.get(1), CATEGORIAS.get(3),
+                    LocalDateTime.now().minusMonths(1), LocalDateTime.now(),
+                    ExpenseClass.SUBSCRIPCION,
+                    LocalDateTime.now().minusMonths(1), null,
+                    1, 30, true),
+
+            new Subscription("Spotify", "Subscripción mensual de música", "",
+                    LocalDateTime.now().minusWeeks(12), 9.99, 1.10,
+                    USERS.get(0), CATEGORIAS.get(4),
+                    LocalDateTime.now().minusWeeks(12), LocalDateTime.now(),
+                    ExpenseClass.SUBSCRIPCION,
+                    LocalDateTime.now().minusWeeks(2), null,
+                    5, 30, true),
+
+            new Subscription("Amazon", "Subscripción mensual de streaming", "",
+                    LocalDateTime.now().minusMonths(8), 10.99, 1.21,
+                    USERS.get(1), CATEGORIAS.get(3),
+                    LocalDateTime.now().minusMonths(8), LocalDateTime.now(),
+                    ExpenseClass.SUBSCRIPCION,
+                    LocalDateTime.now().minusMonths(1), null,
+                    1, 30, false),
+
+            new Subscription("XBoxPass", "Subscripción mensual de juegos", "",
+                    LocalDateTime.now().minusWeeks(2), 9.99, 1.10,
+                    USERS.get(0), CATEGORIAS.get(9),
+                    LocalDateTime.now().minusWeeks(9), LocalDateTime.now(),
+                    ExpenseClass.SUBSCRIPCION,
+                    LocalDateTime.now().minusWeeks(2), null,
+                    5, 30, true)
     );
+
+
 
     public static final List<LoginAttempt> LOGIN_ATTEMPTS = List.of(
             new LoginAttempt("admin", Instant.now(), true),

@@ -109,7 +109,7 @@ export class HomeComponent implements OnInit {
 
       // Luego cargar gastos
       this.spentService.getSpents().subscribe(gastos => {
-        this.ultimosGastos = gastos;
+        this.ultimosGastos = gastos.sort((a, b) => new Date(b.fechaCompra).getTime() - new Date(a.fechaCompra).getTime());
         this.actualizarGraficos(gastos);
       });
     });
@@ -133,15 +133,15 @@ export class HomeComponent implements OnInit {
     const totalSemanal = gastosSemana.reduce((sum, g) => sum + g.total, 0);
     const mediaSemanal = totalSemanal / 7;
 
-this.donutChartData = {
-  ...this.donutChartData,
-  datasets: [{
-    ...this.donutChartData.datasets[0],
-    data: [mediaSemanal, totalSemanal],
-    backgroundColor: ['#555', '#bb86fc'], // Ejemplo de colores modernos
-    hoverBackgroundColor: ['#2C9AB7', '#CC527A']
-  }]
-};
+    this.donutChartData = {
+      ...this.donutChartData,
+      datasets: [{
+        ...this.donutChartData.datasets[0],
+        data: [mediaSemanal, totalSemanal],
+        backgroundColor: ['#000000', '#4dc9f6'],
+        hoverBackgroundColor: ['#2C9AB7', '#CC527A']
+      }]
+    };
 
 
 
@@ -295,7 +295,7 @@ this.donutChartData = {
 
   getChartColor(index: number): string {
     const colors = [
-      '#0d6efd', '#198754', '#fd7e14', '#dc3545',
+      '#8800f6', '#00b0f6', '#f68700', '#dc3545',
       '#6f42c1', '#20c997', '#6610f2', '#d63384',
       '#0dcaf0', '#ffc107', '#adb5bd', '#6c757d'
     ];

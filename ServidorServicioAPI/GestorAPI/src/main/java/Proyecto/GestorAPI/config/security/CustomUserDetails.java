@@ -1,6 +1,6 @@
-package Proyecto.GestorAPI.security;
+package Proyecto.GestorAPI.config.security;
 
-import Proyecto.GestorAPI.security.oauth2.OAuth2Provider;
+import Proyecto.GestorAPI.config.security.oauth2.OAuth2Provider;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

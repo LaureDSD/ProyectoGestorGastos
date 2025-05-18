@@ -1,8 +1,13 @@
-<div class="container" style="margin-top: 8%; margin-bottom: 18%">
+
+<div *ngIf="load" class="d-flex justify-content-center align-items-center" style="height: 80vh;">
+  <app-spinning2></app-spinning2>
+</div>
+
+<div *ngIf="!load" class="container mt-5 pt-4" style="margin-bottom: 18%">
 
   <!-- Métricas principales -->
   <div class="row text-white text-center mb-4">
-    <div class="col" *ngFor="let m of metrics">
+    <div class="col mt-3" *ngFor="let m of metrics">
       <div class="p-3 rounded shadow" [ngClass]="m.bg" style="min-width: 120px;">
         <h4 class="mb-0">{{ m.value }}</h4>
         <small>{{ m.label }}</small>
@@ -101,14 +106,10 @@
         <canvas baseChart
           [data]="barData"
           [options]="barOptions"
-          [type]="'bar'">
+          [type]="'line'">
         </canvas>
+
       </div>
-
     </div>
-
   </div>
-
-  
-
 </div>

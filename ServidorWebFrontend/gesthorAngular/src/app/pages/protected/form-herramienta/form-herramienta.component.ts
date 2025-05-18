@@ -56,6 +56,33 @@ export class FormHerramientaComponent implements OnInit {
         this.form.get('fechaCompra')?.setValue(new Date().toISOString().slice(0, 16));
       }
     }
+
+    // Suscribirse a cambios relevantes para recalcular accumulate
+    ['total', 'start', 'end', 'activa', 'intervalTime', 'fechaCompra'].forEach(field => {
+      this.form.get(field)?.valueChanges.subscribe(() => {
+        this.calculateAccumulate();
+      });
+    });
+
+    // Controlar la activación para limpiar fecha end si activa=true
+    this.form.get('activa')?.valueChanges.subscribe(activa => {
+      if (activa) {
+        // Si está activa, borrar fecha de fin (end)
+        this.form.get('end')?.setValue('');
+      } else {
+        // Si se desactiva y no hay fecha fin, poner fecha actual
+        if (!this.form.get('end')?.value) {
+          this.form.get('end')?.setValue(new Date().toISOString().slice(0, 16));
+        }
+      }
+    });
+
+    // Sincronizar start con fechaCompra
+    this.form.get('fechaCompra')?.valueChanges.subscribe(fechaCompra => {
+      if (fechaCompra) {
+        this.form.get('start')?.setValue(fechaCompra, { emitEvent: false });
+      }
+    });
   }
 
   initForm() {
@@ -78,17 +105,21 @@ export class FormHerramientaComponent implements OnInit {
       end: [''],
       accumulate: [0],
       restartDay: [''],
-      intervalTime: [1],
-      activa: [true]
+      intervalTime: [30],  // Default 30 días
+      activa: [true],
+
+      // Para gasto
+      fechaCompra: [''],
+      typeExpense: [ExpenseFilterClass.GASTO_GENERICO, Validators.required],
     };
 
-    // Solo agregar fechaCompra y typeExpense si es gasto
-    if (this.tipo === 'gasto') {
-      formConfig.fechaCompra = [this.id === 0 ? '' : '', Validators.required];
-      formConfig.typeExpense = [ExpenseFilterClass.GASTO_GENERICO, Validators.required];
-    } else {
-      // Para ticket y subscripción, fechaCompra es editable
+    // Para ticket y subscripción, fechaCompra es editable y required
+    if (this.tipo === 'ticket' || this.tipo === 'subscripcion') {
       formConfig.fechaCompra = ['', Validators.required];
+      formConfig.typeExpense = [this.tipo === 'ticket' ? ExpenseClass.TICKET : ExpenseClass.SUBSCRIPCION, Validators.required];
+    } else if (this.tipo === 'gasto') {
+      formConfig.fechaCompra = [this.id === 0 ? new Date().toISOString().slice(0, 16) : '', Validators.required];
+      formConfig.typeExpense = [ExpenseFilterClass.GASTO_GENERICO, Validators.required];
     }
 
     this.form = this.fb.group(formConfig);
@@ -106,13 +137,13 @@ export class FormHerramientaComponent implements OnInit {
     if (normalized.fechaCompra) {
       normalized.fechaCompra = new Date(normalized.fechaCompra)
         .toISOString()
-        .slice(0, 16); 
+        .slice(0, 16);
     }
 
     if (normalized.start) {
       normalized.start = new Date(normalized.start)
         .toISOString()
-        .slice(0, 16); 
+        .slice(0, 16);
     }
 
     if (normalized.end) {
@@ -197,6 +228,35 @@ export class FormHerramientaComponent implements OnInit {
     this.img = event.value;
   }
 
+  calculateAccumulate() {
+    const total = this.form.get('total')?.value || 0;
+    const startValue = this.form.get('start')?.value || this.form.get('fechaCompra')?.value;
+    const endValue = this.form.get('end')?.value;
+    const activa = this.form.get('activa')?.value;
+    const intervalDays = this.form.get('intervalTime')?.value || 1;
+
+    if (!startValue || !total) {
+      this.form.get('accumulate')?.setValue(0);
+      return;
+    }
+
+    const startDate = new Date(startValue);
+    const endDate = activa
+      ? new Date()  // Fecha actual si está activa
+      : (endValue ? new Date(endValue) : new Date());
+
+    // Diferencia en milisegundos y conversión a días
+    const diffTime = endDate.getTime() - startDate.getTime();
+    const diffDays = diffTime > 0 ? diffTime / (1000 * 60 * 60 * 24) : 0;
+
+    // Cantidad de intervalos completos
+    const intervals = Math.floor(diffDays / intervalDays);
+
+    const accumulateValue = total * (intervals > 0 ? intervals : 1);
+
+    this.form.get('accumulate')?.setValue(accumulateValue);
+  }
+
   onSubmit() {
     if (!this.form.valid) {
       this.form.markAllAsTouched();
@@ -206,10 +266,20 @@ export class FormHerramientaComponent implements OnInit {
     const data = this.form.value;
     const isEdit = this.id !== 0;
 
-    // Para nuevos gastos, asegurar que la fecha es la actual
-    if (this.tipo === 'gasto' && !isEdit) {
-      data.fechaCompra = new Date().toISOString();
+    // start siempre igual a fechaCompra
+    data.start = data.fechaCompra;
+
+    // Ajustar fecha end si activa es true (limpia end)
+    if (data.activa) {
+      data.end = null;
+    } else {
+      if (!data.end) {
+        data.end = new Date().toISOString();
+      }
     }
+
+    this.calculateAccumulate();
+    data.accumulate = this.form.get('accumulate')?.value;
 
     const actions = {
       ticket: () => {
@@ -218,7 +288,10 @@ export class FormHerramientaComponent implements OnInit {
           : this.ticketService.addTicket(data);
 
         op.subscribe({
-          next: () => alert(`Ticket ${isEdit ? 'actualizado' : 'creado'}`),
+          next: () => {
+            alert(`Ticket ${isEdit ? 'actualizado' : 'creado'}`);
+            this.router.navigate(['/protected/filter/', this.tipo]);
+          },
           error: (err) => {
             if (err.error === "El campo de productos no puede estar vacío.") {
               alert("Sin productos..");
@@ -235,7 +308,10 @@ export class FormHerramientaComponent implements OnInit {
           : this.subscriptionService.addSubscription(data);
 
         op.subscribe({
-          next: () => alert(`Subscripción ${isEdit ? 'actualizada' : 'creada'}`),
+          next: () => {
+            alert(`Subscripción ${isEdit ? 'actualizada' : 'creada'}`);
+            this.router.navigate(['/protected/filter/', this.tipo]);
+          },
           error: (err) => this.handleError(err)
         });
       },
@@ -246,15 +322,16 @@ export class FormHerramientaComponent implements OnInit {
           : this.spentService.addSpent(data);
 
         op.subscribe({
-          next: () => alert(`Gasto ${isEdit ? 'actualizado' : 'creado'}`),
+          next: () => {
+            alert(`Gasto ${isEdit ? 'actualizado' : 'creado'}`);
+            this.router.navigate(['/protected/filter/', this.tipo]);
+          },
           error: (err) => this.handleError(err)
         });
       }
     };
 
     actions[this.tipo]();
-
-    this.router.navigate(['/protected/filter/', this.tipo]);
   }
 
   getCurrentForm(): FormGroup {

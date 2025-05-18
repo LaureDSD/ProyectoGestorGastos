@@ -57,9 +57,8 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  //Falta
   forgotPassword(email: string): Observable<any> {
-    return this.http.post('/api/auth/forgot-password', { email });
+    return this.http.post(`${environment.apiUrl}/public/forgot-password`, { email });
   }
 
   logout(): void {

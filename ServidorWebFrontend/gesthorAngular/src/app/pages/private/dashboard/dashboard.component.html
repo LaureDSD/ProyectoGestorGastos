@@ -55,7 +55,8 @@
 
       <li  class="list-group-item bg-dark text-light  justify-content-between align-items-center border-secondary">
         <button class="btn btn-outline-light btn-sm "  (click)="borrarToken()">Desconectarse</button>
-        <button class="btn btn-outline-light btn-sm ms-3"  [disabled] = true (click)="redirectTo()">Ajustes</button>
+        <button class="btn btn-outline-light btn-sm ms-3"  [disabled] = true (click)="redirectTo('/private/setings')">Ajustes</button>
+        <button *ngIf="user.role == 'ADMIN'" class="btn btn-outline-light btn-sm ms-3"  [disabled] = false (click)="redirectTo('/private/admindashboard')">Admin</button>
       </li>
 
     </ul>

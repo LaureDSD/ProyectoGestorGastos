@@ -1,12 +1,15 @@
 package Proyecto.GestorAPI.controllers;
 
+import Proyecto.GestorAPI.exceptions.ResourceNotFoundException;
 import Proyecto.GestorAPI.models.Subscription;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.models.enums.ExpenseClass;
 import Proyecto.GestorAPI.modelsDTO.subscription.CreateSubscriptionRequest;
 import Proyecto.GestorAPI.modelsDTO.subscription.SubscriptionDto;
-import Proyecto.GestorAPI.security.CustomUserDetails;
-import Proyecto.GestorAPI.security.RoleServer;
+import Proyecto.GestorAPI.modelsDTO.subscription.UpdateSubscriptionRequest;
+import Proyecto.GestorAPI.config.security.CustomUserDetails;
+import Proyecto.GestorAPI.config.security.RoleServer;
+import Proyecto.GestorAPI.services.CategoryExpenseService;
 import Proyecto.GestorAPI.services.SubscriptionService;
 import Proyecto.GestorAPI.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +17,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,8 +35,14 @@ import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME
 @Tag(name = "Subscription Management (Verify control)", description = "Operaciones sobre suscripciones")
 public class SubscriptionController {
 
+    @Autowired
     private final SubscriptionService subscriptionService;
+
+    @Autowired
     private final UserService userService;
+
+    @Autowired
+    private CategoryExpenseService categoriaService;
 
     @GetMapping("")
     @Operation(
@@ -58,6 +68,7 @@ public class SubscriptionController {
         if (subscriptions.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
+        System.out.println(subscriptions.get(1).toString());
         //Devolucion
         return ResponseEntity.ok(subscriptions.stream()
                 .map(SubscriptionDto::from)
@@ -85,14 +96,17 @@ public class SubscriptionController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        System.out.println(subscription);
-        System.out.println(SubscriptionDto.from(subscription));
+        System.out.println("Pide: "+subscription);
+        System.out.println("Fecha de compra real: " + subscription.getExpenseDate());
+
+        System.out.println( "Envia: "+SubscriptionDto.from(subscription));
+
 
         return ResponseEntity.ok(SubscriptionDto.from(subscription));
     }
 
 
-    @PostMapping("/")
+    @PostMapping("")
     @Operation(
             security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
             summary = "Crear una nueva suscripción"
@@ -135,6 +149,7 @@ public class SubscriptionController {
         subscription.setRestartDay(request.restartDay());
         subscription.setIntervalTime(request.intervalTime());
         subscription.setActiva(request.activa());
+        subscription.setCategory(categoriaService.getByID(request.categoriaId()).orElse(null));
         subscription.setTypeExpense(ExpenseClass.SUBSCRIPCION);
         return subscription;
     }
@@ -169,26 +184,49 @@ public class SubscriptionController {
     )
     public ResponseEntity<SubscriptionDto> updateSubscription(
             @PathVariable Long subscriptionId,
-            @Valid @RequestBody Subscription request,
-            @AuthenticationPrincipal CustomUserDetails currentUser) {
+            @Valid @RequestBody UpdateSubscriptionRequest request,
+            @AuthenticationPrincipal CustomUserDetails currentUser) throws ResourceNotFoundException {
+
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
-        Subscription subscription;
-        //verificacion de propiedad
-        if(user.getRole() != RoleServer.ADMIN && !request.getUser().getId().equals(user.getId())){
+
+        Subscription subscription = subscriptionService.getByID(subscriptionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Subscription not found"));
+
+        // Verificación de propiedad
+        if(user.getRole() != RoleServer.ADMIN && !subscription.getUser().getId().equals(user.getId())){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        // Validación del id en el request vs path param
+        if (request.spentId() == null || !request.spentId().equals(subscriptionId)) {
             return ResponseEntity.badRequest().build();
         }
-        //Verificacion complememntaria
-        if (request.getSpentId() == null || !request.getSpentId().equals(subscriptionId)) {
-            return ResponseEntity.badRequest().build();
-        }else {
-            subscription = subscriptionService.getByID(subscriptionId).orElse(null);
-        }
-        //Veriificacion existencia
-        if (subscription == null) {
-            return ResponseEntity.notFound().build();
-        }
-        //Actualizacion
-        Subscription updatedSubscription = subscriptionService.setItem(request);
+
+        System.out.println("Entra:  "+request);
+        subscription.setName(request.name());
+        subscription.setDescription(request.description());
+        subscription.setIcon(request.icon());
+        subscription.setExpenseDate(request.fechaCompra());
+        subscription.setTotal(request.total());
+        subscription.setIva(request.iva());
+        subscription.setStart(request.start());
+        subscription.setEnd(request.end());
+        subscription.setAccumulate(request.accumulate());
+        subscription.setRestartDay(request.restartDay());
+        subscription.setIntervalTime(request.intervalTime());
+        subscription.setActiva(request.activa());
+        subscription.setCategory(categoriaService.getByID(request.categoriaId()).orElse(null));
+        // No cambiar user ni typeExpense
+        //System.out.println("Guarda: "+subscription);
+
+        //System.out.println("ANTES DE GUARDAR (Controller):");
+        //System.out.println("Activa: " + subscription.isActiva());
+        //System.out.println("Start: " + subscription.getStart());
+        //System.out.println("ExpenseDate: " + subscription.getExpenseDate());
+
+        Subscription updatedSubscription = subscriptionService.setItem(subscription);
+
+        //System.out.println("Retorna: "+updatedSubscription);
         return ResponseEntity.ok(SubscriptionDto.from(updatedSubscription));
     }
 }

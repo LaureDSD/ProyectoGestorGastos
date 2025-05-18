@@ -1,7 +1,7 @@
 package Proyecto.GestorAPI.models;
 
-import Proyecto.GestorAPI.security.RoleServer;
-import Proyecto.GestorAPI.security.oauth2.OAuth2Provider;
+import Proyecto.GestorAPI.config.security.RoleServer;
+import Proyecto.GestorAPI.config.security.oauth2.OAuth2Provider;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
