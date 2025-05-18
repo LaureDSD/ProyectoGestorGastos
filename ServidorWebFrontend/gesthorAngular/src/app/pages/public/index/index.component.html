@@ -22,6 +22,10 @@
 
   <app-separator></app-separator>
 
+  <app-carrousel [imglist]="list" [imgSlide]="5"  [title]="'Compatible con dispositivos moviles'" [text]="'Accede desde cualquier lugar con la applicacion web compatible con Android e IOS'"></app-carrousel>
+
+  <app-separator></app-separator>
+
   <app-section-left
   [title]="'Seguridad Avanzada'"
   [text]="'Tus datos están cifrados, protegidos y solo tú tienes el control total de tu información.'"
@@ -36,6 +40,8 @@
 
   <app-separator></app-separator>
 
+
+
   <app-section-cards
   [cardList] = "cardList">
   </app-section-cards>
@@ -47,6 +53,10 @@
   [text]="'GesThor aprende de ti y automatiza tareas para que ahorres tiempo y evites errores.*'"
   [img]="'/img/_320e12e7-9ee9-4987-95be-7b12ffbbb4d3.jpeg'">
   </app-section-right2>
+
+  <app-separator></app-separator>
+
+  <app-carrousel [imglist]="list2" [imgSlide]="2"  [title]="'Gestiona todos tus gastos desde cualquier lugar'" [text]="'Accede desde cuaqier navegador , Gesthor es compatible con CHROME, FIERFOX, OPERA y muchos mas..'" ></app-carrousel>
 
   <app-separator></app-separator>
 

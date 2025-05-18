@@ -7,12 +7,19 @@ import { Component, Input } from '@angular/core';
   styleUrl: './carrousel.component.css'
 })
 export class CarrouselComponent {
-  @Input() carr : string[] = [
-    "/luca-romano-3ciMh7Ck92s-unsplash.jpg",
-    "/pexels-photo-7680742.jpeg",
-    "/pexels-photo-7926655.jpeg"]
+  @Input() imglist : string[] = []
+  @Input() imgSlide : number = 4
+  @Input() title = ""
+  @Input() text = ""
+
+  get chunkedImages() {
+  const chunks = [];
+  for (let i = 0; i < this.imglist.length; i += this.imgSlide) {
+    chunks.push(this.imglist.slice(i, i + this.imgSlide));
+  }
+  return chunks;
+}
 
   constructor(){}
-
 
 }
