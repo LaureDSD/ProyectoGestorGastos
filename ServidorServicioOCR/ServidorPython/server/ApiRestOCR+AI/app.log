@@ -1,0 +1,184 @@
+2025-05-19 22:25:50,568 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 22:28:13,898 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 22:29:10,327 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 22:30:13,990 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 22:33:14,080 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 22:33:58,790 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 22:38:04,212 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 22:42:31,905 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 22:44:38,915 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 22:46:21,182 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 22:48:09,209 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 22:49:25,928 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 22:52:30,126 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 22:53:33,527 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 22:54:40,143 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 22:54:47,576 - ERROR - Error al procesar OCR imagen
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 192, in procesar_ocr_imagen_local
+    parsed = json.loads(json_text)
+  File "C:\Python313\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "C:\Python313\Lib\json\decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\json\decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+2025-05-19 22:54:47,578 - ERROR - Error en /ocr
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 192, in procesar_ocr_imagen_local
+    parsed = json.loads(json_text)
+  File "C:\Python313\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "C:\Python313\Lib\json\decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\json\decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 308, in ocr
+    resultado = procesar_ocr_imagen_local(file)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 198, in procesar_ocr_imagen_local
+    raise RuntimeError(f"Error al procesar OCR imagen: {e}") from e
+RuntimeError: Error al procesar OCR imagen: Expecting value: line 1 column 1 (char 0)
+2025-05-19 23:00:25,707 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 23:02:32,120 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 23:06:15,809 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 23:13:18,817 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 23:13:25,739 - ERROR - Error al procesar OCR imagen
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 193, in procesar_ocr_imagen_local
+    ticket = TicketResponse(**parsed)
+  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 3 validation errors for TicketResponse
+categoria
+  Input should be a valid integer [type=int_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/int_type
+articulos.24.cantidad
+  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.428, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
+articulos.25.cantidad
+  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.134, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
+2025-05-19 23:13:25,793 - ERROR - Error en /ocr
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 193, in procesar_ocr_imagen_local
+    ticket = TicketResponse(**parsed)
+  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 3 validation errors for TicketResponse
+categoria
+  Input should be a valid integer [type=int_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/int_type
+articulos.24.cantidad
+  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.428, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
+articulos.25.cantidad
+  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.134, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 308, in ocr
+    resultado = procesar_ocr_imagen_local(file)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 198, in procesar_ocr_imagen_local
+    raise RuntimeError(f"Error al procesar OCR imagen: {e}") from e
+RuntimeError: Error al procesar OCR imagen: 3 validation errors for TicketResponse
+categoria
+  Input should be a valid integer [type=int_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.11/v/int_type
+articulos.24.cantidad
+  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.428, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
+articulos.25.cantidad
+  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.134, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
+2025-05-19 23:16:34,192 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 23:16:42,548 - ERROR - Error al procesar OCR imagen
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 195, in procesar_ocr_imagen_local
+    ticket = TicketResponse(**parsed)
+  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 2 validation errors for TicketResponse
+articulos.24.cantidad
+  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.428, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
+articulos.25.cantidad
+  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.134, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
+2025-05-19 23:16:42,550 - ERROR - Error en /ocr
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 195, in procesar_ocr_imagen_local
+    ticket = TicketResponse(**parsed)
+  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 2 validation errors for TicketResponse
+articulos.24.cantidad
+  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.428, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
+articulos.25.cantidad
+  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.134, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 311, in ocr
+    resultado = procesar_ocr_imagen_local(file)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 201, in procesar_ocr_imagen_local
+    raise RuntimeError(f"Error al procesar OCR imagen: {e}") from e
+RuntimeError: Error al procesar OCR imagen: 2 validation errors for TicketResponse
+articulos.24.cantidad
+  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.428, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
+articulos.25.cantidad
+  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.134, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
+2025-05-19 23:17:46,316 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 23:22:36,605 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 23:29:49,621 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 23:38:21,102 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 23:38:30,754 - ERROR - Error al procesar OCR imagen
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 334, in procesar_ocr_imagen_local
+    ticket = TicketResponse(**parsed)
+  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 1 validation error for TicketResponse
+categoria
+  Input should be a valid string [type=string_type, input_value=1, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/string_type
+2025-05-19 23:38:30,756 - ERROR - Error en /ocr
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 334, in procesar_ocr_imagen_local
+    ticket = TicketResponse(**parsed)
+  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\pydantic\main.py", line 253, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 1 validation error for TicketResponse
+categoria
+  Input should be a valid string [type=string_type, input_value=1, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/string_type
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 452, in ocr
+    resultado = procesar_ocr_imagen_local(file)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 339, in procesar_ocr_imagen_local
+    raise RuntimeError(f"Error al procesar OCR imagen: {e}") from e
+RuntimeError: Error al procesar OCR imagen: 1 validation error for TicketResponse
+categoria
+  Input should be a valid string [type=string_type, input_value=1, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/string_type
+2025-05-19 23:41:14,029 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-19 23:45:29,230 - INFO - Texto extraído correctamente de imagen OCR.

@@ -22,17 +22,18 @@ from PIL import Image, ImageEnhance, ImageFilter
 import numpy as np
 import cv2
 
+import mimetypes
+
 # ===================== CONFIGURACIÓN =====================
 
 load_dotenv()
 env = dotenv_values()
 
-config = dotenv_values(".env")
-
-OCR_LOCAL = config.get("OCR_LOCAL", "True").lower() == "true"
-TESSERACT_CMD = config.get("TESSERACT_CMD")
-LOCAL_API_KEY = config.get("LOCAL_API_KEY")
-OPENAI_API_KEY = config.get("OPENAI_API_KEY")
+OCR_LOCAL = env.get("OCR_LOCAL", "True").lower() == "true"
+TESSERACT_CMD=r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+LOCAL_API_KEY = env.get("LOCAL_API_KEY")
+MODEL = env.get("MODEL", "gpt-3.5-turbo")
+openai.api_key = env.get("OPENAI_API_KEY")
 # Llamar a la API para listar los modelos
 models = openai.Model.list()
 # Imprimir los modelos disponibles
@@ -121,7 +122,7 @@ logger.addHandler(handler)
 class Producto(BaseModel):
     nombre: str
     precio: float
-    cantidad: str
+    cantidad: float
     subtotal: float
 
 class TicketResponse(BaseModel):
@@ -150,6 +151,77 @@ def require_api_key(func):
 
 # ===================== FUNCIONES AUXILIARES =====================
 
+def simulador_respuesta():
+    return {
+  "articulos": [
+    {
+      "cantidad": 1.0,
+      "nombre": "TEST",
+      "precio": 1.0,
+      "subtotal": 1.0
+    }
+  ],
+  "categoria": 1,
+  "confianza": 0.99,
+  "establecimiento": "TEST",
+  "fecha": "2023-10-26",
+  "hora": "18:16",
+  "iva": 10.05,
+  "total": 109.15
+}
+
+    
+
+def procesar_ocr_imagen_local(file):
+    try:
+        # Abre la imagen desde el stream del archivo (Flask o archivo directo)
+        img = Image.open(file).convert('RGB')
+
+        # Preprocesamiento: Escala de grises, contraste, nitidez
+        img_gray = img.convert('L')
+        enhancer = ImageEnhance.Contrast(img_gray)
+        img_contrast = enhancer.enhance(2)
+        img_sharp = img_contrast.filter(ImageFilter.SHARPEN)
+
+        # Convertir a array de NumPy y aplicar binarización
+        img_np = np.array(img_sharp)
+        _, img_bin = cv2.threshold(img_np, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+        # Convertir de nuevo a PIL para OCR
+        img_bin_pil = Image.fromarray(img_bin)
+
+        # Configuración personalizada de Tesseract
+        custom_config = r'--oem 3 --psm 6'  # OEM 3: automático, PSM 6: bloques de texto
+
+        # OCR
+        texto = pytesseract.image_to_string(img_bin_pil, config=custom_config)
+
+        logger.info("Texto extraído correctamente de imagen OCR.")
+
+        response = openai.ChatCompletion.create(
+            model=MODEL,
+            messages=[
+                {"role": "system", "content": (
+                    "Eres un experto en tickets. Extrae esta estructura exacta como JSON:\n"
+                    "{ establecimiento: str, fecha: str, hora: str, total: float, iva: float, categoria: str,\n"
+                    "  articulos: [ { nombre: str, precio: float, cantidad: float, subtotal: float } ], confianza: float }"
+                )},
+                {"role": "user", "content": f"Texto OCR:\n{texto.strip()}\nDevuélveme solo JSON estructurado."}
+            ],
+            temperature=0.7,
+        )
+
+
+        json_text = response['choices'][0]['message']['content']  # corregido
+        parsed = json.loads(json_text)
+        ticket = TicketResponse(**parsed)
+        ticket.categoria = 1
+        return ticket.dict()
+    
+    except Exception as e:
+        logger.error("Error al procesar OCR imagen", exc_info=True)
+        raise RuntimeError(f"Error al procesar OCR imagen: {e}") from e
+
 def procesar_ocr_imagen_openai(file):
     try:
         img = Image.open(file.stream).convert("RGB")
@@ -158,12 +230,12 @@ def procesar_ocr_imagen_openai(file):
         img_b64 = base64.b64encode(buffer.getvalue()).decode()
 
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo", 
+            model=MODEL, 
             messages=[
                 {"role": "system", "content": (
                     "Eres un experto en tickets. Extrae esta estructura exacta como JSON:\n"
                     "{ establecimiento: str, fecha: str, hora: str, total: float, iva: float, categoria: str,\n"
-                    "  articulos: [ { nombre: str, precio: float, cantidad: str, subtotal: float } ], confianza: float }"
+                    "  articulos: [ { nombre: str, precio: float, cantidad: float, subtotal: float } ], confianza: float }"
                 )},
                 {"role": "user", "content": [
                     {"type": "text", "text": "Devuélveme solo JSON estructurado."},
@@ -176,6 +248,7 @@ def procesar_ocr_imagen_openai(file):
         json_text = response['choices'][0]['message']['content']  # corregido
         parsed = json.loads(json_text)
         ticket = TicketResponse(**parsed)
+        ticket.categoria = 1
         return ticket.dict()
 
     except (RateLimitError) as e:
@@ -188,15 +261,22 @@ def procesar_ocr_imagen_openai(file):
 
 def procesar_ocr_archivo(file):
     try:
-        contenido = file.read().decode('utf-8', errors='ignore')
+        content_type = mimetypes.guess_type(file.filename)[0]
+        
+        if content_type == 'application/pdf':
+            from PyPDF2 import PdfReader
+            reader = PdfReader(file)
+            contenido = "\n".join(page.extract_text() or '' for page in reader.pages)
+        else:
+            contenido = file.read().decode('utf-8', errors='ignore')
 
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo", 
+            model=MODEL, 
             messages=[
                 {"role": "system", "content": (
                     "Eres un experto en tickets. Extrae esta estructura exacta como JSON:\n"
                     "{ establecimiento: str, fecha: str, hora: str, total: float, iva: float, categoria: str,\n"
-                    "  articulos: [ { nombre: str, precio: float, cantidad: str, subtotal: float } ], confianza: float }"
+                    "  articulos: [ { nombre: str, precio: float, cantidad: float, subtotal: float } ], confianza: float }"
                 )},
                 {"role": "user", "content": contenido}
             ],
@@ -207,6 +287,7 @@ def procesar_ocr_archivo(file):
         json_text = response['choices'][0]['message']['content']  # corregido
         parsed = json.loads(json_text)
         ticket = TicketResponse(**parsed)
+        ticket.categoria = 1
         return ticket.dict()
 
     except (RateLimitError, APIError) as e:
@@ -237,44 +318,6 @@ def responder_chat(mensaje: str):
         raise RuntimeError(f"Error al generar respuesta de chat: {e}") from e
     
 
-def procesar_ocr_imagen_local(file):
-    try:
-        # Abre la imagen desde el stream del archivo (Flask o archivo directo)
-        img = Image.open(file).convert('RGB')
-
-        # Preprocesamiento: Escala de grises, contraste, nitidez
-        img_gray = img.convert('L')
-        enhancer = ImageEnhance.Contrast(img_gray)
-        img_contrast = enhancer.enhance(2)
-        img_sharp = img_contrast.filter(ImageFilter.SHARPEN)
-
-        # Convertir a array de NumPy y aplicar binarización
-        img_np = np.array(img_sharp)
-        _, img_bin = cv2.threshold(img_np, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-
-        # Convertir de nuevo a PIL para OCR
-        img_bin_pil = Image.fromarray(img_bin)
-
-        # Configuración personalizada de Tesseract
-        custom_config = r'--oem 3 --psm 6'  # OEM 3: automático, PSM 6: bloques de texto
-
-        # OCR
-        texto = pytesseract.image_to_string(img_bin_pil, config=custom_config)
-
-        logger.info("Texto extraído correctamente de imagen OCR.")
-        return texto.strip()
-    
-    
-    
-    
-    
-
-    except Exception as e:
-        logger.error("Error al procesar OCR imagen", exc_info=True)
-        raise RuntimeError(f"Error al procesar OCR imagen: {e}") from e
-
-        
-
 
 # ===================== ENDPOINTS =====================
 
@@ -291,10 +334,13 @@ def ocr():
         if not file or file.filename == '':
             return jsonify({"error": "Archivo inválido"}), 400
         
+        #resultado = simulador_respuesta()
+        #return jsonify(resultado), 200
+        
         if OCR_LOCAL:
-            resultado = procesar_ocr_imagen_openai(file)
-        else:
             resultado = procesar_ocr_imagen_local(file)
+        else:
+            resultado = procesar_ocr_imagen_openai(file)
         
         return jsonify(resultado), 200
     except ConnectionError as ce:
