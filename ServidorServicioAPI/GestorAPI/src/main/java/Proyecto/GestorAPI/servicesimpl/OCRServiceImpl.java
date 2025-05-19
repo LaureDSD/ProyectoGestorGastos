@@ -50,20 +50,25 @@ public class OCRServiceImpl implements OCRService {
     public Ticket processImageTicket(MultipartFile file, User user)  {
         Ticket ticket = new Ticket();
         try {
-            System.out.println("Imagen");
+            System.out.println("Imagen0");
             // 1. Guardar archivo temporalmente
             Path tempFilePath = Files.createTempFile("ticket_", "_" + file.getOriginalFilename());
             Files.copy(file.getInputStream(), tempFilePath, StandardCopyOption.REPLACE_EXISTING);
 
+            System.out.println("Imagen1");
             // 2. Procesar el archivo con OCR
             String ocrResult = sendFileForOCR(tempFilePath.toFile(),true);
 
+            System.out.println("Imagen2");
             // 3. Crear y guardar el ticket
+
             ticket = ticketService.mappingCreateTicketbyOCR(ocrResult, user);
 
+            System.out.println("Imagen3");
             // 3.1 Agregar imagen del ticket al ticket y guardarla
             ticket.setIcon(storageService.saveImageData(STORAGE_BASE_PATH, file));
 
+            System.out.println("Imagen4");
             // 4. Guardar el ticket en la base de datos y devolverlo
             ticket = ticketService.setItem(ticket);
 

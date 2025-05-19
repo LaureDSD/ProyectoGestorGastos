@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static java.time.LocalTime.now;
@@ -155,36 +156,95 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public Ticket mappingCreateTicketbyOCR(String ocrResult, User user) throws ErrorPharseJsonException {
-
         ObjectMapper mapper = new ObjectMapper();
-        TicketResponse ticketOCR;
-        String articulosJson;
 
-        try{
+        TicketResponse ticketOCR = new TicketResponse();
+        String articulosJson = "[]";
+
+        System.out.println("Mappear");
+
+        try {
             ticketOCR = mapper.readValue(ocrResult, TicketResponse.class);
-            articulosJson = mapper.writeValueAsString(ticketOCR.getArticulos());
+            try {
+                articulosJson = mapper.writeValueAsString(ticketOCR.getArticulos());
+            } catch (Exception e) {
+                System.out.println("Error al convertir artículos a JSON: " + e.getMessage());
+            }
         } catch (Exception e) {
-            throw new ErrorPharseJsonException("Error al cargar ocr desde Python" + e);
+            throw new ErrorPharseJsonException("Error al cargar ocr desde Python: " + e);
         }
+
+        System.out.println("Mappear2");
 
         Ticket ticket = new Ticket();
         ticket.setUser(user);
-        ticket.setIcon("");
-        ticket.setStore(ticketOCR.getEstablecimiento());
+
+        // Establecimiento
+        try {
+            ticket.setStore(ticketOCR.getEstablecimiento() != null ? ticketOCR.getEstablecimiento() : "Desconocido");
+        } catch (Exception e) {
+            ticket.setStore("Desconocido");
+        }
+
         ticket.setProductsJSON(articulosJson);
-        ticket.setTotal(ticketOCR.getTotal());
-        ticket.setIva(ticketOCR.getIva());
-        ticket.setName(ticketOCR.getEstablecimiento());
+
+        // Total
+        try {
+            ticket.setTotal(ticketOCR.getTotal() != null ? ticketOCR.getTotal() : 0.0);
+        } catch (Exception e) {
+            ticket.setTotal(0.0);
+        }
+
+        // IVA
+        try {
+            ticket.setIva(ticketOCR.getIva() != null ? ticketOCR.getIva() : 0.0);
+        } catch (Exception e) {
+            ticket.setIva(0.0);
+        }
+
+        // Nombre
+        try {
+            ticket.setName(ticketOCR.getEstablecimiento() != null ? ticketOCR.getEstablecimiento() : "Ticket");
+        } catch (Exception e) {
+            ticket.setName("Ticket");
+        }
+
         ticket.setDescription("Sin descripción..");
-        ticket.setCategory(categoriaService.getByID(ticketOCR.getCategoria()).orElse(null));
-        ticket.setTotal(ticketOCR.getTotal());
-        ticket.setStore(ticketOCR.getEstablecimiento());
+
+        // Categoría (por defecto ID = 1)
+        try {
+            ticket.setCategory(categoriaService.getByID(1L).orElse(null));
+        } catch (Exception e) {
+            ticket.setCategory(null);
+        }
+
+        // Fecha y hora
+        LocalDate fecha = LocalDate.now();
+        LocalTime hora = LocalTime.now();
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        LocalDate date = LocalDate.parse(ticketOCR.getFecha(), dateFormatter);
-        LocalTime time = LocalTime.parse(ticketOCR.getHora(), timeFormatter);
-        ticket.setExpenseDate(LocalDateTime.of(date, time));
+
+        try {
+            if (ticketOCR.getFecha() != null && !ticketOCR.getFecha().isEmpty()) {
+                fecha = LocalDate.parse(ticketOCR.getFecha(), dateFormatter);
+            }
+        } catch (Exception e) {
+            System.out.println("Fecha inválida, usando actual: " + e.getMessage());
+        }
+
+        try {
+            if (ticketOCR.getHora() != null && !ticketOCR.getHora().isEmpty()) {
+                hora = LocalTime.parse(ticketOCR.getHora(), timeFormatter);
+            }
+        } catch (Exception e) {
+            System.out.println("Hora inválida, usando actual: " + e.getMessage());
+        }
+
+        ticket.setExpenseDate(LocalDateTime.of(fecha, hora));
         ticket.setTypeExpense(ExpenseClass.TICKET);
+
+        System.out.println("Mappear3");
         return ticket;
     }
+
 }
