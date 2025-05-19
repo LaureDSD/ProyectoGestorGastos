@@ -3,7 +3,7 @@ from PIL import Image, ImageEnhance, ImageFilter
 import numpy as np
 import cv2
 
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"  # Cambia la ruta si es necesario
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 img = Image.open("Tests/ticket-zara-1.jpg")
 img_gray = img.convert('L')
 enhancer = ImageEnhance.Contrast(img_gray)
