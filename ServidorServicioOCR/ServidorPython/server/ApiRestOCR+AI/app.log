@@ -1,184 +1,225 @@
-2025-05-19 22:25:50,568 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 22:28:13,898 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 22:29:10,327 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 22:30:13,990 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 22:33:14,080 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 22:33:58,790 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 22:38:04,212 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 22:42:31,905 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 22:44:38,915 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 22:46:21,182 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 22:48:09,209 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 22:49:25,928 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 22:52:30,126 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 22:53:33,527 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 22:54:40,143 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 22:54:47,576 - ERROR - Error al procesar OCR imagen
+2025-05-20 19:36:31,588 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-20 19:36:31,989 - ERROR - Error al procesar OCR imagen
 Traceback (most recent call last):
-  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 192, in procesar_ocr_imagen_local
-    parsed = json.loads(json_text)
-  File "C:\Python313\Lib\json\__init__.py", line 346, in loads
-    return _default_decoder.decode(s)
-           ~~~~~~~~~~~~~~~~~~~~~~~^^^
-  File "C:\Python313\Lib\json\decoder.py", line 345, in decode
-    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
-               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Python313\Lib\json\decoder.py", line 363, in raw_decode
-    raise JSONDecodeError("Expecting value", s, err.value) from None
-json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
-2025-05-19 22:54:47,578 - ERROR - Error en /ocr
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 226, in procesar_ocr_imagen_local
+    response = openai.ChatCompletion.create(
+        model=MODEL,
+    ...<8 lines>...
+        temperature=0.7,
+    )
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_resources\chat_completion.py", line 25, in create
+    return super().create(*args, **kwargs)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_resources\abstract\engine_api_resource.py", line 153, in create
+    response, _, api_key = requestor.request(
+                           ~~~~~~~~~~~~~~~~~^
+        "post",
+        ^^^^^^^
+    ...<5 lines>...
+        request_timeout=request_timeout,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_requestor.py", line 298, in request
+    resp, got_stream = self._interpret_response(result, stream)
+                       ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_requestor.py", line 700, in _interpret_response
+    self._interpret_response_line(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        result.content.decode("utf-8"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        stream=False,
+        ^^^^^^^^^^^^^
+    ),
+    ^
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_requestor.py", line 765, in _interpret_response_line
+    raise self.handle_error_response(
+        rbody, rcode, resp.data, rheaders, stream_error=stream_error
+    )
+openai.error.AuthenticationError: Incorrect API key provided: NO-KEY. You can find your API key at https://platform.openai.com/account/api-keys.
+2025-05-20 19:36:31,993 - ERROR - Error en /ocr
 Traceback (most recent call last):
-  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 192, in procesar_ocr_imagen_local
-    parsed = json.loads(json_text)
-  File "C:\Python313\Lib\json\__init__.py", line 346, in loads
-    return _default_decoder.decode(s)
-           ~~~~~~~~~~~~~~~~~~~~~~~^^^
-  File "C:\Python313\Lib\json\decoder.py", line 345, in decode
-    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
-               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Python313\Lib\json\decoder.py", line 363, in raw_decode
-    raise JSONDecodeError("Expecting value", s, err.value) from None
-json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 226, in procesar_ocr_imagen_local
+    response = openai.ChatCompletion.create(
+        model=MODEL,
+    ...<8 lines>...
+        temperature=0.7,
+    )
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_resources\chat_completion.py", line 25, in create
+    return super().create(*args, **kwargs)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_resources\abstract\engine_api_resource.py", line 153, in create
+    response, _, api_key = requestor.request(
+                           ~~~~~~~~~~~~~~~~~^
+        "post",
+        ^^^^^^^
+    ...<5 lines>...
+        request_timeout=request_timeout,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_requestor.py", line 298, in request
+    resp, got_stream = self._interpret_response(result, stream)
+                       ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_requestor.py", line 700, in _interpret_response
+    self._interpret_response_line(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        result.content.decode("utf-8"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        stream=False,
+        ^^^^^^^^^^^^^
+    ),
+    ^
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_requestor.py", line 765, in _interpret_response_line
+    raise self.handle_error_response(
+        rbody, rcode, resp.data, rheaders, stream_error=stream_error
+    )
+openai.error.AuthenticationError: Incorrect API key provided: NO-KEY. You can find your API key at https://platform.openai.com/account/api-keys.
 
 The above exception was the direct cause of the following exception:
 
 Traceback (most recent call last):
-  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 308, in ocr
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 426, in endpoint_ocr_image
     resultado = procesar_ocr_imagen_local(file)
-  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 198, in procesar_ocr_imagen_local
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 248, in procesar_ocr_imagen_local
     raise RuntimeError(f"Error al procesar OCR imagen: {e}") from e
-RuntimeError: Error al procesar OCR imagen: Expecting value: line 1 column 1 (char 0)
-2025-05-19 23:00:25,707 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 23:02:32,120 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 23:06:15,809 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 23:13:18,817 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 23:13:25,739 - ERROR - Error al procesar OCR imagen
+RuntimeError: Error al procesar OCR imagen: Incorrect API key provided: NO-KEY. You can find your API key at https://platform.openai.com/account/api-keys.
+2025-05-20 19:36:58,828 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-20 19:36:59,227 - ERROR - Error al procesar OCR imagen
 Traceback (most recent call last):
-  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 193, in procesar_ocr_imagen_local
-    ticket = TicketResponse(**parsed)
-  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\pydantic\main.py", line 253, in __init__
-    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
-pydantic_core._pydantic_core.ValidationError: 3 validation errors for TicketResponse
-categoria
-  Input should be a valid integer [type=int_type, input_value=None, input_type=NoneType]
-    For further information visit https://errors.pydantic.dev/2.11/v/int_type
-articulos.24.cantidad
-  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.428, input_type=float]
-    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
-articulos.25.cantidad
-  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.134, input_type=float]
-    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
-2025-05-19 23:13:25,793 - ERROR - Error en /ocr
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 226, in procesar_ocr_imagen_local
+    response = openai.ChatCompletion.create(
+        model=MODEL,
+    ...<8 lines>...
+        temperature=0.7,
+    )
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_resources\chat_completion.py", line 25, in create
+    return super().create(*args, **kwargs)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_resources\abstract\engine_api_resource.py", line 153, in create
+    response, _, api_key = requestor.request(
+                           ~~~~~~~~~~~~~~~~~^
+        "post",
+        ^^^^^^^
+    ...<5 lines>...
+        request_timeout=request_timeout,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_requestor.py", line 298, in request
+    resp, got_stream = self._interpret_response(result, stream)
+                       ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_requestor.py", line 700, in _interpret_response
+    self._interpret_response_line(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        result.content.decode("utf-8"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        stream=False,
+        ^^^^^^^^^^^^^
+    ),
+    ^
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_requestor.py", line 765, in _interpret_response_line
+    raise self.handle_error_response(
+        rbody, rcode, resp.data, rheaders, stream_error=stream_error
+    )
+openai.error.AuthenticationError: Incorrect API key provided: NO-KEY. You can find your API key at https://platform.openai.com/account/api-keys.
+2025-05-20 19:36:59,229 - ERROR - Error en /ocr
 Traceback (most recent call last):
-  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 193, in procesar_ocr_imagen_local
-    ticket = TicketResponse(**parsed)
-  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\pydantic\main.py", line 253, in __init__
-    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
-pydantic_core._pydantic_core.ValidationError: 3 validation errors for TicketResponse
-categoria
-  Input should be a valid integer [type=int_type, input_value=None, input_type=NoneType]
-    For further information visit https://errors.pydantic.dev/2.11/v/int_type
-articulos.24.cantidad
-  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.428, input_type=float]
-    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
-articulos.25.cantidad
-  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.134, input_type=float]
-    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 226, in procesar_ocr_imagen_local
+    response = openai.ChatCompletion.create(
+        model=MODEL,
+    ...<8 lines>...
+        temperature=0.7,
+    )
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_resources\chat_completion.py", line 25, in create
+    return super().create(*args, **kwargs)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_resources\abstract\engine_api_resource.py", line 153, in create
+    response, _, api_key = requestor.request(
+                           ~~~~~~~~~~~~~~~~~^
+        "post",
+        ^^^^^^^
+    ...<5 lines>...
+        request_timeout=request_timeout,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_requestor.py", line 298, in request
+    resp, got_stream = self._interpret_response(result, stream)
+                       ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_requestor.py", line 700, in _interpret_response
+    self._interpret_response_line(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        result.content.decode("utf-8"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        stream=False,
+        ^^^^^^^^^^^^^
+    ),
+    ^
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_requestor.py", line 765, in _interpret_response_line
+    raise self.handle_error_response(
+        rbody, rcode, resp.data, rheaders, stream_error=stream_error
+    )
+openai.error.AuthenticationError: Incorrect API key provided: NO-KEY. You can find your API key at https://platform.openai.com/account/api-keys.
 
 The above exception was the direct cause of the following exception:
 
 Traceback (most recent call last):
-  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 308, in ocr
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 426, in endpoint_ocr_image
     resultado = procesar_ocr_imagen_local(file)
-  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 198, in procesar_ocr_imagen_local
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 248, in procesar_ocr_imagen_local
     raise RuntimeError(f"Error al procesar OCR imagen: {e}") from e
-RuntimeError: Error al procesar OCR imagen: 3 validation errors for TicketResponse
-categoria
-  Input should be a valid integer [type=int_type, input_value=None, input_type=NoneType]
-    For further information visit https://errors.pydantic.dev/2.11/v/int_type
-articulos.24.cantidad
-  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.428, input_type=float]
-    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
-articulos.25.cantidad
-  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.134, input_type=float]
-    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
-2025-05-19 23:16:34,192 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 23:16:42,548 - ERROR - Error al procesar OCR imagen
+RuntimeError: Error al procesar OCR imagen: Incorrect API key provided: NO-KEY. You can find your API key at https://platform.openai.com/account/api-keys.
+2025-05-20 19:44:15,516 - ERROR - Error en /aichat
 Traceback (most recent call last):
-  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 195, in procesar_ocr_imagen_local
-    ticket = TicketResponse(**parsed)
-  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\pydantic\main.py", line 253, in __init__
-    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
-pydantic_core._pydantic_core.ValidationError: 2 validation errors for TicketResponse
-articulos.24.cantidad
-  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.428, input_type=float]
-    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
-articulos.25.cantidad
-  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.134, input_type=float]
-    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
-2025-05-19 23:16:42,550 - ERROR - Error en /ocr
-Traceback (most recent call last):
-  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 195, in procesar_ocr_imagen_local
-    ticket = TicketResponse(**parsed)
-  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\pydantic\main.py", line 253, in __init__
-    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
-pydantic_core._pydantic_core.ValidationError: 2 validation errors for TicketResponse
-articulos.24.cantidad
-  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.428, input_type=float]
-    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
-articulos.25.cantidad
-  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.134, input_type=float]
-    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 364, in responder_chat
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+    ...<5 lines>...
+        max_tokens=500
+    )
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_resources\chat_completion.py", line 25, in create
+    return super().create(*args, **kwargs)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_resources\abstract\engine_api_resource.py", line 153, in create
+    response, _, api_key = requestor.request(
+                           ~~~~~~~~~~~~~~~~~^
+        "post",
+        ^^^^^^^
+    ...<5 lines>...
+        request_timeout=request_timeout,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_requestor.py", line 298, in request
+    resp, got_stream = self._interpret_response(result, stream)
+                       ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_requestor.py", line 700, in _interpret_response
+    self._interpret_response_line(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        result.content.decode("utf-8"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        stream=False,
+        ^^^^^^^^^^^^^
+    ),
+    ^
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\venv\Lib\site-packages\openai\api_requestor.py", line 765, in _interpret_response_line
+    raise self.handle_error_response(
+        rbody, rcode, resp.data, rheaders, stream_error=stream_error
+    )
+openai.error.AuthenticationError: You didn't provide an API key. You need to provide your API key in an Authorization header using Bearer auth (i.e. Authorization: Bearer YOUR_KEY), or as the password field (with blank username) if you're accessing the API from your browser and are prompted for a username and password. You can obtain an API key from https://platform.openai.com/account/api-keys.
 
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 311, in ocr
-    resultado = procesar_ocr_imagen_local(file)
-  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 201, in procesar_ocr_imagen_local
-    raise RuntimeError(f"Error al procesar OCR imagen: {e}") from e
-RuntimeError: Error al procesar OCR imagen: 2 validation errors for TicketResponse
-articulos.24.cantidad
-  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.428, input_type=float]
-    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
-articulos.25.cantidad
-  Input should be a valid integer, got a number with a fractional part [type=int_from_float, input_value=0.134, input_type=float]
-    For further information visit https://errors.pydantic.dev/2.11/v/int_from_float
-2025-05-19 23:17:46,316 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 23:22:36,605 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 23:29:49,621 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 23:38:21,102 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 23:38:30,754 - ERROR - Error al procesar OCR imagen
-Traceback (most recent call last):
-  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 334, in procesar_ocr_imagen_local
-    ticket = TicketResponse(**parsed)
-  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\pydantic\main.py", line 253, in __init__
-    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
-pydantic_core._pydantic_core.ValidationError: 1 validation error for TicketResponse
-categoria
-  Input should be a valid string [type=string_type, input_value=1, input_type=int]
-    For further information visit https://errors.pydantic.dev/2.11/v/string_type
-2025-05-19 23:38:30,756 - ERROR - Error en /ocr
-Traceback (most recent call last):
-  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 334, in procesar_ocr_imagen_local
-    ticket = TicketResponse(**parsed)
-  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\pydantic\main.py", line 253, in __init__
-    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
-pydantic_core._pydantic_core.ValidationError: 1 validation error for TicketResponse
-categoria
-  Input should be a valid string [type=string_type, input_value=1, input_type=int]
-    For further information visit https://errors.pydantic.dev/2.11/v/string_type
-
-The above exception was the direct cause of the following exception:
+During handling of the above exception, another exception occurred:
 
 Traceback (most recent call last):
-  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 452, in ocr
-    resultado = procesar_ocr_imagen_local(file)
-  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 339, in procesar_ocr_imagen_local
-    raise RuntimeError(f"Error al procesar OCR imagen: {e}") from e
-RuntimeError: Error al procesar OCR imagen: 1 validation error for TicketResponse
-categoria
-  Input should be a valid string [type=string_type, input_value=1, input_type=int]
-    For further information visit https://errors.pydantic.dev/2.11/v/string_type
-2025-05-19 23:41:14,029 - INFO - Texto extraído correctamente de imagen OCR.
-2025-05-19 23:45:29,230 - INFO - Texto extraído correctamente de imagen OCR.
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 493, in endpoint_Chat_Service
+    resultado = responder_chat(mensaje)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\OcrAiServer.py", line 374, in responder_chat
+    except (RateLimitError) as e:
+            ^^^^^^^^^^^^^^
+NameError: name 'RateLimitError' is not defined

@@ -1,12 +1,18 @@
 #pip install -r requirements.txt
+#pip install --no-cache-dir -r requirements.txt
 Flask
 python-dotenv
 pydantic
 Pillow
-#openai==0.28
-#Werkzeug==2.3.8
+openai==0.28
+Werkzeug
 pytz
 flasgger
 ratelimit
 cachetools
 requests
+
+# OCR y procesamiento de imágenes
+pytesseract
+opencv-python
+numpy

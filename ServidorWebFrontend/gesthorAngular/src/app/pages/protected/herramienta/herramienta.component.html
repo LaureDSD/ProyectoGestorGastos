@@ -1,4 +1,15 @@
-<div class="container py-4 mt-5 text-white">
+
+<div *ngIf="loading" class="d-flex justify-content-center align-items-center" style="height: 80vh;">
+  <app-spinning2 class="m-3"></app-spinning2>
+   Estamos trabajando en ello..
+</div>
+
+<div *ngIf="!loading" class="container py-4 mt-5 text-white">
+
+  <div *ngIf="error" class="alert alert-danger mt-3">
+  {{ error }}
+  <button (click)="error = null" class="btn-close float-end"></button>
+  </div>
 
   <div *ngIf="tipo === 'ticketimagen' || tipo === 'ticketdigital'">
     <h4>Cargar {{ tipo === 'ticketimagen' ? 'Ticket Imagen' : 'Ticket Digital' }}</h4>

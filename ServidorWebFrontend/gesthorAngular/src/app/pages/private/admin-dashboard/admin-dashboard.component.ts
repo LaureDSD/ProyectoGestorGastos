@@ -56,13 +56,13 @@ export class AdminDashboardComponent {
     this.serverStatsService.getServerInfo().subscribe(info => {
       this.serverInfo = info;
       this.updateMetrics();
-      this.updateDonut(info); // solo una vez al inicio
+      this.updateDonut(info);
       this.updateHistory(info);
       this.load = false;
     });
 
     // Actualizaciones periódicas sin tocar donut
-    interval(2500).subscribe(() => {
+    interval(5000).subscribe(() => {
       this.fetchStats(false);
     });
   }

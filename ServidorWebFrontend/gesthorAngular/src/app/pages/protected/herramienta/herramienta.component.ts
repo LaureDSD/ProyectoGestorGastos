@@ -12,6 +12,7 @@ export class HerramientaComponent {
   file?: File;
   imagePreview: string | ArrayBuffer | null = null;
   loading: boolean = false;
+  error: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -68,6 +69,7 @@ export class HerramientaComponent {
         },
         (error) => {
           this.loading = false;
+          this.error = 'Error al procesar la imagen. Verifica el archivo e inténtalo nuevamente.';
           console.error('Error al procesar el archivo de imagen:', error);
         }
       );
@@ -86,6 +88,7 @@ export class HerramientaComponent {
         },
         (error) => {
           this.loading = false;
+          this.error = 'Error al procesar el ticket digital. Verifica el archivo e inténtalo nuevamente.';
           console.error('Error al procesar el archivo digital:', error);
         }
       );
