@@ -51,9 +51,9 @@ public class ServerStatsServiceImpl {
         ServerInfoDto dto = new ServerInfoDto();
         dto.setName("GESTHOR1");
         dto.setUsers(userService.getCountUsers());
-        dto.setActiveocr(ocrService.getStatus());
+        dto.setActiveocr(ocrService.getStatus().isDemo());
         dto.setSpenses(spentService.getCountSpents());
-        dto.setActiveapi(true);
+        dto.setActiveapi(ocrService.getStatus().isStatusServer());
         dto.setStorage((int) (totalDisk / 1_073_741_824));
         dto.setUsedStorage((int) (usedDisk / 1_073_741_824));
         dto.setCreatedAt(new Date());

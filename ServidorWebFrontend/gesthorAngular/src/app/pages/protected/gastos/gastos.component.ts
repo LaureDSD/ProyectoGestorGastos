@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { SpentService } from './../../../services/spent.service';
 import { SpentFullDto, ExpenseClass } from '../../../models/api-models/api-models.component';
@@ -31,7 +32,7 @@ export class GastosComponent implements OnInit {
     ]
   };
 
-  constructor(private spentService: SpentService) {}
+  constructor(private spentService: SpentService, private router : Router) {}
 
 
 
@@ -147,7 +148,7 @@ getFechaRenovacion(gasto: SpentFullDto): Date {
 
 
 // En tu componente.ts
-detallesVisibles: {[key: number]: boolean} = {}; // Objeto para rastrear el estado de cada elemento
+detallesVisibles: {[key: number]: boolean} = {}; 
 
 toggleDetalle(index: number) {
   this.detallesVisibles[index] = !this.detallesVisibles[index];
@@ -155,6 +156,14 @@ toggleDetalle(index: number) {
 
 mostrarDetalle(index: number): boolean {
   return this.detallesVisibles[index] || false;
+}
+
+redirectToSubscription(subId: number) {
+  this.redirectTo(`/protected/form/subscripcion/${subId}`);
+}
+
+redirectTo(route : string){
+ this.router.navigate([route])
 }
 
 }

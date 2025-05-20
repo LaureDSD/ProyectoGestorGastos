@@ -52,16 +52,14 @@ export class AdminDashboardComponent {
   ngOnInit() {
     this.load = true;
 
-    // Carga inicial: info + donut solo una vez
     this.serverStatsService.getServerInfo().subscribe(info => {
       this.serverInfo = info;
       this.updateMetrics();
-      this.updateDonut(info); // solo una vez al inicio
+      this.updateDonut(info);
       this.updateHistory(info);
       this.load = false;
     });
 
-    // Actualizaciones periódicas sin tocar donut
     interval(2500).subscribe(() => {
       this.fetchStats(false);
     });
@@ -90,13 +88,13 @@ export class AdminDashboardComponent {
         bg: 'bg-secondary'
       },
       {
-        label: 'SPRING',
-        value: this.serverInfo.activeapi ? 'Activo' : 'Inactivo',
+        label: 'API PYTHON',
+        value: this.serverInfo.activeapi ? 'ACTIVO' : 'SIN SEÑAL',
         bg: this.serverInfo.activeapi ? 'bg-success' : 'bg-danger'
       },
       {
         label: 'OCR',
-        value: this.serverInfo.activeocr ? 'Activo' : 'Inactivo',
+        value: this.serverInfo.activeocr ? 'ACTIVO' : 'INACTIVO',
         bg: this.serverInfo.activeocr ? 'bg-success' : 'bg-danger'
       }
     ];
@@ -110,7 +108,7 @@ export class AdminDashboardComponent {
       labels: ['Usado', 'Libre'],
       datasets: [{
         data: [usedGB, totalGB - usedGB],
-        backgroundColor: ['#ffad00', '#f6f6f6']
+        backgroundColor: ['#10cee0', '#f6f6f6']
       }]
     };
 

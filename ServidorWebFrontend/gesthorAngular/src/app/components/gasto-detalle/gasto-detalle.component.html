@@ -1,9 +1,12 @@
 <!-- Elimina el botón y el *ngIf="mostrarDetalle" -->
 <div class="m-4">
-  <div class="mb-2">
+  <div class="mb-4">
     <p *ngIf="gasto.description"><strong>Descripción:</strong> {{gasto.description}}</p>
     <p *ngIf="gasto.iva"><strong>IVA</strong>: {{gasto.iva}}%</p>
-
+    <div class="text-start mt-3">
+      <button class="btn btn-sm btn-outline-light me-2" (click)="exportToCSV()">Descargar CSV</button>
+      <button class="btn btn-sm btn-outline-light" (click)="exportToPDF()">Descargar PDF</button>
+    </div>
   </div>
 
   <div *ngIf="gasto.typeExpense === 'TICKET'">
@@ -37,4 +40,5 @@
       </div>
     </div>
   </div>
+
 </div>

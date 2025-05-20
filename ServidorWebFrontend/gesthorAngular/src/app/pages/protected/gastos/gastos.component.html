@@ -46,7 +46,7 @@
                   <div *ngFor="let sub of activeSubscriptions"
                       class="list-group-item bg-dark text-white d-flex justify-content-between align-items-center border-bottom border-secondary p-3 hover-effect">
 
-                    <div class="d-flex flex-column w-100">
+                    <div (click)="redirectToSubscription(sub.spentId)" class="d-flex flex-column w-100">
                       <div class="d-flex justify-content-between align-items-center mb-2">
                         <h5 class="mb-0 text-info">{{ sub.name }}</h5>
                         <span class="badge bg-info text-dark rounded-pill fs-6 px-3 py-1">
@@ -117,21 +117,15 @@
                 <th>Nombre</th>
                 <th>Total</th>
                 <th>Tipo</th>
-                <th>Detalle</th>
               </tr>
             </thead>
             <tbody>
               <ng-container *ngFor="let s of filteredSpents; let i = index">
-                <tr>
+                <tr (click)="toggleDetalle(i)">
                   <td>{{ s.fechaCompra | date: 'shortDate' }}</td>
                   <td class="text-info">{{ s.name }}</td>
                   <td>{{ s.total }}€</td>
                   <td>{{ s.typeExpense }}</td>
-                  <td>
-                    <button class="btn btn-sm btn-outline-light" (click)="toggleDetalle(i)">
-                      {{ mostrarDetalle(i) ? 'Ocultar' : 'Ver' }}
-                    </button>
-                  </td>
                 </tr>
                 <tr *ngIf="mostrarDetalle(i)">
                   <td colspan="5" class="p-0">

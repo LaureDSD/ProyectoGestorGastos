@@ -3,6 +3,7 @@ package Proyecto.GestorAPI.servicesimpl;
 import Proyecto.GestorAPI.exceptions.ErrorPharseJsonException;
 import Proyecto.GestorAPI.models.Ticket;
 import Proyecto.GestorAPI.models.User;
+import Proyecto.GestorAPI.modelsDTO.StatusServerResponse;
 import Proyecto.GestorAPI.services.OCRService;
 import Proyecto.GestorAPI.services.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,15 +130,17 @@ public class OCRServiceImpl implements OCRService {
         }
     }
 
-    public boolean getStatus() {
+    public StatusServerResponse getStatus() {
+        StatusServerResponse health = new StatusServerResponse(false,false,false);
         try {
-            String url = pythonServerUrl + "/status"; // ejemplo: http://localhost:5000/health
-            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-            return response.getStatusCode().is2xxSuccessful();
+            String url = pythonServerUrl + "/status";
+            ResponseEntity<StatusServerResponse> response = restTemplate.getForEntity(url, StatusServerResponse.class);
+            health = response.getBody();
         } catch (Exception e) {
             System.out.println("Servidor Python no disponible: " + e.getMessage());
-            return false;
         }
+
+        return health;
     }
 
 }

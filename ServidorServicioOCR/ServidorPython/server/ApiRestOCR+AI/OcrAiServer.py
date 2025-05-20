@@ -38,6 +38,8 @@ from PIL import Image, ImageEnhance, ImageFilter
 import numpy as np
 import cv2
 
+from pdf2image import convert_from_bytes
+
 import mimetypes
 
 # ===================== CONFIGURACIÓN =====================
@@ -68,7 +70,12 @@ app = Flask(__name__)
 max_mb = int(env.get("MAX_CONTENT_LENGTH_MB", 10))
 app.config['MAX_CONTENT_LENGTH'] = max_mb * 1024 * 1024
 
+# Llamar a la API para listar los modelos
+models = openai.Model.list()
 
+# Imprimir los modelos disponibles
+for model in models['data']:
+    print(model['id'])
 
 EXTENSIONS = env.get("EXTENSIONS") 
 
@@ -129,9 +136,24 @@ class TicketResponse(BaseModel):
     hora: Optional[str]
     total: float
     iva: float
-    categoria: str
+    categoria: Optional[int] = None
     articulos: List[Producto]
     confianza: float
+
+class StatusResponse(BaseModel):
+    """
+    Representa la respuesta de estado del servidor.
+
+    :param status: Estado del servidor ("true" o "false").
+    :type statusServer: bool
+    :param serverMode: Estado del servidor ("true" o "false").
+    :type demo: bool
+    :param ocrMode: Estado del servidor ("true" o "false").
+    :type ocrLocal: bool
+    """
+    statusServer: bool
+    demo: bool
+    ocrLocal: bool
 
 
 # ===================== DECORADORES =====================
@@ -183,7 +205,6 @@ def simulador_respuesta():
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in EXTENSIONS
-    
 
 def procesar_ocr_imagen_local(file):
     """
@@ -228,7 +249,7 @@ def procesar_ocr_imagen_local(file):
             messages=[
                 {"role": "system", "content": (
                     "Eres un experto en tickets. Extrae esta estructura exacta como JSON:\n"
-                    "{ establecimiento: str, fecha: str, hora: str, total: float, iva: float, categoria: str,\n"
+                    "{ establecimiento: str, fecha: str, hora: str, total: float, iva: float, categoria: int,\n"
                     "  articulos: [ { nombre: str, precio: float, cantidad: float, subtotal: float } ], confianza: float }"
                 )},
                 {"role": "user", "content": f"Texto OCR:\n{texto.strip()}\nDevuélveme solo JSON estructurado."}
@@ -241,7 +262,7 @@ def procesar_ocr_imagen_local(file):
         parsed = json.loads(json_text)
         ticket = TicketResponse(**parsed)
         ticket.categoria = 1 #Temporal
-        return ticket.dict()
+        return ticket.model_dump()
     
     except Exception as e:
         logger.error("Error al procesar OCR imagen", exc_info=True)
@@ -271,7 +292,7 @@ def procesar_ocr_imagen_openai(file):
             messages=[
                 {"role": "system", "content": (
                     "Eres un experto en tickets. Extrae esta estructura exacta como JSON:\n"
-                    "{ establecimiento: str, fecha: str, hora: str, total: float, iva: float, categoria: str,\n"
+                    "{ establecimiento: str, fecha: str, hora: str, total: float, iva: float, categoria: int,\n"
                     "  articulos: [ { nombre: str, precio: float, cantidad: float, subtotal: float } ], confianza: float }"
                 )},
                 {"role": "user", "content": [
@@ -286,7 +307,7 @@ def procesar_ocr_imagen_openai(file):
         parsed = json.loads(json_text)
         ticket = TicketResponse(**parsed)
         ticket.categoria = 1 #Temporal
-        return ticket.dict()
+        return ticket.model_dump()
 
     except (RateLimitError) as e:
         logger.error("Error de conexión con OpenAI", exc_info=True)
@@ -324,7 +345,7 @@ def procesar_ocr_archivo(file):
             messages=[
                 {"role": "system", "content": (
                     "Eres un experto en tickets. Extrae esta estructura exacta como JSON:\n"
-                    "{ establecimiento: str, fecha: str, hora: str, total: float, iva: float, categoria: str,\n"
+                    "{ establecimiento: str, fecha: str, hora: str, total: float, iva: float, categoria: int,\n"
                     "  articulos: [ { nombre: str, precio: float, cantidad: float, subtotal: float } ], confianza: float }"
                 )},
                 {"role": "user", "content": contenido}
@@ -337,7 +358,7 @@ def procesar_ocr_archivo(file):
         parsed = json.loads(json_text)
         ticket = TicketResponse(**parsed)
         ticket.categoria = 1 #Temporal
-        return ticket.dict()
+        return ticket.model_dump()
 
     except (RateLimitError, APIError) as e:
         logger.error("Error de conexión con OpenAI", exc_info=True)
@@ -517,7 +538,12 @@ def endpoin_tStatus_Server():
 
     :statuscode 200: Servicio activo y funcionando correctamente.
     """
-    return jsonify({"status": "ok"}), 200
+    response = {
+        "statusServer": True,
+        "demo": DEMO_MODE != True,
+        "ocrLocal": OCR_LOCAL
+    }
+    return jsonify(response), 200
 
 
 # ===================== INICIO =====================
