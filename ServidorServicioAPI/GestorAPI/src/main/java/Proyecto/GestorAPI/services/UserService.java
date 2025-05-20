@@ -128,4 +128,6 @@ public interface UserService {
     Optional<User> getUserByUsernameOrEmail(String user);
 
     long countByProvider(OAuth2Provider oAuth2Provider);
+
+    int getCountUsers();
 }

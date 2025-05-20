@@ -94,4 +94,9 @@ public class SpentServiceImpl implements SpentService {
         return repository.countByUserId(userId);
     }
 
+    @Override
+    public int getCountSpents() {
+        return repository.countGastos();
+    }
+
 }

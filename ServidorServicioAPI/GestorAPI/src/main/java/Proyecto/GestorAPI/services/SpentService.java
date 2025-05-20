@@ -61,4 +61,6 @@ public interface SpentService {
     List<Spent> getSpentsByUserId(Long clienteId);
 
     long countSpentsByUserId(Long userId);
+
+    int getCountSpents();
 }

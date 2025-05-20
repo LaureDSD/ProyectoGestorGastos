@@ -2,6 +2,7 @@ package Proyecto.GestorAPI.repositories;
 
 import Proyecto.GestorAPI.models.Spent;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,6 +18,9 @@ public interface SpentRepository extends JpaRepository<Spent, Long> {
     List<Spent> getByUserId(Long id);
 
     long countByUserId(Long userId);
+
+    @Query("SELECT COUNT(u) FROM Spent u ")
+    int countGastos();
 
     // JpaRepository proporciona automáticamente las operaciones básicas sobre la entidad Spent
     // como findAll(), findById(), save(), deleteById(), entre otras.

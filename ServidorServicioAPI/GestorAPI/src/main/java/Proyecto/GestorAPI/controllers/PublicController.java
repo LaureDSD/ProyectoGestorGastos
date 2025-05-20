@@ -54,19 +54,19 @@ public class PublicController {
      */
     @GetMapping("/usuarios")
     public Integer getNumberOfUsers() {
-        return userService.getUsers().size();
+        return userService.getCountUsers();
     }
 
     /**
-     * Endpoint para obtener el número total de tickets registrados en la aplicación.
+     * Endpoint para obtener el número total de gastos registrados en la aplicación.
      *
-     * Este endpoint retorna la cantidad total de tickets almacenados en la base de datos.
+     * Este endpoint retorna la cantidad total de gastos almacenados en la base de datos.
      *
-     * @return El número total de tickets.
+     * @return El número total de gastos.
      */
     @GetMapping("/gastos")
-    public Integer getNumberOfTickets() {
-        return ticketService.getAll().size();
+    public Integer getNumberOfSpennts() {
+        return spentService.getCountSpents();
     }
 
     // Futuro: Endpoint para ver las suscripciones más populares,

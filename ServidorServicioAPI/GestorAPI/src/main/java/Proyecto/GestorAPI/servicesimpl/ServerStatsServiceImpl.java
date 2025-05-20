@@ -3,7 +3,6 @@ package Proyecto.GestorAPI.servicesimpl;
 
 import Proyecto.GestorAPI.modelsDTO.ServerInfoDto;
 import Proyecto.GestorAPI.services.SpentService;
-import Proyecto.GestorAPI.services.TicketService;
 import Proyecto.GestorAPI.services.UserService;
 import lombok.RequiredArgsConstructor;
 import oshi.SystemInfo;
@@ -16,7 +15,6 @@ import oshi.util.Util;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.time.Instant;
 import java.util.Date;
 
 @Service
@@ -52,9 +50,9 @@ public class ServerStatsServiceImpl {
 
         ServerInfoDto dto = new ServerInfoDto();
         dto.setName("GESTHOR1");
-        dto.setUsers(userService.getUsers().size());
+        dto.setUsers(userService.getCountUsers());
         dto.setActiveocr(ocrService.getStatus());
-        dto.setSpenses(spentService.getAll().size());
+        dto.setSpenses(spentService.getCountSpents());
         dto.setActiveapi(true);
         dto.setStorage((int) (totalDisk / 1_073_741_824));
         dto.setUsedStorage((int) (usedDisk / 1_073_741_824));

@@ -181,4 +181,9 @@ public class UserServiceImpl implements UserService {
     public long countByProvider(OAuth2Provider oAuth2Provider) {
         return userRepository.countByProvider(oAuth2Provider);
     }
+
+    @Override
+    public int getCountUsers() {
+        return  userRepository.countActiveUsers();
+    }
 }

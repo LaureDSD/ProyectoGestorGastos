@@ -3,6 +3,7 @@ package Proyecto.GestorAPI.repositories;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.config.security.oauth2.OAuth2Provider;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -47,4 +48,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);
 
     long countByProvider(OAuth2Provider oAuth2Provider);
+
+    @Query("SELECT COUNT(u) FROM User u WHERE u.active = true")
+    int countActiveUsers();
 }
