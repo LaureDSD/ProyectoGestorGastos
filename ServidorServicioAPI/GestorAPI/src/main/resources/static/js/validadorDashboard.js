@@ -1,18 +1,53 @@
-const token = localStorage.getItem('token'); // O donde guardes el token
-    console.log(token); // Verifica que esté presente antes de realizar la solicitud.
+document.addEventListener("DOMContentLoaded", function () {
+    const token = localStorage.getItem('token');
 
     if (!token) {
-    alert('No se ha encontrado el token');
-    return;
+        window.location.href = '/auth/login';
+        return;
     }
 
-    const headers = new HttpHeaders({
-        'Authorization': `Bearer ${token}`
-    });
+    fetch('/api/users/data', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('No autorizado o token inválido');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Mostrar nombre de usuario
+            document.getElementById('username').textContent = data.username;
 
-    this.http.get('http://localhost:8080/api/some-endpoint', { headers })
-      .subscribe(response => {
-        console.log(response);
-      }, error => {
-        console.log(error);
-      });
+            // Mostrar roles como texto
+            const roles = data.rol.map(r => r.authority);
+            document.getElementById('roles').textContent = roles.join(', ');
+
+            // Mostrar contenido condicional
+            if (roles.includes("ADMIN")) {
+                document.getElementById('adminSection').style.display = 'block';
+            } else {
+                document.getElementById('noAccessSection').style.display = 'block';
+            }
+
+            // (Opcional) mostrar mensaje en consola o añadirlo al DOM
+            console.log(data.message);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            localStorage.removeItem('token');
+            window.location.href = '/auth/login';
+        });
+
+    // Cerrar sesión
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', function () {
+            localStorage.removeItem('token');
+            window.location.href = '/auth/logout';
+        });
+    }
+});

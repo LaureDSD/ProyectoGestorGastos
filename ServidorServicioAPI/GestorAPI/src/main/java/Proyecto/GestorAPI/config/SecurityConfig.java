@@ -19,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
+import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -102,7 +104,9 @@ public class SecurityConfig {
                                 "/error",
                                 "/csrf",
                                 "/swagger-ui/**",
+                                "/admin/dashboard",
                                 "/v3/api-docs/**")
+
                         .permitAll()
 
                         // Acceso restringido a los usuarios con roles ADMIN o USER
@@ -125,6 +129,34 @@ public class SecurityConfig {
                         // Cualquier otra solicitud requiere autenticación
                         .anyRequest().authenticated())
 
+
+                .formLogin(form -> form
+                        .loginPage("/auth/login")
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/auth/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .addLogoutHandler(new HeaderWriterLogoutHandler(
+                                new ClearSiteDataHeaderWriter(
+                                        ClearSiteDataHeaderWriter.Directive.COOKIES,
+                                        ClearSiteDataHeaderWriter.Directive.STORAGE,
+                                        ClearSiteDataHeaderWriter.Directive.CACHE
+                                )
+                        ))
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .clearAuthentication(true)
+                        .permitAll()
+                )
+                .sessionManagement(session -> session
+                        .sessionFixation().migrateSession()
+                        .maximumSessions(1)
+                        .expiredUrl("/login?expired")
+                )
+
+
+
                 // Configuración de login OAuth2
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOauth2UserService))
@@ -134,11 +166,12 @@ public class SecurityConfig {
                 // Añadir filtro de autenticación antes del filtro por defecto de nombre y contraseña
                 .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 // Configuración para sesiones sin estado (sin sesión en el servidor)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 // Manejo de errores de autenticación (401)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 // Deshabilitar CSRF (recomendado solo si la aplicación no tiene formularios de sesión)
                 .csrf(AbstractHttpConfigurer::disable)
+
                 .build();
     }
 
@@ -165,5 +198,6 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 
 }

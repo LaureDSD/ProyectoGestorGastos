@@ -4,6 +4,7 @@ import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.config.security.RoleServer;
 import Proyecto.GestorAPI.servicesimpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,15 +12,19 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
-@RequestMapping("/admin/usuario/usuarios")
+@RequestMapping("/admin/usuarios")
 public class UserWebController {
 
-    private final String rutaHTML ="/admin/usuario/usuarios";
+    private final String rutaHTML ="/admin/usuarios";
 
     @Autowired
     private UserServiceImpl usuarioService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private List<RoleServer> tl;
 
@@ -27,11 +32,11 @@ public class UserWebController {
     @GetMapping
     public String showUsuariosList(Model model) {
         try {
-            tl = Arrays.stream(RoleServer.values()).toList();
+            tl = List.of(RoleServer.values());
             List<User> usuarios = usuarioService.getUsers();
             model.addAttribute("usuarios", usuarios);
             model.addAttribute("usuario", new User());
-            model.addAttribute("tipoUsuarioList", tl);
+            model.addAttribute("roleList", tl);
             return rutaHTML;
         } catch (Exception e) {
             model.addAttribute("error", "Error al cargar los usuarios: " + e.getMessage());
@@ -44,8 +49,9 @@ public class UserWebController {
     public String editarUsuario(@PathVariable("id") Long id, Model model) {
         try {
             User usuario = usuarioService.getUserById(id).orElse(new User());
-            model.addAttribute("tipoUsuarioList", tl);
+            model.addAttribute("roleList", tl);
             model.addAttribute("usuario", usuario);
+            usuario.setPassword("*******");
             return rutaHTML;
         } catch (Exception e) {
             model.addAttribute("error", "Error al cargar el usuario para editar: " + e.getMessage());
@@ -55,14 +61,22 @@ public class UserWebController {
 
     // Guardar un usuario (creación o actualización)
     @PostMapping("/save")
-    public String guardarUsuario(@ModelAttribute("usuario") User usuario, Model model) throws IOException {
-        try {
-            usuarioService.saveUser(usuario);
-            return "redirect:"+rutaHTML;
-        } catch (Exception e) {
-            model.addAttribute("error", "Error al guardar el usuario: " + e.getMessage());
-            return rutaHTML;
+    public String saveUsuario(@ModelAttribute User usuario, Model model) {
+        if (usuario.getId() != null) { // Edición
+            User existingUsuario = usuarioService.getUserById(usuario.getId()).orElse(null);
+
+            // Si el campo está vacío, mantiene la contraseña anterior
+            if (usuario.getPassword() == null || usuario.getPassword().isEmpty() || usuario.getPassword().equals("*******")) {
+                usuario.setPassword(existingUsuario.getPassword());
+            } else {
+                usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+            }
+        } else { // Creación
+            usuario.setPassword(usuario.getPassword());
         }
+
+        usuarioService.saveUser(usuario);
+        return "redirect:/admin/usuarios";
     }
 
     // Endpoint para eliminar un usuario

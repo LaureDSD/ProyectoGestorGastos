@@ -35,7 +35,7 @@
         const correo = document.getElementById("correo").value;
         const contraseña = document.getElementById("contraseña").value;
 
-        fetch('/auth/login', {
+        fetch('/auth/loginToken', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'

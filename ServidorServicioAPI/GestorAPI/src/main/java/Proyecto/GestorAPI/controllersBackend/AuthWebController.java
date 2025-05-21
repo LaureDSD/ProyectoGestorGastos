@@ -8,6 +8,7 @@ import Proyecto.GestorAPI.servicesimpl.AuthServiceImpl;
 import Proyecto.GestorAPI.servicesimpl.LoginAttemptServiceImpl;
 import Proyecto.GestorAPI.servicesimpl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -70,7 +72,7 @@ public class AuthWebController {
     }
 
 
-    @PostMapping("/login")
+    @PostMapping("/loginToken")
     public ResponseEntity<?> login(@RequestParam String correo, @RequestParam String contraseña, HttpServletRequest request) {
             try {
                 System.out.println(correo + " " + contraseña);
@@ -82,5 +84,11 @@ public class AuthWebController {
                 loginAttemptService.registerLoginAttempt(correo, false);
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Error en la autenticación:" + ex));
             }
+    }
+
+    @PostMapping("/logout")
+    public String performLogout(HttpServletRequest request, HttpServletResponse response) {
+        new SecurityContextLogoutHandler().logout(request, response, null);
+        return "redirect:/login?logout";
     }
 }

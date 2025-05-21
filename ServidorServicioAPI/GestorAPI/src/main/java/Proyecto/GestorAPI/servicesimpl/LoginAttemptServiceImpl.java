@@ -94,5 +94,9 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
     public void setItem(LoginAttempt loginAttempt) {
          loginAttemptRepository.save(loginAttempt);
     }
+
+    public int deleteAttemptsOlderThan(Instant cutoffDate) {
+        return 0;
+    }
 }
 

@@ -9,10 +9,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME;
 
@@ -73,4 +77,16 @@ public class UserAdminController {
         userService.saveUser(request);
         return ResponseEntity.ok(UserDto.from(findUser));
     }
+
+    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
+    @GetMapping("/data")
+    public ResponseEntity<?> getAdminData(@AuthenticationPrincipal UserDetails userDetails) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("username", userDetails.getUsername());
+        data.put("rol", userDetails.getAuthorities());
+        data.put("message", "Acceso autorizado a datos protegidos del dashboard.");
+        return ResponseEntity.ok(data);
+    }
+
+
 }
