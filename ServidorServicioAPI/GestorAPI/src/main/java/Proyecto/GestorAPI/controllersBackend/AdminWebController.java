@@ -1,5 +1,7 @@
 package Proyecto.GestorAPI.controllersBackend;
 
+import Proyecto.GestorAPI.modelsDTO.ServerInfoDto;
+import Proyecto.GestorAPI.servicesimpl.ServerStatsServiceImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,13 +17,16 @@ import java.util.stream.Collectors;
 @RequestMapping("/admin")
 public class AdminWebController {
 
+    private final ServerStatsServiceImpl serverStatsService;
+
+    public AdminWebController(ServerStatsServiceImpl serverStatsService) {
+        this.serverStatsService = serverStatsService;
+    }
+
     @GetMapping("/dashboard")
     public String getDashboard(Model model, Authentication authentication) {
-        if (authentication != null) {
-            System.out.println("redirect");
-        }
-        System.out.println("redirect2");
-
+        ServerInfoDto serverInfo = serverStatsService.getFullServerInfo();
+        model.addAttribute("serverInfo", serverInfo);
         return "admin/dashboard";
     }
 }

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -30,20 +29,28 @@ public class SpentWebController {
     @Autowired
     private CategoryExpenseServiceImpl categoryService;
 
-    // Listar todos los gastos genéricos (no incluye subclases)
+    private List<User> usuarios;
+    private List<CategoryExpense> categorias;
+    private List<ExpenseClass> tiposGasto;
+
+    private void initDatosCompartidos() {
+        usuarios = userService.getUsers();
+        categorias = categoryService.getAll();
+        tiposGasto = List.of(ExpenseClass.values());
+    }
+
+    // Listar todos los gastos
     @GetMapping
     public String listarGastos(Model model) {
         try {
+            initDatosCompartidos();
             List<Spent> gastos = spentService.getAll();
-            List<User> users = userService.getUsers();
-            List<CategoryExpense> categories = categoryService.getAll();
-            List<ExpenseClass> expenseTypes = List.of(ExpenseClass.values());
 
             model.addAttribute("expenses", gastos);
             model.addAttribute("expense", new Spent());
-            model.addAttribute("users", users);
-            model.addAttribute("categories", categories);
-            model.addAttribute("expenseTypes", expenseTypes);
+            model.addAttribute("users", usuarios);
+            model.addAttribute("categories", categorias);
+            model.addAttribute("expenseTypes", tiposGasto);
 
             return rutaHTML;
         } catch (Exception e) {
@@ -56,15 +63,13 @@ public class SpentWebController {
     @GetMapping("/edit/{id}")
     public String editarGasto(@PathVariable("id") Long id, Model model) {
         try {
-            Spent gasto = spentService.getByID(id).orElse(new Spent());
-            List<User> users = userService.getUsers();
-            List<CategoryExpense> categories = categoryService.getAll();
-            List<ExpenseClass> expenseTypes = List.of(ExpenseClass.values());
+            initDatosCompartidos();
+            Spent gasto = (id != null) ? spentService.getByID(id).orElse(new Spent()) : new Spent();
 
             model.addAttribute("expense", gasto);
-            model.addAttribute("users", users);
-            model.addAttribute("categories", categories);
-            model.addAttribute("expenseTypes", expenseTypes);
+            model.addAttribute("users", usuarios);
+            model.addAttribute("categories", categorias);
+            model.addAttribute("expenseTypes", tiposGasto);
 
             return rutaHTML;
         } catch (Exception e) {
@@ -73,28 +78,27 @@ public class SpentWebController {
         }
     }
 
-    // Guardar gasto (crear/actualizar)
+    // Guardar gasto
     @PostMapping("/save")
     public String guardarGasto(@ModelAttribute Spent gasto, Model model) {
         try {
-            // Asegurar que el tipo sea genérico (para evitar confusión con subclases)
-            gasto.setTypeExpense(ExpenseClass.GASTO_GENERICO);
+            // Obtener y establecer el usuario completo si hay un ID
+            if (gasto.getUser() != null && gasto.getUser().getId() != null) {
+                User fullUser = userService.getUserById(gasto.getUser().getId()).orElse(null);
+                gasto.setUser(fullUser);
+            }
 
-            // Las fechas se manejan automáticamente con los callbacks @PrePersist y @PreUpdate
+            // Obtener y establecer la categoría completa si hay un ID
+            if (gasto.getCategory() != null && gasto.getCategory().getId() != null) {
+                CategoryExpense fullCategory = categoryService.getByID(gasto.getCategory().getId()).orElse(null);
+                gasto.setCategory(fullCategory);
+            }
             spentService.setItem(gasto);
-            return "redirect:/admin/expenses";
+            return "redirect:" + rutaHTML;
         } catch (Exception e) {
+            initDatosCompartidos();
             model.addAttribute("error", "Error al guardar el gasto: " + e.getMessage());
-
-            // Recargar datos necesarios para la vista en caso de error
-            List<User> users = userService.getUsers();
-            List<CategoryExpense> categories = categoryService.getAll();
-            List<ExpenseClass> expenseTypes = List.of(ExpenseClass.values());
-
-            model.addAttribute("users", users);
-            model.addAttribute("categories", categories);
-            model.addAttribute("expenseTypes", expenseTypes);
-
+            model.addAttribute("expense", gasto);
             return rutaHTML;
         }
     }
@@ -103,37 +107,15 @@ public class SpentWebController {
     @GetMapping("/delete/{id}")
     public String eliminarGasto(@PathVariable("id") Long id, Model model) {
         try {
-            spentService.deleteByID(spentService.getByID(id).orElse(null).getSpentId());
-            return "redirect:" + rutaHTML;
+            return spentService.getByID(id).map(gasto -> {
+                spentService.deleteByID(gasto.getSpentId());
+                return "redirect:" + rutaHTML;
+            }).orElseGet(() -> {
+                model.addAttribute("error", "Gasto no encontrado.");
+                return rutaHTML;
+            });
         } catch (Exception e) {
             model.addAttribute("error", "Error al eliminar el gasto: " + e.getMessage());
-            return rutaHTML;
-        }
-    }
-
-    // Endpoint para ver detalles (incluyendo subclases si existen)
-    @GetMapping("/view/{id}")
-    public String verDetalleGasto(@PathVariable("id") Long id, Model model) {
-        try {
-            Spent gasto = spentService.getByID(id).orElse(null);
-            if (gasto == null) {
-                return "redirect:" + rutaHTML;
-            }
-
-            model.addAttribute("expense", gasto);
-
-            // Determinar la vista específica según el tipo de gasto
-            switch(gasto.getTypeExpense()) {
-                case TICKET:
-                    return "redirect:/admin/tickets/edit/" + id;
-                case SUBSCRIPCION:
-                    return "redirect:/admin/subscriptions/edit/" + id;
-                default:
-                    model.addAttribute("isGeneric", true);
-                    return rutaHTML + "-detail";
-            }
-        } catch (Exception e) {
-            model.addAttribute("error", "Error al cargar el detalle del gasto: " + e.getMessage());
             return rutaHTML;
         }
     }

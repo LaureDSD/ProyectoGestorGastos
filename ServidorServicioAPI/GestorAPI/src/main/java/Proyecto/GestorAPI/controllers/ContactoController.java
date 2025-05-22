@@ -1,6 +1,6 @@
 package Proyecto.GestorAPI.controllers;
 
-import Proyecto.GestorAPI.models.Contacto;
+import Proyecto.GestorAPI.models.FormContacto;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.config.security.CustomUserDetails;
 import Proyecto.GestorAPI.config.security.RoleServer;
@@ -34,7 +34,7 @@ public class ContactoController {
             security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)},
             summary = "Guardar formulario"
     )
-    public ResponseEntity<Contacto> guardar(@RequestBody Contacto contacto) {
+    public ResponseEntity<FormContacto> guardar(@RequestBody FormContacto contacto) {
         contacto.setRevisado(false);
         return ResponseEntity.ok(contactoService.setItem(contacto));
     }
@@ -44,7 +44,7 @@ public class ContactoController {
             security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)},
             summary = "Obtener formularios"
     )
-    public ResponseEntity<List<Contacto>> obtenerTodos( @AuthenticationPrincipal CustomUserDetails currentUser) {
+    public ResponseEntity<List<FormContacto>> obtenerTodos(@AuthenticationPrincipal CustomUserDetails currentUser) {
         if (currentUser == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -54,7 +54,7 @@ public class ContactoController {
             return ResponseEntity.badRequest().build();
         }
 
-        List<Contacto> contactos  = contactoService.getAll();
+        List<FormContacto> contactos  = contactoService.getAll();
 
         if (contactos.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -67,7 +67,7 @@ public class ContactoController {
             security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)},
             summary = "Obtener formularios por ID"
     )
-    public ResponseEntity<Contacto> obtenerPorId(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails currentUser) {
+    public ResponseEntity<FormContacto> obtenerPorId(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails currentUser) {
 
         if (currentUser == null) {
             return ResponseEntity.badRequest().build();

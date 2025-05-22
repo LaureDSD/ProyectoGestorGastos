@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -30,20 +29,28 @@ public class TicketWebController {
     @Autowired
     private CategoryExpenseServiceImpl categoryService;
 
+    private List<User> usuarios;
+    private List<CategoryExpense> categorias;
+    private List<ExpenseClass> tiposGasto;
+
+    private void initDatosCompartidos() {
+        usuarios = userService.getUsers();
+        categorias = categoryService.getAll();
+        tiposGasto = List.of(ExpenseClass.values());
+    }
+
     // Listar todos los tickets
     @GetMapping
-    public String listarTickets(Model model) {
+    public String showTicketsList(Model model) {
         try {
+            initDatosCompartidos();
             List<Ticket> tickets = ticketService.getAll();
-            List<User> users = userService.getUsers();
-            List<CategoryExpense> categories = categoryService.getAll();
-            List<ExpenseClass> expenseTypes = List.of(ExpenseClass.values());
 
             model.addAttribute("tickets", tickets);
             model.addAttribute("ticket", new Ticket());
-            model.addAttribute("users", users);
-            model.addAttribute("categories", categories);
-            model.addAttribute("expenseTypes", expenseTypes);
+            model.addAttribute("users", usuarios);
+            model.addAttribute("categories", categorias);
+            model.addAttribute("expenseTypes", tiposGasto);
 
             return rutaHTML;
         } catch (Exception e) {
@@ -52,19 +59,17 @@ public class TicketWebController {
         }
     }
 
-    // Formulario de edición
+    // Formulario para editar un ticket
     @GetMapping("/edit/{id}")
     public String editarTicket(@PathVariable("id") Long id, Model model) {
         try {
-            Ticket ticket = ticketService.getByID(id).orElse(new Ticket());
-            List<User> users = userService.getUsers();
-            List<CategoryExpense> categories = categoryService.getAll();
-            List<ExpenseClass> expenseTypes = List.of(ExpenseClass.values());
+            initDatosCompartidos();
+            Ticket ticket = (id != null) ? ticketService.getByID(id).orElse(new Ticket()) : new Ticket();
 
             model.addAttribute("ticket", ticket);
-            model.addAttribute("users", users);
-            model.addAttribute("categories", categories);
-            model.addAttribute("expenseTypes", expenseTypes);
+            model.addAttribute("users", usuarios);
+            model.addAttribute("categories", categorias);
+            model.addAttribute("expenseTypes", tiposGasto);
 
             return rutaHTML;
         } catch (Exception e) {
@@ -73,40 +78,43 @@ public class TicketWebController {
         }
     }
 
-    // Guardar ticket (crear/actualizar)
+    // Guardar un ticket
     @PostMapping("/save")
-    public String guardarTicket(@ModelAttribute Ticket ticket, Model model) {
+    public String saveTicket(@ModelAttribute Ticket ticket, Model model) {
         try {
-            // Establecer fechas si es nuevo
-            if (ticket.getSpentId() == null) {
-                ticket.setCreatedAt(LocalDateTime.now());
+            // Obtener y establecer el usuario completo si hay un ID
+            if (ticket.getUser() != null && ticket.getUser().getId() != null) {
+                User fullUser = userService.getUserById(ticket.getUser().getId()).orElse(null);
+                ticket.setUser(fullUser);
             }
-            ticket.setUpdatedAt(LocalDateTime.now());
+
+            // Obtener y establecer la categoría completa si hay un ID
+            if (ticket.getCategory() != null && ticket.getCategory().getId() != null) {
+                CategoryExpense fullCategory = categoryService.getByID(ticket.getCategory().getId()).orElse(null);
+                ticket.setCategory(fullCategory);
+            }
 
             ticketService.setItem(ticket);
-            return "redirect:/admin/tickets";
+            return "redirect:" + rutaHTML;
         } catch (Exception e) {
+            initDatosCompartidos();
             model.addAttribute("error", "Error al guardar el ticket: " + e.getMessage());
-
-            // Recargar datos necesarios para la vista en caso de error
-            List<User> users = userService.getUsers();
-            List<CategoryExpense> categories = categoryService.getAll();
-            List<ExpenseClass> expenseTypes = List.of(ExpenseClass.values());
-
-            model.addAttribute("users", users);
-            model.addAttribute("categories", categories);
-            model.addAttribute("expenseTypes", expenseTypes);
-
             return rutaHTML;
         }
     }
+
 
     // Eliminar ticket
     @GetMapping("/delete/{id}")
     public String eliminarTicket(@PathVariable("id") Long id, Model model) {
         try {
-            ticketService.deleteByID(ticketService.getByID(id).orElse(null).getSpentId());
-            return "redirect:" + rutaHTML;
+            return ticketService.getByID(id).map(ticket -> {
+                ticketService.deleteByID(ticket.getSpentId());
+                return "redirect:" + rutaHTML;
+            }).orElseGet(() -> {
+                model.addAttribute("error", "Ticket no encontrado.");
+                return rutaHTML;
+            });
         } catch (Exception e) {
             model.addAttribute("error", "Error al eliminar el ticket: " + e.getMessage());
             return rutaHTML;

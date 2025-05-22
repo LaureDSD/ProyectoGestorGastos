@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.Instant;
 
@@ -21,6 +22,7 @@ public class LoginAttempt {
 
     private String username;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Instant attemptTime;
 
     private boolean success;

@@ -1,6 +1,6 @@
 package Proyecto.GestorAPI.servicesimpl;
 
-import Proyecto.GestorAPI.models.Contacto;
+import Proyecto.GestorAPI.models.FormContacto;
 import Proyecto.GestorAPI.repositories.ContactoRepository;
 import Proyecto.GestorAPI.services.ContactoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +17,17 @@ public class ContactoServiceImpl implements ContactoService {
 
 
     @Override
-    public List<Contacto> getAll() {
+    public List<FormContacto> getAll() {
         return contactoRepository.findAll();
     }
 
     @Override
-    public Optional<Contacto> getByID(Long id) {
+    public Optional<FormContacto> getByID(Long id) {
         return contactoRepository.findById(id);
     }
 
     @Override
-    public Contacto setItem(Contacto contacto) {
+    public FormContacto setItem(FormContacto contacto) {
         return contactoRepository.save(contacto);
     }
 

@@ -1,186 +1,251 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Dashboard - Backend</title>
-    <!-- Bootstrap CSS CDN -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gestión de Usuarios</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
     <style>
-        .navbar-brand img {
-          height: 40px;
-          margin-right: 10px;
+        /* Estilos comunes */
+        .table-container {
+            overflow-x: auto;
         }
-        footer {
-          background-color: #343a40;
-          color: #ffffff;
+        table {
+            min-width: 1000px;
+        }
+        tbody tr:hover {
+            background-color: rgba(13, 110, 253, 0.05) !important;
+        }
+        /* Para que el filtro y paginación queden alineados */
+        .filter-input {
+            max-width: 300px;
+        }
+        /* Estilo para estado activo/inactivo */
+        .badge-activo {
+            background-color: #198754;
+        }
+        .badge-inactivo {
+            background-color: #dc3545;
+        }
+        /* Estilo para roles */
+        .badge-role {
+            background-color: #6c757d;
         }
     </style>
 </head>
-<body>
-<!-- Header con el menú dropdown -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<body class="bg-light d-flex flex-column min-vh-100">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-white bg-white shadow-sm">
     <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/admin/dashboard}">API</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand text-primary fw-bold" th:href="@{/admin/dashboard}">
+            <i class="bi bi-boxes me-2"></i>API-GESTHOR
+        </a>
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" th:href="@{/admin/usuarios}" id="usuariosDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        Usuarios
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="usuariosDropdown">
-                        <li><a class="dropdown-item" th:href="@{/admin/usuarios}">Usuarios</a></li>
-                        <li><a class="dropdown-item" th:href="@{/admin/logUsuarios}">Logs de Usuario</a></li>
-                    </ul>
-                </li>
+                <li class="nav-item"><a class="nav-link active fw-semibold" aria-current="page" th:href="@{/admin/usuarios}">Usuarios</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/categorias}">Categorías</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/expenses}">Gastos</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/tickets}">Tickets</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/subscriptions}">Subscripciones</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/login-attempts}">Log Logins</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/formcontacto}">Form Contacto</a></li>
             </ul>
         </div>
-        <button id="logoutButton" class="btn btn-outline-danger ms-auto">Cerrar sesión</button>
+        <button id="logoutButton" class="btn btn-outline-danger ms-auto fw-semibold">Cerrar sesión</button>
     </div>
 </nav>
 
-<!-- Contenido principal -->
-<div class="container mt-4">
-    <!-- Mensaje de Error si ocurre algún problema -->
-    <div th:if="${error}" class="alert alert-danger">
-        <p th:text="${error}"></p>
+<!-- CONTENIDO PRINCIPAL -->
+<div class="container py-4 flex-grow-1">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark mb-0"><i class="bi  bi-people me-2"></i> Gestión de Usuarios</h2>
     </div>
 
-    <h2 class="text-center mb-4">Gestión de Usuarios</h2>
-
-    <!-- Formulario de Estado (Crear o Editar) -->
-    <div class="form-container">
-        <h3 th:text="${usuario.id != null ? 'Editar Usuario' : 'Crear Nuevo Usuario'}"></h3>
-        <form th:action="@{/admin/usuarios/save}" th:object="${usuario}" method="post">
-
-            <input type="hidden" th:field="*{id}" />
-
-            <!-- Nombre de usuario -->
-            <div class="form-group mb-3">
-                <label for="username" class="form-label">Nombre de Usuario</label>
-                <input type="text" id="username" th:field="*{username}" class="form-control" placeholder="Nombre de usuario" required />
-            </div>
-
-            <!-- Nombre completo -->
-            <div class="form-group mb-3">
-                <label for="name" class="form-label">Nombre completo</label>
-                <input type="text" id="name" th:field="*{name}" class="form-control" placeholder="Nombre completo" required />
-            </div>
-
-            <!-- Email -->
-            <div class="form-group mb-3">
-                <label for="email" class="form-label">Correo electrónico</label>
-                <input type="email" id="email" th:field="*{email}" class="form-control" placeholder="Correo electrónico" required />
-            </div>
-
-            <!-- Contraseña -->
-            <div class="form-group mb-3">
-                <label for="password" class="form-label">Contraseña</label>
-                <input
-                        type="password"
-                        id="password"
-                        th:field="*{password}"
-                        class="form-control"
-                        th:placeholder="${usuario.id != null} ? '******* (dejar vacío para no cambiar)' : 'Ingrese contraseña'"
-                        th:required="${usuario.id == null}"
-                />
-            </div>
-
-            <!-- Estado de cuenta -->
-            <div class="form-group mb-3">
-                <label for="active" class="form-label">Estado de cuenta</label>
-                <select id="active" th:field="*{active}" class="form-control" required>
-                    <option th:value="true" th:text="'Activa'"></option>
-                    <option th:value="false" th:text="'Inactiva'"></option>
-                </select>
-            </div>
-
-            <!-- Teléfono -->
-            <div class="form-group mb-3">
-                <label for="phone" class="form-label">Teléfono</label>
-                <input type="text" id="phone" th:field="*{phone}" class="form-control" />
-            </div>
-
-            <!-- Dirección -->
-            <div class="form-group mb-3">
-                <label for="address" class="form-label">Dirección</label>
-                <input type="text" id="address" th:field="*{address}" class="form-control" />
-            </div>
-
-            <!-- Servidor -->
-            <div class="form-group mb-3">
-                <label for="server" class="form-label">Servidor (Auto)</label>
-                <input type="text" id="server" th:field="*{server}" class="form-control" />
-            </div>
-
-            <!-- Rol -->
-            <div class="form-group mb-3">
-                <label for="role" class="form-label">Rol</label>
-                <select id="role" th:field="*{role}" class="form-control" required>
-                    <option th:each="r : ${roleList}" th:value="${r}" th:text="${r}"></option>
-                </select>
-            </div>
-
-            <input type="hidden" th:field="*{createdAt}" th:value="${usuario.createdAt}"/>
-
-            <button type="submit" class="btn btn-primary">
-                <span th:text="${usuario.id != null ? 'Actualizar' : 'Crear'}"></span>
-            </button>
-        </form>
+    <!-- Mostrar error si hay -->
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
-    <div th:unless="${usuario.id != null}" class="table-container mt-5">
-        <h3 class="mb-4">Listado de Usuarios</h3>
-        <table class="table table-bordered">
-            <thead class="thead-dark">
-            <tr>
-                <th>ID</th>
-                <th>Nombre de Usuario</th>
-                <th>Nombre Completo</th>
-                <th>Correo</th>
-                <th>Estado de Cuenta</th>
-                <th>Rol</th>
-                <th>Creación</th>
-                <th>Modificación</th>
-                <th>Acciones</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="u : ${usuarios}">
-                <td th:text="${u.id}"></td>
-                <td th:text="${u.username}"></td>
-                <td th:text="${u.name}"></td>
-                <td th:text="${u.email}"></td>
-                <td th:text="${u.active ? 'Activa' : 'Inactiva'}"></td>
-                <td th:text="${u.role}"></td>
-                <td th:text="${#temporals.format(u.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
-                <td th:text="${#temporals.format(u.updatedAt, 'dd/MM/yyyy HH:mm')}"></td>
+    <!-- Formulario de Nuevo/Editar Usuario -->
+    <div class="card border-0 shadow mb-5">
+        <div class="card-header bg-primary text-white py-3">
+            <h5 class="card-title mb-0 fw-semibold" th:text="${usuario.id == null} ? 'Nuevo Usuario' : 'Editar Usuario'">Nuevo Usuario</h5>
+        </div>
+        <div class="card-body p-4">
+            <form th:action="@{/admin/usuarios/save}" th:object="${usuario}" method="post">
+                <input type="hidden" th:field="*{id}" />
+                <input type="hidden" th:field="*{createdAt}" />
 
-                <td>
-                    <a th:href="@{/admin/usuarios/edit/{id}(id=${u.id})}" class="btn btn-warning btn-sm">Editar</a>
-                    <a th:href="@{/admin/usuarios/delete/{id}(id=${u.id})}" class="btn btn-danger btn-sm">Eliminar</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                <div class="row g-3">
+                    <!-- Nombre de usuario -->
+                    <div class="col-md-6">
+                        <label for="username" class="form-label fw-semibold">Nombre de Usuario</label>
+                        <input type="text" id="username" th:field="*{username}" class="form-control" placeholder="Nombre de usuario" required />
+                    </div>
+
+                    <!-- Nombre completo -->
+                    <div class="col-md-6">
+                        <label for="name" class="form-label fw-semibold">Nombre completo</label>
+                        <input type="text" id="name" th:field="*{name}" class="form-control" placeholder="Nombre completo" required />
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-md-6">
+                        <label for="email" class="form-label fw-semibold">Correo electrónico</label>
+                        <input type="email" id="email" th:field="*{email}" class="form-control" placeholder="Correo electrónico" required />
+                    </div>
+
+                    <!-- Contraseña -->
+                    <div class="col-md-6">
+                        <label for="password" class="form-label fw-semibold">Contraseña</label>
+                        <input
+                                type="password"
+                                id="password"
+                                th:field="*{password}"
+                                class="form-control"
+                                th:placeholder="${usuario.id != null} ? '******* (dejar vacío para no cambiar)' : 'Ingrese contraseña'"
+                                th:required="${usuario.id == null}"
+                        />
+                    </div>
+
+                    <!-- Estado de cuenta -->
+                    <div class="col-md-6">
+                        <label for="active" class="form-label fw-semibold">Estado de cuenta</label>
+                        <select id="active" th:field="*{active}" class="form-select" required>
+                            <option th:value="true" th:selected="${usuario.active == true}">Activa</option>
+                            <option th:value="false" th:selected="${usuario.active == false}">Inactiva</option>
+                        </select>
+                    </div>
+
+                    <!-- Rol -->
+                    <div class="col-md-6">
+                        <label for="role" class="form-label fw-semibold">Rol</label>
+                        <select id="role" th:field="*{role}" class="form-select" required>
+                            <option th:each="r : ${roleList}"
+                                    th:value="${r}"
+                                    th:text="${r}"
+                                    th:selected="${usuario.role != null} ? ${r} == ${usuario.role} : false"></option>
+                        </select>
+                    </div>
+
+                    <!-- Teléfono -->
+                    <div class="col-md-6">
+                        <label for="phone" class="form-label fw-semibold">Teléfono</label>
+                        <input type="text" id="phone" th:field="*{phone}" class="form-control" placeholder="Teléfono" />
+                    </div>
+
+                    <!-- Dirección -->
+                    <div class="col-md-6">
+                        <label for="address" class="form-label fw-semibold">Dirección</label>
+                        <input type="text" id="address" th:field="*{address}" class="form-control" placeholder="Dirección" />
+                    </div>
+
+                    <!-- Servidor -->
+                    <div class="col-12">
+                        <label for="server" class="form-label fw-semibold">Servidor (Auto)</label>
+                        <input type="text" id="server" th:field="*{server}" class="form-control" placeholder="Servidor automático" readonly />
+                    </div>
+
+                    <div class="col-12 mt-3">
+                        <button type="submit" class="btn btn-success fw-semibold">
+                            <i class="bi bi-save me-2"></i>
+                            <span th:text="${usuario.id != null} ? 'Actualizar' : 'Crear'"></span>
+                        </button>
+                        <a th:href="@{/admin/usuarios}" class="btn btn-secondary fw-semibold ms-2">
+                            <i class="bi bi-x-circle me-2"></i>Cancelar
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabla de usuarios (solo mostrar si no estamos editando) -->
+    <div th:unless="${usuario.id != null}">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold text-dark mb-0">Listado de Usuarios</h3>
+            <div class="filter-input">
+                <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                    <input type="text" id="buscador" class="form-control" onkeyup="filtrarTabla()" placeholder="Buscar...">
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container bg-white rounded-3 shadow-sm p-3">
+            <table class="table table-bordered table-hover align-middle" id="usuariosTable">
+                <thead class="table">
+                <tr class="text-center">
+                    <th>ID</th>
+                    <th>Usuario</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Estado</th>
+                    <th>Rol</th>
+                    <th>Creación</th>
+                    <th>Modificación</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="u : ${usuarios}">
+                    <td class="text-center" th:text="${u.id}"></td>
+                    <td th:text="${u.username}"></td>
+                    <td th:text="${u.name}"></td>
+                    <td th:text="${u.email}"></td>
+                    <td class="text-center">
+                        <span th:class="${u.active} ? 'badge bg-success' : 'badge bg-danger'"
+                              th:text="${u.active} ? 'Activo' : 'Inactivo'"></span>
+                    </td>
+                    <td class="text-center">
+                        <span class="badge bg-secondary" th:text="${u.role}"></span>
+                    </td>
+                    <td class="text-center" th:text="${#temporals.format(u.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td class="text-center" th:text="${#temporals.format(u.updatedAt, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td class="text-center">
+                        <div class="d-flex gap-2 justify-content-center">
+                            <a th:href="@{'/admin/usuarios/edit/' + ${u.id}}" class="btn btn-sm btn-primary" title="Editar">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a th:href="@{'/admin/usuarios/delete/' + ${u.id}}"
+                               class="btn btn-sm btn-danger"
+                               onclick="return confirm('¿Está seguro de eliminar este usuario?');"
+                               title="Eliminar">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
-<!-- Footer -->
-<footer class="mt-5 py-3">
+<!-- FOOTER -->
+<footer class="py-4 bg-white text-dark mt-auto">
     <div class="container text-center">
-        <p class="mb-0">Backend V1.0 Acceso a Datos DAM</p>
+        <p class="mb-0">Backend V1.0 Proyecto GESTHOR DAM Laureano</p>
     </div>
 </footer>
 
-<!-- Agregar Bootstrap JS para que los dropdowns funcionen -->
+<!-- SCRIPTS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/static/js/logout.js"></script>
-
+<script src="/static/js/filtrosTablas.js"></script>
 </body>
 </html>
