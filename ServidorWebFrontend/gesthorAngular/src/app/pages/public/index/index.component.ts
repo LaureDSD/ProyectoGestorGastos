@@ -23,8 +23,7 @@ export class IndexComponent implements OnInit{
 
     "/capturas/c8.png",
     "/capturas/c9.png",
-    "/capturas/c10.png",
-    "/capturas/c11.png",
+
   ]
 
   list2 = [

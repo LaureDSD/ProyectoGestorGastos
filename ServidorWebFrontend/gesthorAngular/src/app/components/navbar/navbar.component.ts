@@ -12,7 +12,7 @@ import { environment } from '../../environments/environment';
 export class NavbarComponent {
 
   @Input() server : any = `${environment.apiUrl}/`;
-  @Input() titulo : string = "GESTHOR"
+  @Input() titulo : string = "WEB-GESTHOR"
   @Input() default : string = "/public/home"
   @Input() icono : string = "/icon.png"
   @Input() enlaces : string[][] = [["Inicio","/protected/home"],["Filtros","/protected/gastos"],["Herramientas","/protected/tools"]]
