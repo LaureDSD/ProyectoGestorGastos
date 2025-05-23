@@ -1,30 +1,70 @@
+<!--
+  Sección de carga y visualización del estado de procesamiento.
+
+  Cuando 'loading' es true:
+  - Se muestra un contenedor centrado vertical y horizontalmente.
+  - Se incluye un componente spinner personalizado (<app-spinning2>) para indicar carga.
+  - Mensaje indicando que se está trabajando en la acción.
+
+  Cuando 'loading' es false:
+  - Se muestra el contenido principal del formulario para cargar tickets.
+  - Contenedor con estilos de espaciado y texto en color blanco.
+-->
 
 <div *ngIf="loading" class="d-flex justify-content-center align-items-center" style="height: 80vh;">
   <app-spinning2 class="m-3"></app-spinning2>
-   Estamos trabajando en ello..
+  Estamos trabajando en ello..
 </div>
 
 <div *ngIf="!loading" class="container py-4 mt-5 text-white">
 
+  <!--
+    Sección de alerta para mostrar mensajes de error si existen.
+    - El mensaje se muestra dentro de un alert Bootstrap con clase 'alert-danger'.
+    - Botón para cerrar la alerta, que limpia el mensaje de error al hacer click.
+  -->
   <div *ngIf="error" class="alert alert-danger mt-3">
-  {{ error }}
-  <button (click)="error = null" class="btn-close float-end"></button>
+    {{ error }}
+    <button (click)="error = null" class="btn-close float-end"></button>
   </div>
 
+  <!--
+    Sección para carga de archivos solo visible si el tipo es 'ticketimagen' o 'ticketdigital'.
+    - Título dinámico que muestra si es carga de ticket imagen o ticket digital.
+    - Input tipo file con filtro para imágenes y PDFs.
+  -->
   <div *ngIf="tipo === 'ticketimagen' || tipo === 'ticketdigital'">
     <h4>Cargar {{ tipo === 'ticketimagen' ? 'Ticket Imagen' : 'Ticket Digital' }}</h4>
 
     <input type="file" class="form-control mb-2" (change)="onFileSelected($event)" accept="image/*,.pdf">
 
+    <!--
+      Vista previa para archivos de tipo imagen:
+      - Se muestra la imagen en tamaño adaptable (img-fluid) con bordes redondeados y borde secundario.
+      - Solo aparece si hay un archivo seleccionado y su tipo incluye 'image'.
+    -->
     <div *ngIf="file && file.type.includes('image')" class="mb-3">
       <h5>Vista previa:</h5>
       <img [src]="imagePreview" class="img-fluid rounded border border-secondary" style="width: 100%">
     </div>
 
+    <!--
+      Indicador de archivo PDF o XML seleccionado:
+      - Se muestra un alert Bootstrap de tipo info.
+      - Icono indicando tipo archivo PDF.
+      - Muestra el nombre del archivo seleccionado.
+      - Solo visible si el archivo es PDF o XML.
+    -->
     <div *ngIf="file && (file.type.includes('pdf') || file.type.includes('xml') )" class="alert alert-info mb-3">
       <i class="bi bi-file-earmark-pdf"></i> Archivo PDF seleccionado: {{ file.name }}
     </div>
 
+    <!--
+      Botón para subir el archivo y proceder a la edición:
+      - Botón estilizado con clase 'btn-success'.
+      - Deshabilitado si no hay archivo seleccionado.
+      - Al hacer click ejecuta el método 'subirArchivoYEditar()'.
+    -->
     <button class="btn btn-success" (click)="subirArchivoYEditar()" [disabled]="!file">
       Subir y Editar
     </button>

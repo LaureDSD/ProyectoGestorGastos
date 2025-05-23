@@ -1,10 +1,27 @@
+<!--
+  Sección visible solo en pantallas medianas o grandes (>=768px).
+  Renderiza la barra de navegación principal (navbar) con el título "APP-GESTHOR".
+-->
 <div class="d-none d-md-block">
-  <app-navbar></app-navbar>
+  <app-navbar titulo="APP-GESTHOR"></app-navbar>
 </div>
+
+<!--
+  Sección visible solo en pantallas pequeñas (<768px).
+  Renderiza un componente de navegación adaptado para dispositivos móviles (tabvar).
+-->
 <div class="d-block d-md-none">
-  <app-tabvar
-  ></app-tabvar>
+  <app-tabvar></app-tabvar>
 </div>
+
+<!--
+  Componente de chat persistente, visible en todas las resoluciones.
+  Permite al usuario interactuar con funciones de chat integradas.
+-->
 <app-chat></app-chat>
 
+<!--
+  Punto de inserción de componentes de rutas hijas.
+  El contenido de las rutas cargadas dinámicamente se renderiza aquí.
+-->
 <router-outlet></router-outlet>

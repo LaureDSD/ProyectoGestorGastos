@@ -1,71 +1,96 @@
+<!-- Contenedor principal con fondo negro y texto blanco para toda la sección -->
 <div style=" background-color: rgb(0, 0, 0) ;  color: #ffffff;" >
 
+  <!-- Componente app-hero: Sección hero de bienvenida con título, texto y logo -->
   <app-hero
-  [title]="'Bienvenido a GesThor'"
-  [text]="'Optimiza y controla tus gastos con precisión, inteligencia artificial y seguridad.'"
-  logo="\icon\icon.png">
+    [title]="'Bienvenido a GesThor'"
+    [text]="'Optimiza y controla tus gastos con precisión, inteligencia artificial y seguridad.'"
+    logo="\icon\icon.png">
   </app-hero>
 
+  <!-- Componente app-image: Imagen destacada con texto explicativo -->
   <app-image
-  [src]="'/imgHD/luca-romano-3ciMh7Ck92s-unsplash.jpg'"
-  [alt]="'Descripcion'"
-  [text]="'Visualiza tus gastos, recibe recomendaciones y toma decisiones informadas con facilidad.'">
+    [src]="'/imgHD/luca-romano-3ciMh7Ck92s-unsplash.jpg'"
+    [alt]="'Descripcion'"
+    [text]="'Visualiza tus gastos, recibe recomendaciones y toma decisiones informadas con facilidad.'">
   </app-image>
 
+  <!-- Componente app-call-buttom: Llamada a la acción con texto dinámico, estilo y redirección -->
   <app-call-buttom
-  [title]="'¿Listo para dominar tus finanzas?'"
-  [text]= "usuarios+' Usuarios ya confían en GesThor para tomar el control de sus finanzas personales.'"
-  [buttomstyle]="1"
-  [buttomtext]="'Empezar ahora'"
-  [buttonredirect]="'/register'">
+    [title]="'¿Listo para dominar tus finanzas?'"
+    [text]= "usuarios+' Usuarios ya confían en GesThor para tomar el control de sus finanzas personales.'"
+    [buttomstyle]="1"
+    [buttomtext]="'Empezar ahora'"
+    [buttonredirect]="'/register'">
   </app-call-buttom>
 
+  <!-- Separador visual para organización de contenido -->
   <app-separator></app-separator>
 
-  <app-carrousel [imglist]="list" [imgSlide]="5"  [title]="'Compatible con dispositivos moviles'" [text]="'Accede desde cualquier lugar con la applicacion web compatible con Android e IOS'"></app-carrousel>
+  <!-- Componente app-carrousel: Carrusel de imágenes con lista dinámica, número de slides visibles, título y texto -->
+  <app-carrousel
+    [imglist]="list"
+    [imgSlide]="5"
+    [title]="'Compatible con dispositivos moviles'"
+    [text]="'Accede desde cualquier lugar con la applicacion web compatible con Android e IOS'">
+  </app-carrousel>
 
+  <!-- Separador para mantener la estructura limpia -->
   <app-separator></app-separator>
 
+  <!-- Componente app-section-left: Sección informativa con imagen a la izquierda -->
   <app-section-left
-  [title]="'Seguridad Avanzada'"
-  [text]="'Tus datos están cifrados, protegidos y solo tú tienes el control total de tu información.'"
-  [img]="'/img/_7f201f6d-59ab-4d2f-ba8c-34f3c9f61301.jpeg'">
+    [title]="'Seguridad Avanzada'"
+    [text]="'Tus datos están cifrados, protegidos y solo tú tienes el control total de tu información.'"
+    [img]="'/img/_7f201f6d-59ab-4d2f-ba8c-34f3c9f61301.jpeg'">
   </app-section-left>
 
+  <!-- Componente app-section-right: Sección informativa con imagen a la derecha -->
   <app-section-right
-  [title]="'Integración Multiplataforma'"
-  [text]="'Todos los datos accesibles desde la web, exporta datos y accede desde cualquier dispositivo.'"
-  [img]="'/img/_5a3cde26-bfd9-4a2e-b945-b925eaada5a7.jpeg'">
+    [title]="'Integración Multiplataforma'"
+    [text]="'Todos los datos accesibles desde la web, exporta datos y accede desde cualquier dispositivo.'"
+    [img]="'/img/_5a3cde26-bfd9-4a2e-b945-b925eaada5a7.jpeg'">
   </app-section-right>
 
+  <!-- Separador para estructura ordenada -->
   <app-separator></app-separator>
 
-
-
+  <!-- Componente app-section-cards: Sección que recibe una lista dinámica de tarjetas para mostrar -->
   <app-section-cards
-  [cardList] = "cardList">
+    [cardList] = "cardList">                                     <!-- Input con la lista de tarjetas a renderizar -->
   </app-section-cards>
 
+  <!-- Separador visual -->
   <app-separator></app-separator>
 
+  <!-- Componente app-section-right2: Variante de sección con imagen a la derecha -->
   <app-section-right2
-  [title]="'Automatización Inteligente'"
-  [text]="'GesThor aprende de ti y automatiza tareas para que ahorres tiempo y evites errores.*'"
-  [img]="'/img/_320e12e7-9ee9-4987-95be-7b12ffbbb4d3.jpeg'">
+    [title]="'Automatización Inteligente'"
+    [text]="'GesThor aprende de ti y automatiza tareas para que ahorres tiempo y evites errores.*'"
+    [img]="'/img/_320e12e7-9ee9-4987-95be-7b12ffbbb4d3.jpeg'">
   </app-section-right2>
 
+  <!-- Separador para separación visual -->
   <app-separator></app-separator>
 
-  <app-carrousel [imglist]="list2" [imgSlide]="2"  [title]="'Gestiona todos tus gastos desde cualquier lugar'" [text]="'Accede desde cuaqier navegador , Gesthor es compatible con CHROME, FIERFOX, OPERA y muchos mas..'" ></app-carrousel>
+  <!-- Segundo carrusel de imágenes con diferente configuración -->
+  <app-carrousel
+    [imglist]="list2"
+    [imgSlide]="2"
+    [title]="'Gestiona todos tus gastos desde cualquier lugar'"
+    [text]="'Accede desde cuaqier navegador , Gesthor es compatible con CHROME, FIERFOX, OPERA y muchos mas..'" >
+  </app-carrousel>
 
+  <!-- Separador para mantener la estructura -->
   <app-separator></app-separator>
 
+  <!-- Segunda llamada a la acción con estilo distinto -->
   <app-call-buttom
-  [title]="'Empieza Ahora'"
-  [text]="'Regístrate en minutos, configura tus categorías y empieza a gestionar como un profesional.'"
-  [buttomstyle]="2"
-  [buttomtext]="'Crear cuenta'"
-  [buttonredirect]="'/register'">
+    [title]="'Empieza Ahora'"
+    [text]="'Regístrate en minutos, configura tus categorías y empieza a gestionar como un profesional.'"
+    [buttomstyle]="2"
+    [buttomtext]="'Crear cuenta'"
+    [buttonredirect]="'/register'">                             
   </app-call-buttom>
 
 </div>

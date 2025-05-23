@@ -1,41 +1,79 @@
-<div class="mycontainer d-flex justify-content-center align-items-center vh-100" style="background-image: url('/imgHD/wall0.jpg');background-size: contains;">
+<!-- Contenedor principal centrado vertical y horizontalmente en la pantalla completa -->
+<div class="mycontainer d-flex justify-content-center align-items-center vh-100"
+     style="background-image: url('/imgHD/wall0.jpg'); background-size: contains;">
+
+  <!-- Caja del formulario de login con sombra, bordes redondeados y padding -->
   <div class="login-container shadow-lg rounded p-5">
+
+    <!-- Sección de encabezado con logo y título centrados -->
     <div class="text-center mb-5">
+      <!-- Logo de la aplicación -->
       <img src="/icon/gesthor1.png" alt="Logo" class="logo mb-5">
+      <!-- Título principal -->
       <h2 class="text-light">Iniciar sesión</h2>
     </div>
 
+    <!-- Formulario reactivo Angular ligado al FormGroup loginForm -->
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+      <!-- Campo para ingresar el nombre de usuario o email -->
       <div class="mb-3">
         <label for="username" class="form-label text-light">Usuario</label>
         <input id="username" placeholder="usuario/email" formControlName="username" class="form-control" />
       </div>
+
+      <!-- Campo para ingresar la contraseña -->
       <div class="mb-3">
         <label for="password" class="form-label text-light">Contraseña</label>
+
+        <!-- Grupo de entrada con input y botón para mostrar/ocultar contraseña -->
         <div class="input-group">
-          <input id="password" placeholder="contraseña" [type]="passwordVisible ? 'text' : 'password'" formControlName="password" class="form-control" />
+          <!-- Input de contraseña cuyo tipo cambia dinámicamente según passwordVisible -->
+          <input id="password" placeholder="contraseña"
+                 [type]="passwordVisible ? 'text' : 'password'"
+                 formControlName="password" class="form-control" />
+
+          <!-- Botón para alternar visibilidad de la contraseña -->
           <button type="button" class="btn btn-outline-light" (click)="togglePasswordVisibility()">
+            <!-- Texto dinámico: 'O' para visible, 'M' para oculto -->
             <span>{{ passwordVisible ? 'O' : 'M' }}</span>
           </button>
         </div>
 
+        <!-- Mensaje y enlace para recuperación de contraseña, visible solo si hay error -->
         <div *ngIf="error" class="mt-2 ">
-          <a routerLink="/forgot-password" class="text-decoration-none text-primary small">¿Problemas al iniciar sesión?</a>
+          <a routerLink="/forgot-password" class="text-decoration-none text-primary small">
+            ¿Problemas al iniciar sesión?
+          </a>
         </div>
       </div>
+
+      <!-- Botón de envío deshabilitado durante carga -->
       <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="isLoading">Entrar</button>
+
+      <!-- Mensaje de error visible debajo del botón si existe error -->
       <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
     </form>
 
+    <!-- Botones para login con proveedores externos OAuth2: Google y GitHub -->
     <div class="d-flex justify-content-center gap-3 mt-2">
-      <button class="btn btn-light rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;" (click)="loginGoogle()">
-        <img  src="/icon/icons8-google-48.png" alt="Google" style="width: 30px;" />
+      <!-- Botón Google -->
+      <button class="btn btn-light rounded-circle d-flex align-items-center justify-content-center"
+              style="width: 40px; height: 40px;" (click)="loginGoogle()">
+        <img src="/icon/icons8-google-48.png" alt="Google" style="width: 30px;" />
       </button>
-      <button class="btn btn-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;" (click)="loginGitHub()">
-        <img src="/icon/git2.png" alt="GitHub" style="width: 70px;"  />
+
+      <!-- Botón GitHub -->
+      <button class="btn btn-dark rounded-circle d-flex align-items-center justify-content-center"
+              style="width: 40px; height: 40px;" (click)="loginGitHub()">
+        <img src="/icon/git2.png" alt="GitHub" style="width: 70px;" />
       </button>
     </div>
 
-    <p class="mt-5 mb-3 text-center text-light">¿No tienes cuenta? <a routerLink="/register" class="text-decoration-none text-primary">Regístrate</a></p>
+    <!-- Enlace para registro de nuevos usuarios -->
+    <p class="mt-5 mb-3 text-center text-light">
+      ¿No tienes cuenta?
+      <a routerLink="/register" class="text-decoration-none text-primary">Regístrate</a>
+    </p>
   </div>
 </div>

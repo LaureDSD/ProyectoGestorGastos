@@ -1,17 +1,26 @@
-// Duplicate import removed
-
+/**
+ * Módulo principal de la aplicación Angular.
+ *
+ * Este módulo centraliza la configuración principal de la app,
+ * declarando todos los componentes, pipes y módulos necesarios,
+ * además de proveer servicios globales y configuraciones de interceptores HTTP.
+ *
+ * NOTA: Se eliminó un import duplicado para mantener la limpieza.
+ */
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AppRoutingModule } from './app-routing.module';
+
+import { AppRoutingModule } from './app-routing.module'; // Módulo de rutas de la aplicación
+
+// Componentes principales de la aplicación
 import { AppComponent } from './app.component';
 import { LoginComponent } from './security/login/login.component';
 import { RegisterComponent } from './security/register/register.component';
 import { DashboardComponent } from './pages/private/dashboard/dashboard.component';
 import { OAuth2RedirectComponent } from './security/oauth2-redirect/oauth2-redirect.component';
-import { TokenInterceptor } from './interceptors/token.interceptor';
 import { HomeComponent } from './pages/protected/home/home.component';
 import { ForgotPasswordComponent } from './security/forgot-password/forgot-password.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -50,7 +59,7 @@ import { EditFormPasswordComponent } from './components/edit-form-password/edit-
 import { GastosComponent } from './pages/protected/gastos/gastos.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { FormHerramientaComponent } from './pages/protected/form-herramienta/form-herramienta.component';
-import { NgChartsModule } from 'ng2-charts';
+import { NgChartsModule } from 'ng2-charts'; // Módulo para gráficos (charts)
 import { HerramientaComponent } from './pages/protected/herramienta/herramienta.component';
 import { FiltroHerramientaComponent } from './pages/protected/filtro-herramienta/filtro-herramienta.component';
 import { ToolGroupComponent } from './components/tool-group/tool-group.component';
@@ -60,7 +69,15 @@ import { FormProductosComponent } from './components/form-productos/form-product
 import { GastoDetalleComponent } from './components/gasto-detalle/gasto-detalle.component';
 import { Spinning2Component } from './components/spinning2/spinning2.component';
 
+// Interceptor para añadir tokens de autenticación en las peticiones HTTP
+import { TokenInterceptor } from './interceptors/token.interceptor';
+
 @NgModule({
+  /**
+   * Declaraciones:
+   * Lista todos los componentes, directivas y pipes que pertenecen a este módulo.
+   * Estos elementos podrán ser usados en las plantillas de los componentes declarados.
+   */
   declarations: [
     AppComponent,
     LoginComponent,
@@ -112,20 +129,40 @@ import { Spinning2Component } from './components/spinning2/spinning2.component';
     ModelsComponent,
     FormProductosComponent,
     GastoDetalleComponent,
-    Spinning2Component,
+    Spinning2Component
   ],
+
+  /**
+   * Imports:
+   * Importa módulos externos necesarios para que los componentes de este módulo funcionen correctamente.
+   */
   imports: [
-    BrowserModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    AppRoutingModule,
-    FormsModule,
-    NgChartsModule,
-    SecondsToHmsPipe
-],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }
+    BrowserModule,       // Módulo necesario para ejecutar la app en navegador
+    HttpClientModule,    // Para hacer peticiones HTTP
+    ReactiveFormsModule, // Para formularios reactivos (FormBuilder, validaciones, etc)
+    AppRoutingModule,    // Módulo de rutas definido por el usuario
+    FormsModule,         // Formularios template-driven
+    NgChartsModule,      // Módulo para gráficos
+    NgChartsModule,      // Módulo para gráficos
+    SecondsToHmsPipe,    // Importar el pipe standalone
   ],
+  /**
+   * Providers:
+   * Servicios e interceptores inyectables globalmente en la app.
+   * Aquí se registra el interceptor que añade el token de autenticación a las peticiones HTTP.
+   */
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor, // Clase interceptor para manejar tokens JWT
+      multi: true                 // Permite múltiples interceptores
+    }
+  ],
+
+  /**
+   * Bootstrap:
+   * Componente raíz que Angular arranca al iniciar la aplicación.
+   */
   bootstrap: [AppComponent]
 })
 export class AppModule { }

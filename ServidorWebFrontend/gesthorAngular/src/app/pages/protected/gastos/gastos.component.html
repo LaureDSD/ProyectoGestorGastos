@@ -1,102 +1,128 @@
+<!--
+  Contenedor principal para la sección de Información de Gastos con estilos de padding y margen
+  Clase container de Bootstrap para layout responsivo con padding vertical y margen inferior y superior
+-->
 <div class="container py-4 mb-5 mt-5 pb-5">
 
-  <!-- Suscripciones activas -->
-
-
+  <!-- Fila principal que contiene las columnas izquierda (gráfico y filtros) y derecha (detalle y tabla) -->
   <div class="row">
 
+    <!-- Título principal de la sección -->
     <h3 class="text-light">Información de gastos</h3>
 
-    <!-- Columna izquierda: gráfico y filtros -->
+    <!-- Columna izquierda: contiene gráfico de barras y lista de suscripciones activas -->
     <aside class="col-md-4 mb-4">
+
+      <!-- Tarjeta que contiene el gráfico, con sombras, fondo oscuro y texto blanco -->
       <div class="card shadow-sm bg-dark text-white mb-4">
         <div class="card-body">
 
-
+          <!-- Contenedor flex para controles de navegación por año -->
           <div class="d-flex justify-content-between align-items-center mb-3">
+            <!-- Botón para retroceder un año, deshabilitado si no se puede navegar -->
             <button class="btn btn-outline-light" (click)="changeYear(-1)" [disabled]="!canNavigateYear(-1)">
               &larr;
             </button>
+
+            <!-- Título con el año activo -->
             <h4 class="mb-0">Año {{ activeYear }}</h4>
+
+            <!-- Botón para avanzar un año, deshabilitado si no se puede navegar -->
             <button class="btn btn-outline-light" (click)="changeYear(1)" [disabled]="!canNavigateYear(1)">
               &rarr;
             </button>
           </div>
 
-
+          <!-- Contenedor con altura fija para el gráfico de barras -->
           <div style="height: 300px;">
+            <!-- Componente canvas para gráfico usando baseChart de ng2-charts -->
             <canvas baseChart
                     [data]="chartData"
                     [type]="'bar'"
                     [options]="{ responsive: true, maintainAspectRatio: false }">
             </canvas>
           </div>
-
-
         </div>
       </div>
 
-        <section class="mb-5">
-          <h4 class="mb-3 text-white">Suscripciones activas</h4>
+      <!-- Sección para mostrar las suscripciones activas -->
+      <section class="mb-5">
+        <h4 class="mb-3 text-white">Suscripciones activas</h4>
 
-          <div class="card border-0 shadow mb-4" style="background-color: #1e1e1e;">
-            <div class="card-body p-0">
-              <div *ngIf="activeSubscriptions.length; else noSubs">
-                <div class="list-group list-group-flush">
-                  <div *ngFor="let sub of activeSubscriptions"
-                      class="list-group-item bg-dark text-white d-flex justify-content-between align-items-center border-bottom border-secondary p-3 hover-effect">
+        <!-- Tarjeta para lista de suscripciones, sin borde y con sombra, fondo personalizado -->
+        <div class="card border-0 shadow mb-4" style="background-color: #1e1e1e;">
+          <div class="card-body p-0">
 
-                    <div (click)="redirectToSubscription(sub.spentId)" class="d-flex flex-column w-100">
-                      <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="mb-0 text-info">{{ sub.name }}</h5>
-                        <span class="badge bg-info text-dark rounded-pill fs-6 px-3 py-1">
-                            {{  sub.total  }}€
-                        </span>
-                      </div>
+            <!-- Mostrar lista solo si hay suscripciones activas -->
+            <div *ngIf="activeSubscriptions.length; else noSubs">
 
-                      <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-light">
-                          <i class="bi bi-arrow-repeat me-1 text-secondary"></i>
-                          Renovación: {{ getFechaRenovacion(sub) | date:'mediumDate' }}
-                        </small>
-                      </div>
+              <!-- Lista Bootstrap sin borde para items -->
+              <div class="list-group list-group-flush">
+
+                <!-- Iteración sobre las suscripciones activas -->
+                <div *ngFor="let sub of activeSubscriptions"
+                    class="list-group-item bg-dark text-white d-flex justify-content-between align-items-center border-bottom border-secondary p-3 hover-effect">
+
+                  <!-- Contenedor clicable que redirige a detalles de la suscripción -->
+                  <div (click)="redirectToSubscription(sub.spentId)" class="d-flex flex-column w-100">
+
+                    <!-- Fila con nombre y total del gasto -->
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <h5 class="mb-0 text-info">{{ sub.name }}</h5> <!-- Nombre suscripción -->
+                      <span class="badge bg-info text-dark rounded-pill fs-6 px-3 py-1">
+                        {{  sub.total  }}€
+                      </span> <!-- Total gastado en suscripción -->
+                    </div>
+
+                    <!-- Fila con fecha de renovación formateada -->
+                    <div class="d-flex justify-content-between align-items-center">
+                      <small class="text-light">
+                        <i class="bi bi-arrow-repeat me-1 text-secondary"></i> <!-- Icono de renovación -->
+                        Renovación: {{ getFechaRenovacion(sub) | date:'mediumDate' }}
+                      </small>
                     </div>
 
                   </div>
+
                 </div>
               </div>
 
-              <ng-template #noSubs>
-                <div class="text-center p-5">
-                  <i class="bi bi-calendar-x text-secondary" style="font-size: 2.5rem;"></i>
-                  <p class="text-muted mt-3 mb-0 fst-italic">No hay suscripciones activas</p>
-                </div>
-              </ng-template>
             </div>
+
+            <!-- Plantilla alternativa si no hay suscripciones activas -->
+            <ng-template #noSubs>
+              <div class="text-center p-5">
+                <i class="bi bi-calendar-x text-secondary" style="font-size: 2.5rem;"></i>
+                <p class="text-muted mt-3 mb-0 fst-italic">No hay suscripciones activas</p>
+              </div>
+            </ng-template>
+
           </div>
+        </div>
 
-
-  </section>
-
+      </section>
 
     </aside>
 
-    <!-- Columna derecha: tabla con detalle -->
+    <!-- Columna derecha: contiene tabla con detalle de gastos y filtros -->
     <section class="col-md-8">
       <div class="card shadow-sm bg-dark text-white">
         <div class="card-body">
 
-         <ul class="nav nav-tabs mb-3 bg-dark">
-          <li class="nav-item" *ngFor="let type of typeExpenses">
-            <a class="nav-link text-white"
-              [class.active]="activeType === type"
-              [class.bg-secondary]="activeType === type"
-              (click)="setType(type)">
-              {{ type }}
-            </a>
-          </li>
-        </ul>
+          <!-- Navegación tipo pestañas para seleccionar tipo de gasto -->
+          <ul class="nav nav-tabs mb-3 bg-dark">
+            <!-- Iteración sobre tipos de gastos para crear pestañas -->
+            <li class="nav-item" *ngFor="let type of typeExpenses">
+              <a class="nav-link text-white"
+                [class.active]="activeType === type"
+                [class.bg-secondary]="activeType === type"
+                (click)="setType(type)">
+                {{ type }}
+              </a>
+            </li>
+          </ul>
 
+          <!-- Filtro de búsqueda solo si el tipo activo no es "ALL" -->
           <div class="mb-3" *ngIf="activeType !== 'ALL'">
             <label for="searchInput" class="form-label">Buscar en todos los campos:</label>
             <input
@@ -109,37 +135,49 @@
             />
           </div>
 
-       <div class="table-responsive">
-          <table class="table table-dark table-striped table-hover">
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Nombre</th>
-                <th>Total</th>
-                <th>Tipo</th>
-              </tr>
-            </thead>
-            <tbody>
-              <ng-container *ngFor="let s of filteredSpents; let i = index">
-                <tr (click)="toggleDetalle(i)">
-                  <td>{{ s.fechaCompra | date: 'shortDate' }}</td>
-                  <td class="text-info">{{ s.name }}</td>
-                  <td>{{ s.total }}€</td>
-                  <td>{{ s.typeExpense }}</td>
+          <!-- Tabla responsiva con estilos oscuros, rayada y hover -->
+          <div class="table-responsive">
+            <table class="table table-dark table-striped table-hover">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Nombre</th>
+                  <th>Total</th>
+                  <th>Tipo</th>
                 </tr>
-                <tr *ngIf="mostrarDetalle(i)">
-                  <td colspan="5" class="p-0">
-                    <app-gasto-detalle [gasto]="s"></app-gasto-detalle>
-                  </td>
-                </tr>
-              </ng-container>
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
 
+                <!-- Iteración sobre gastos filtrados con índice -->
+                <ng-container *ngFor="let s of filteredSpents; let i = index">
+
+                  <!-- Fila resumen de gasto que es clicable para mostrar detalle -->
+                  <tr (click)="toggleDetalle(i)">
+                    <td>{{ s.fechaCompra | date: 'shortDate' }}</td>  <!-- Fecha de compra formateada -->
+                    <td class="text-info">{{ s.name }}</td>            <!-- Nombre del gasto -->
+                    <td>{{ s.total }}€</td>                             <!-- Total gastado -->
+                    <td>{{ s.typeExpense }}</td>                         <!-- Tipo de gasto -->
+                  </tr>
+
+                  <!-- Fila detalle expandida si corresponde -->
+                  <tr *ngIf="mostrarDetalle(i)">
+                    <td colspan="5" class="p-0">
+                      <!-- Componente anidado para mostrar detalle del gasto -->
+                      <app-gasto-detalle [gasto]="s"></app-gasto-detalle>
+                    </td>
+                  </tr>
+
+                </ng-container>
+
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Mensaje cuando no hay datos que mostrar -->
           <p *ngIf="!filteredSpents.length" class="text-center text-muted fst-italic mt-4">
             No hay datos para mostrar.
           </p>
+
         </div>
       </div>
     </section>

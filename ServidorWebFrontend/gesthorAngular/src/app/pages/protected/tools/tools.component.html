@@ -1,9 +1,43 @@
+<!--
+  Contenedor principal con padding vertical y margen superior.
+  El margen inferior se establece manualmente para evitar solapamiento con elementos fijos como un footer.
+-->
 <div class="container py-4 mt-5" style="margin-bottom: 100px;">
+
+  <!--
+    Título principal de la sección de herramientas de usuario.
+    Se aplica un margen superior adicional y color de texto claro.
+  -->
   <h3 style="margin-top: 5%;" class="text-light">Herramientas de usuario</h3>
+
+  <!--
+    Separador visual con margen personalizado (2rem arriba y abajo).
+    Mejora la separación entre bloques de contenido.
+  -->
   <app-separator margin="2rem 0"></app-separator>
+
+  <!--
+    Primer grupo de herramientas (herramientas de carga).
+    Se inyecta el arreglo de herramientas mediante property binding.
+  -->
   <app-tool-group [herramientas]="herramientas"></app-tool-group>
+
+  <!-- Separador entre grupos de herramientas -->
   <app-separator margin="2rem 0"></app-separator>
+
+  <!--
+    Segundo grupo de herramientas (herramientas de creación).
+    Contiene acciones como crear ticket, gasto o suscripción.
+  -->
   <app-tool-group [herramientas]="herramientas1"></app-tool-group>
+
+  <!-- Separador entre grupos de herramientas -->
   <app-separator margin="2rem 0"></app-separator>
+
+  <!--
+    Tercer grupo de herramientas (herramientas de gestión).
+    Permite editar o eliminar elementos existentes como tickets, gastos o suscripciones.
+  -->
   <app-tool-group [herramientas]="herramientas2"></app-tool-group>
+
 </div>

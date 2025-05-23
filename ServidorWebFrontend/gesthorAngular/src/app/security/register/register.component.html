@@ -1,49 +1,92 @@
+<!--
+  Plantilla HTML para el componente de registro de usuarios.
+
+  Estructura:
+  - Contenedor principal centrado vertical y horizontalmente con
+    una imagen de fondo (wall0.jpg) ajustada mediante CSS.
+  - Caja de formulario con sombra y bordes redondeados para el registro.
+  - Logo y título centrados en la parte superior.
+  - Formulario reactivo ligado a 'registerForm' con validaciones.
+  - Campos de usuario, nombre, email, contraseña y confirmación de contraseña.
+  - Botones para alternar visibilidad de contraseñas.
+  - Mensajes de error visibles condicionados a validaciones:
+    * Contraseñas no coinciden.
+    * Contraseña débil (seguridad insuficiente).
+  - Botón de envío deshabilitado durante la carga.
+  - Enlace para redirigir a la página de inicio de sesión.
+
+  Clases Bootstrap y estilos propios aplicados para apariencia y
+  responsividad.
+-->
+
 <div class="mycontainer d-flex justify-content-center align-items-center vh-100" style="background-image: url('/imgHD/wall0.jpg');background-size: contains;">
   <div class="login-container shadow-lg rounded p-5">
+    <!-- Logo y título -->
     <div class="text-center mb-5">
       <img src="/icon/gesthor1.png" alt="Logo" class="logo mb-5">
       <h2 class="text-light">Registrarse</h2>
     </div>
 
+    <!-- Formulario de registro enlazado a FormGroup 'registerForm' -->
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+      <!-- Campo Usuario -->
       <div class="mb-3">
         <label for="username" class="form-label text-light">Usuario</label>
         <input id="username" placeholder="usuario" formControlName="username" class="form-control" />
       </div>
+
+      <!-- Campo Nombre -->
       <div class="mb-3">
         <label for="name" class="form-label text-light">Tu nombre</label>
         <input id="name" placeholder="Nombre completo" formControlName="name" class="form-control" />
       </div>
+
+      <!-- Campo Email -->
       <div class="mb-3">
         <label for="email" class="form-label text-light">Email</label>
         <input id="email" placeholder="correo@gesthor.me" formControlName="email" class="form-control" />
       </div>
+
+      <!-- Campo Contraseña con toggle visibilidad -->
       <div class="mb-3">
         <label for="password" class="form-label text-light">Contraseña</label>
         <div class="input-group">
           <input id="password" placeholder="contraseña" [type]="passwordVisible ? 'text' : 'password'" formControlName="password" class="form-control" />
-          <button type="button"  class="btn btn-outline-light" (click)="togglePasswordVisibility()">
+          <button type="button" class="btn btn-outline-light" (click)="togglePasswordVisibility()">
             <span>{{ passwordVisible ? 'O' : 'M' }}</span>
           </button>
         </div>
       </div>
 
+      <!-- Campo Confirmar contraseña con toggle visibilidad -->
       <div class="mb-3">
         <label for="confirmPassword" class="form-label text-light">Confirmar contraseña</label>
         <div class="input-group">
           <input id="confirmPassword" placeholder="contraseña" [type]="passwordVisibleConfirm ? 'text' : 'password'" formControlName="confirmPassword" class="form-control" />
-          <button type="button"  class="btn btn-outline-light" (click)="togglePasswordVisibilityConfirm()">
+          <button type="button" class="btn btn-outline-light" (click)="togglePasswordVisibilityConfirm()">
             <span>{{ passwordVisibleConfirm ? 'O' : 'M' }}</span>
           </button>
         </div>
       </div>
 
-      <div *ngIf="passwordsMismatch" class="alert alert-danger">Las contraseñas no coinciden.</div>
-      <div *ngIf="weakPassword" class="alert alert-warning">La contraseña no es segura.{{error}}</div>
+      <!-- Mensaje de error para contraseñas no coincidentes -->
+      <div *ngIf="passwordsMismatch" class="alert alert-danger">
+        Las contraseñas no coinciden.
+      </div>
 
-      <button type="submit" class="btn btn-primary w-100" [disabled]="isLoading">Registrar</button>
+      <!-- Mensaje de advertencia para contraseña débil -->
+      <div *ngIf="weakPassword" class="alert alert-warning">
+        La contraseña no es segura.{{error}}
+      </div>
+
+      <!-- Botón de envío, deshabilitado mientras isLoading sea true -->
+      <button type="submit" class="btn btn-primary w-100" [disabled]="isLoading">
+        Registrar
+      </button>
     </form>
 
+    <!-- Enlace para redirigir a login si ya tiene cuenta -->
     <p class="mt-5 mb-3 text-center text-light">
       ¿Ya tienes cuenta?
       <a routerLink="/login" class="text-decoration-none text-primary">Iniciar sesión</a>

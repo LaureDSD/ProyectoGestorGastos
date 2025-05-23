@@ -6,6 +6,11 @@ import { BaseSpentDto } from '../../../models/api-models/api-models.component';
 import { CategoryService } from '../../../services/categories.service';
 import { CategoryDto } from '../../../models/api-models/api-models.component';
 
+/**
+ * Componente principal de la vista de inicio.
+ * Encargado de cargar datos del usuario autenticado, gastos y categorías,
+ * y generar múltiples visualizaciones (gráficos) basadas en esos datos.
+ */
 @Component({
   selector: 'app-home',
   standalone: false,
@@ -13,15 +18,21 @@ import { CategoryDto } from '../../../models/api-models/api-models.component';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+
+  /** Últimos gastos ordenados por fecha */
   ultimosGastos: BaseSpentDto[] = [];
+
+  /** Lista de categorías obtenidas desde el backend */
   categorias: CategoryDto[] = [];
+
+  /** Secciones visuales controladas por botones (visibilidad true/false) */
   secciones: any = [
     ["mapas", "mapa", true],
     ["monstruos", "monstruo", true],
     ["items", "item", true]
   ];
 
-  // Donut chart: Estimado vs Real
+  /** Datos para el gráfico tipo Donut que muestra media semanal vs total semanal */
   donutChartData: ChartConfiguration<'doughnut'>['data'] = {
     labels: ['Media semanal', 'Total semanal'],
     datasets: [{
@@ -31,7 +42,7 @@ export class HomeComponent implements OnInit {
     }]
   };
 
-  // Monthly bar chart (top 6 categorías + otros)
+  /** Gráfico de barras con las 6 categorías con más gasto + categoría 'Otros' */
   monthlyChartData: ChartConfiguration<'bar'>['data'] = {
     labels: [],
     datasets: [
@@ -43,7 +54,7 @@ export class HomeComponent implements OnInit {
     ]
   };
 
-  // Full categories donut chart
+  /** Gráfico Donut de todas las categorías, mostrando proporción del gasto */
   fullCategoriesChartData: ChartConfiguration<'doughnut'>['data'] = {
     labels: [],
     datasets: [{
@@ -53,7 +64,7 @@ export class HomeComponent implements OnInit {
     }]
   };
 
-  // Weekly line chart
+  /** Gráfico de líneas con gasto diario de la última semana */
   weeklyChartData: ChartConfiguration<'line'>['data'] = {
     labels: [],
     datasets: [
@@ -67,7 +78,7 @@ export class HomeComponent implements OnInit {
     ]
   };
 
-  // Dark mode chart options
+  /** Configuración de estilos para gráficos en modo oscuro */
   darkChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     plugins: {
@@ -90,6 +101,7 @@ export class HomeComponent implements OnInit {
     }
   };
 
+  /** Controla la visualización del gráfico completo de categorías */
   showFullCategories = false;
 
   constructor(
@@ -98,16 +110,16 @@ export class HomeComponent implements OnInit {
     private categoryService: CategoryService
   ) {}
 
+  /** Hook de inicialización del componente. Carga los datos necesarios. */
   ngOnInit() {
     this.cargarDatos();
   }
 
+  /** Obtiene categorías y luego los gastos desde los servicios y actualiza gráficos */
   cargarDatos() {
-    // Cargar categorías primero
     this.categoryService.getCategories().subscribe(cats => {
       this.categorias = cats;
 
-      // Luego cargar gastos
       this.spentService.getSpents().subscribe(gastos => {
         this.ultimosGastos = gastos.sort((a, b) => new Date(b.fechaCompra).getTime() - new Date(a.fechaCompra).getTime());
         this.actualizarGraficos(gastos);
@@ -115,6 +127,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  /** Actualiza todos los gráficos con los gastos proporcionados */
   actualizarGraficos(gastos: BaseSpentDto[]) {
     this.actualizarDonutChart(gastos);
     this.actualizarMonthlyChart(gastos);
@@ -122,6 +135,9 @@ export class HomeComponent implements OnInit {
     this.actualizarFullCategoriesChart(gastos);
   }
 
+  /**
+   * Actualiza el gráfico Donut semanal con media y total de los últimos 7 días
+   */
   actualizarDonutChart(gastos: BaseSpentDto[]) {
     const sieteDiasAtras = new Date();
     sieteDiasAtras.setDate(sieteDiasAtras.getDate() - 7);
@@ -142,15 +158,15 @@ export class HomeComponent implements OnInit {
         hoverBackgroundColor: ['#2C9AB7', '#CC527A']
       }]
     };
-
-
-
   }
 
+  /**
+   * Actualiza el gráfico de barras agrupando por categoría,
+   * muestra las 6 con mayor gasto y agrupa el resto como "Otros".
+   */
   actualizarMonthlyChart(gastos: BaseSpentDto[]) {
     const gastosPorCategoria: {[key: number]: {total: number, name: string}} = {};
 
-    // Inicializar todas las categorías conocidas
     this.categorias.forEach(cat => {
       gastosPorCategoria[cat.id] = {
         total: 0,
@@ -158,7 +174,6 @@ export class HomeComponent implements OnInit {
       };
     });
 
-    // Sumar gastos por categoría
     gastos.forEach(gasto => {
       if (gastosPorCategoria[gasto.categoriaId]) {
         gastosPorCategoria[gasto.categoriaId].total += gasto.total;
@@ -170,24 +185,19 @@ export class HomeComponent implements OnInit {
       }
     });
 
-    // Ordenar por total y separar top 6 y otros
-    const categoriasOrdenadas = Object.values(gastosPorCategoria)
-      .sort((a, b) => b.total - a.total);
-
+    const categoriasOrdenadas = Object.values(gastosPorCategoria).sort((a, b) => b.total - a.total);
     const topCategorias = categoriasOrdenadas.slice(0, 6);
     const otrasCategorias = categoriasOrdenadas.slice(6);
     const totalOtros = otrasCategorias.reduce((sum, cat) => sum + cat.total, 0);
 
-    // Preparar datos para el gráfico
     const labels = topCategorias.map(c => c.name);
     const data = topCategorias.map(c => c.total);
     const backgroundColors = topCategorias.map((_, i) => this.getChartColor(i));
 
-
     if (otrasCategorias.length > 0) {
       labels.push('Otros');
       data.push(totalOtros);
-      backgroundColors.push('#6c757d'); // Color gris para "Otros"
+      backgroundColors.push('#6c757d');
     }
 
     this.monthlyChartData = {
@@ -200,6 +210,9 @@ export class HomeComponent implements OnInit {
     };
   }
 
+  /**
+   * Genera un gráfico Donut que muestra el gasto total por cada categoría.
+   */
   actualizarFullCategoriesChart(gastos: BaseSpentDto[]) {
     const gastosPorCategoria: {[key: number]: {total: number, name: string}} = {};
 
@@ -221,8 +234,7 @@ export class HomeComponent implements OnInit {
       }
     });
 
-    const categoriasOrdenadas = Object.values(gastosPorCategoria)
-      .sort((a, b) => b.total - a.total);
+    const categoriasOrdenadas = Object.values(gastosPorCategoria).sort((a, b) => b.total - a.total);
 
     this.fullCategoriesChartData = {
       labels: categoriasOrdenadas.map(c => c.name),
@@ -234,6 +246,9 @@ export class HomeComponent implements OnInit {
     };
   }
 
+  /**
+   * Construye el gráfico de líneas para los gastos diarios en los últimos 7 días.
+   */
   actualizarWeeklyChart(gastos: BaseSpentDto[]) {
     const hoy = new Date();
     const diasSemana = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
@@ -268,6 +283,10 @@ export class HomeComponent implements OnInit {
     };
   }
 
+  /**
+   * Cambia la visibilidad de las secciones según el botón pulsado.
+   * Si se pulsa 'todo', se activan todas las secciones.
+   */
   pulsarBoton(buttonName: string) {
     if (buttonName === 'todo') {
       this.secciones.forEach((seccion: any) => {
@@ -284,15 +303,25 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  /** Alterna la visualización del gráfico de todas las categorías */
   toggleFullCategories() {
     this.showFullCategories = !this.showFullCategories;
   }
 
+  /**
+   * Retorna el nombre de una categoría dado su ID
+   * @param id ID de la categoría
+   */
   getNombreCategoria(id: number): string {
     const categoria = this.categorias.find(c => c.id === id);
     return categoria ? categoria.name : `Categoría ${id}`;
   }
 
+  /**
+   * Devuelve un color del array predefinido basado en un índice,
+   * útil para asignar colores únicos por categoría o dataset.
+   * @param index Índice del color a usar
+   */
   getChartColor(index: number): string {
     const colors = [
       '#8800f6', '#00b0f6', '#f68700', '#dc3545',

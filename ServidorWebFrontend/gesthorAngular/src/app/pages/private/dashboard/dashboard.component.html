@@ -1,93 +1,108 @@
-<div class="container mt-5 mb-5" >
+<!-- Contenedor principal de la vista de perfil -->
+<div class="container mt-5 mb-5">
   <div class="row" style="margin-top: 10%;">
 
-    <!-- <h1 style="color: aliceblue;"> {{user | json}}  </h1> -->
-
+    <!-- Sección izquierda: Gestión de perfil -->
     <div class="col-md-6">
+
+      <!-- Título de la sección -->
       <h3 class="text-light">Gestión de Perfil</h3>
       <h5 class="mt-4 text-light">Datos de Perfil</h5>
+
+      <!-- Lista de elementos del perfil con estilo personalizado -->
       <ul class="list-group mb-3" style="box-shadow: 5px 5px 17px 10px Black;">
 
-      <app-edit-form-profile
-        [img]="user.imageUrl"
-        field="imageUrl"
-        icon = "icon/icons8-pencil.gif"
-        (save)="updateImg($event)"
-        defaultImg ='/icon/icons8-cuenta-de-prueba-100.png'
-      ></app-edit-form-profile>
+        <!-- Componente para edición de imagen de perfil -->
+        <app-edit-form-profile
+          [img]="user.imageUrl"
+          field="imageUrl"
+          icon="icon/icons8-pencil.gif"
+          (save)="updateImg($event)"
+          defaultImg="/icon/icons8-cuenta-de-prueba-100.png"
+        ></app-edit-form-profile>
 
-      <!--Datos de perfil-->
+        <!-- Componente para editar el nombre de usuario -->
+        <app-edit-form
+          label="Nombre de Usuario"
+          field="username"
+          [value]="user.username"
+          (save)="guardarCampo($event)"
+        ></app-edit-form>
 
-      <app-edit-form
-        label="Nombre de Usuario"
-        field="username"
-        [value]="user.username"
-        (save)="guardarCampo($event)"
-      ></app-edit-form>
+        <!-- Componente para editar el nombre público -->
+        <app-edit-form
+          label="Nombre Público"
+          field="name"
+          [value]="user.name"
+          (save)="guardarCampo($event)"
+        ></app-edit-form>
 
-      <app-edit-form
-        label="Nombre Público"
-        field="name"
-        [value]="user.name"
-        (save)="guardarCampo($event)"
-      ></app-edit-form>
+        <!-- Componente para editar el correo electrónico -->
+        <app-edit-form
+          label="Correo Electrónico"
+          field="email"
+          [value]="user.email"
+          (save)="guardarCampo($event)"
+        ></app-edit-form>
 
-      <app-edit-form
-        label="Correo Electrónico"
-        field="email"
-        [value]="user.email"
-        (save)="guardarCampo($event)"
-      ></app-edit-form>
+        <!-- Componente para editar el teléfono -->
+        <app-edit-form
+          label="Teléfono"
+          field="phone"
+          [value]="user.phone"
+          (save)="guardarCampo($event)"
+        ></app-edit-form>
 
-      <app-edit-form
-        label="Teléfono"
-        field="phone"
-        [value]="user.phone"
-        (save)="guardarCampo($event)"
-      ></app-edit-form>
+        <!-- Componente para editar la dirección -->
+        <app-edit-form
+          label="Dirección"
+          field="address"
+          [value]="user.address"
+          (save)="guardarCampo($event)"
+        ></app-edit-form>
 
-      <app-edit-form
-        label="Dirección"
-        field="address"
-        [value]="user.address"
-        (save)="guardarCampo($event)"
-      ></app-edit-form>
+        <!-- Controles de sesión y navegación de perfil -->
+        <li class="list-group-item bg-dark text-light justify-content-between align-items-center border-secondary">
+          <button class="btn btn-outline-light btn-sm" (click)="borrarToken()">Desconectarse</button>
+          <button class="btn btn-outline-light btn-sm ms-3" [disabled]=true (click)="redirectTo('/private/setings')">Ajustes</button>
+          <button *ngIf="user.role == 'ADMIN'" class="btn btn-outline-light btn-sm ms-3" [disabled]=false (click)="redirectTo('/private/admindashboard')">Admin</button>
+        </li>
 
-      <li  class="list-group-item bg-dark text-light  justify-content-between align-items-center border-secondary">
-        <button class="btn btn-outline-light btn-sm "  (click)="borrarToken()">Desconectarse</button>
-        <button class="btn btn-outline-light btn-sm ms-3"  [disabled] = true (click)="redirectTo('/private/setings')">Ajustes</button>
-        <button *ngIf="user.role == 'ADMIN'" class="btn btn-outline-light btn-sm ms-3"  [disabled] = false (click)="redirectTo('/private/admindashboard')">Admin</button>
-      </li>
+      </ul>
 
-    </ul>
+      <!-- Sección de seguridad -->
       <h5 class="mt-4 text-light">Seguridad</h5>
       <ul class="list-group mb-4" style="box-shadow: 5px 5px 17px 10px Black;">
+
+        <!-- Componente para cambiar contraseña -->
         <app-edit-form-password
-        (save)="cambiarPassword($event)"
+          (save)="cambiarPassword($event)"
         ></app-edit-form-password>
+
+        <!-- Visualización de estado de verificación en 2 pasos -->
         <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
           <span>Verificación en 2 pasos: {{user.fv2 ? 'Activa' : 'Desactivada'}}</span>
-          <button class="btn btn-outline-light btn-sm" [disabled] = true >{{user.fv2 ? 'Desactivar' : 'Activar'}}</button>
+          <button class="btn btn-outline-light btn-sm" [disabled]=true>
+            {{user.fv2 ? 'Desactivar' : 'Activar'}}
+          </button>
         </li>
       </ul>
     </div>
 
+    <!-- Sección derecha: Información de cuenta y accesos -->
+    <div class="col-md-6 mt-4">
+      <h5 class="text-light">Información de Cuenta</h5>
 
-    <!-- <h1 style="color: aliceblue;"> {{user | json}}  </h1> -->
-
-
-
-    <div class="col-md-6 mt-4 ">
-      <h5 class="mt- text-light">Información de Cuenta</h5>
+      <!-- Lista de información detallada del usuario -->
       <ul class="list-group mb-3" style="box-shadow: 5px 5px 17px 10px Black;">
         <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
-          <span>Nivel de acceso: {{user.role == "USER" ? "Usuario" : "Administrador" }}</span>
+          <span>Nivel de acceso: {{user.role == "USER" ? "Usuario" : "Administrador"}}</span>
         </li>
         <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
-          <span>Última Modificación: {{user.updatedAt | date }}</span>
+          <span>Última Modificación: {{user.updatedAt | date}}</span>
         </li>
         <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
-          <span>Miembro desde: {{user.createdAt |  date }}</span>
+          <span>Miembro desde: {{user.createdAt | date}}</span>
         </li>
         <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
           <span>Servidor: {{user.server}}</span>
@@ -100,12 +115,14 @@
         </li>
       </ul>
 
-      <!-- <h1>{{logs | json }}</h1> -->
+      <!-- Panel con el historial de accesos recientes -->
       <div class="mb-5 mt-5">
-        <div class="card bg-dark text-white shadow rounded-4 border border-secondary" >
+        <div class="card bg-dark text-white shadow rounded-4 border border-secondary">
           <div class="card-body" style="box-shadow: 5px 5px 17px 10px Black;">
             <h5 class="card-title text-light">Últimos accesos</h5>
-            <ul class="list-group list-group-flush" >
+
+            <!-- Lista de accesos (máx. 10) con fecha y estado -->
+            <ul class="list-group list-group-flush">
               <li class="list-group-item bg-dark text-white border-secondary" *ngFor="let log of logs.slice(0-10)">
                 <span class="badge bg-secondary me-2">{{ log.attemptTime | date:'medium' }}</span>
                 <span [class.text-success]="log.success" [class.text-danger]="!log.success">
@@ -113,6 +130,7 @@
                 </span>
               </li>
             </ul>
+
           </div>
         </div>
       </div>

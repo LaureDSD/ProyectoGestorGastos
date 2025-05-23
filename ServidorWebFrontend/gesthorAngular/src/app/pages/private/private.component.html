@@ -1,9 +1,18 @@
-<div></div><div class="d-none d-md-block">
-  <app-navbar></app-navbar>
+<!-- Contenedor vacío para posibles futuros elementos o estructura -->
+
+<!-- Barra de navegación para pantallas medianas en adelante (dispositivos desktop y tablets grandes) -->
+<div class="d-none d-md-block">
+  <!-- Componente Navbar principal -->
+  <app-navbar titulo="S-GESTHOR"></app-navbar>
 </div>
-<div class="d-block d-md-none ">
+
+<!-- Barra de navegación para dispositivos móviles (pantallas pequeñas) -->
+<div class="d-block d-md-none">
+  <!-- Componente Tabbar para navegación móvil -->
   <app-tabvar></app-tabvar>
 </div>
+
+<!-- Contenedor donde se renderizan las rutas hijas definidas en Angular Router -->
 <div>
-<router-outlet></router-outlet>
+  <router-outlet></router-outlet>
 </div>

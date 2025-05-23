@@ -1,13 +1,18 @@
+<!-- Contenedor principal con padding vertical y márgenes superiores e inferiores -->
 <div class="container py-4 mb-5 mt-5 pb-5">
   <div class="row">
-    <!-- Columna izquierda: Gráfico de Rosca -->
-    <div class="col-md-4  mt-3">
 
+    <!-- Columna izquierda: contiene gráficos de resumen semanal -->
+    <div class="col-md-4 mt-3">
 
+      <!-- Título sección semanal -->
       <h3 class="text-light">Información de la semana</h3>
+
+      <!-- Card con gráfico de dona: gasto semanal medio vs total -->
       <div class="card shadow-sm bg-dark text-white mb-3">
         <div class="card-body">
           <h5 class="card-title">Gasto Semanal: Medio vs Total</h5>
+          <!-- Gráfico de dona usando baseChart con datos y opciones dark -->
           <canvas baseChart
                   [data]="donutChartData"
                   [options]="darkChartOptions"
@@ -16,12 +21,11 @@
         </div>
       </div>
 
-
-
-      <!-- Columna derecha: línea -->
+      <!-- Card con gráfico de línea para gastos diarios de la semana -->
       <div class="card shadow-sm bg-dark text-white">
         <div class="card-body">
           <h5 class="card-title">Gastos de Esta Semana</h5>
+          <!-- Gráfico de línea usando baseChart con datos y opciones dark -->
           <canvas baseChart
                   [data]="weeklyChartData"
                   [options]="darkChartOptions"
@@ -30,22 +34,23 @@
         </div>
       </div>
 
-
-
     </div>
 
-
+    <!-- Columna derecha: gráficos y lista de gastos -->
     <div class="col-md-8 mt-3">
 
-           <!-- Gráfico de barras (top 6 + otros) -->
+      <!-- Card con gráfico de barras mostrando top 6 categorías más "otros" -->
       <div class="card shadow-sm bg-dark text-white mb-3">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="card-title mb-0">Top 6 Categorías + Otros</h5>
+            <!-- Botón para alternar la visibilidad del gráfico completo de categorías -->
             <button (click)="toggleFullCategories()" class="btn btn-sm btn-outline-light">
+              <!-- Texto dinámico según estado de showFullCategories -->
               {{ showFullCategories ? 'Ocultar Detalle' : 'Ver Todas las Categorías' }}
             </button>
           </div>
+          <!-- Gráfico de barras con datos y opciones dark -->
           <canvas baseChart
                   [data]="monthlyChartData"
                   [options]="darkChartOptions"
@@ -54,10 +59,11 @@
         </div>
       </div>
 
-      <!-- Gráfico de dona completo (solo se muestra cuando showFullCategories es true) -->
+      <!-- Card con gráfico de dona completo que se muestra solo si showFullCategories es true -->
       <div *ngIf="showFullCategories" class="card shadow-sm bg-dark text-white mb-3">
         <div class="card-body">
           <h5 class="card-title">Todas las Categorías</h5>
+          <!-- Gráfico de dona con datos y opciones dark -->
           <canvas baseChart
                   [data]="fullCategoriesChartData"
                   [options]="darkChartOptions"
@@ -66,16 +72,19 @@
         </div>
       </div>
 
-      <!-- Lista de gastos abajo -->
+      <!-- Card que muestra la lista de los últimos 20 gastos -->
       <div class="card shadow-sm bg-dark text-white">
         <div class="card-body">
           <h5 class="card-title">Últimos 20 Gastos</h5>
           <ul class="list-group list-group-flush">
+            <!-- Itera sobre ultimosGastos limitando a 20 elementos -->
             <li *ngFor="let gasto of ultimosGastos.slice(0, 20)"
                 class="list-group-item bg-dark text-white d-flex justify-content-between">
-                <div>
+              <div>
+                <!-- Muestra tipo de gasto, nombre y fecha formateada -->
                 {{gasto.typeExpense}} - <strong class="text-info">{{ gasto.name }}</strong> - <small>{{ gasto.fechaCompra | date }}</small>
               </div>
+              <!-- Muestra el total del gasto con formato decimal y símbolo euro -->
               <span class="fw-bold text">{{ gasto.total.toFixed(2) }}€</span>
             </li>
           </ul>
@@ -87,4 +96,5 @@
   </div>
 </div>
 
+<!-- Comentado: sección para depuración que muestra JSON de gastos -->
 <!-- <h1 style="color: aliceblue;" >{{ultimosGastos | json }}</h1> -->

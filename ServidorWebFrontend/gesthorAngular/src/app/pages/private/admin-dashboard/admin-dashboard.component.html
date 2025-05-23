@@ -1,12 +1,22 @@
+<!--
+  Componente de dashboard del sistema. Muestra métricas generales, gráficos de CPU y almacenamiento,
+  y detalles técnicos del servidor. Se oculta el contenido principal mientras `load` es verdadero,
+  mostrando un componente de carga personalizado.
+-->
 
+<!-- Spinner de carga centrado vertical y horizontalmente mientras `load` está activo -->
 <div *ngIf="load" class="d-flex justify-content-center align-items-center" style="height: 80vh;">
-  <app-spinning2 class="p-3"></app-spinning2>Cargando..
+  <!-- Componente de animación de carga -->
+  <app-spinning2 class="p-3"></app-spinning2>
+  Cargando..
 </div>
 
+<!-- Contenido principal visible solo cuando `load` es falso -->
 <div *ngIf="!load" class="container mt-5 pt-4" style="margin-bottom: 18%">
 
-  <!-- Métricas principales -->
+  <!-- Sección de métricas principales del sistema: CPU, RAM, espacio libre, etc. -->
   <div class="row text-white text-center mb-4">
+    <!-- Itera sobre la lista `metrics` para mostrar cada métrica con su valor y etiqueta -->
     <div class="col mt-3" *ngFor="let m of metrics">
       <div class="p-3 rounded shadow" [ngClass]="m.bg" style="min-width: 120px;">
         <h4 class="mb-0">{{ m.value }}</h4>
@@ -15,11 +25,12 @@
     </div>
   </div>
 
-  <!-- Gráficos CPU y almacenamiento con info técnica debajo -->
+  <!-- Sección de gráficos e información técnica del servidor -->
   <div class="row mb-3">
 
-    <!-- Almacenamiento + info sistema -->
+    <!-- Columna izquierda: Almacenamiento + Información general del sistema -->
     <div class="col-md-4 mb-3">
+      <!-- Gráfico tipo donut con uso de almacenamiento -->
       <div class="card p-3 shadow mb-3">
         <h6>Almacenamiento</h6>
         <canvas baseChart
@@ -30,6 +41,7 @@
         <div class="text-center mt-2">{{ storageValue }} GB usados</div>
       </div>
 
+      <!-- Información básica del servidor renderizada como lista -->
       <div class="card p-3 shadow bg-light">
         <h6 class="mb-3">Información del Servidor</h6>
         <ul class="list-group list-group-flush">
@@ -64,8 +76,9 @@
       </div>
     </div>
 
-    <!-- CPU + info RAM -->
+    <!-- Columna derecha: CPU + RAM -->
     <div class="col-md-8">
+      <!-- Gráfico de línea que muestra la carga del CPU -->
       <div class="card p-3 shadow mb-3">
         <h6>CPU</h6>
         <canvas baseChart
@@ -75,6 +88,7 @@
         </canvas>
       </div>
 
+      <!-- Detalles de memoria RAM y disco del servidor -->
       <div class="card p-3 shadow bg-light">
         <h6 class="mb-3">Información de Memoria RAM</h6>
         <ul class="list-group list-group-flush">
@@ -99,8 +113,7 @@
         </ul>
       </div>
 
-
-      <!-- Gráfico de actividad RAM -->
+      <!-- Gráfico de actividad RAM o uso de recursos en el tiempo -->
       <div class="card p-3 shadow mt-3 mb-4">
         <h6>Actividad</h6>
         <canvas baseChart
@@ -108,7 +121,6 @@
           [options]="barOptions"
           [type]="'line'">
         </canvas>
-
       </div>
     </div>
   </div>

@@ -1,5 +1,18 @@
+<!--
+  Plantilla principal que estructura la página con componentes clave y zona de contenido dinámico.
 
-<app-navbar></app-navbar>
+  Componentes incluidos:
+  - <app-navbar>: Barra de navegación superior común a todas las vistas.
+  - <router-outlet>: Contenedor dinámico donde se renderizan los componentes según la ruta actual.
+  - <app-back-button>: Botón para navegar hacia atrás en la navegación del usuario.
+  - <app-footer>: Pie de página común con información o enlaces de interés.
+-->
+
+<app-navbar titulo="WEB-GESTHOR"></app-navbar>
+
+<!-- Aquí se cargan los componentes correspondientes a la ruta activa -->
 <router-outlet></router-outlet>
+
 <app-back-button></app-back-button>
+
 <app-footer></app-footer>

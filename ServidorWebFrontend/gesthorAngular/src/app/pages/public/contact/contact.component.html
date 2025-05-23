@@ -1,42 +1,64 @@
-
-
-
+<!-- Contenedor principal con fondo negro y texto blanco, con espacio superior e inferior amplio -->
 <div style="background-color: rgb(0, 0, 0); color: #ffffff; padding-top: 150px;  padding-bottom: 100px;">
+
+  <!-- Título principal centrado con margen inferior -->
   <h1 class="text-center mb-4">Contacto y Soporte</h1>
 
-  <p class="text-center mb-5">¿Tienes dudas, sugerencias o necesitas asistencia personalizada? Aquí encontrarás toda la información para contactarnos o resolver tus dudas.</p>
+  <!-- Párrafo descriptivo centrado con margen inferior amplio -->
+  <p class="text-center mb-5">
+    ¿Tienes dudas, sugerencias o necesitas asistencia personalizada? Aquí encontrarás toda la información para contactarnos o resolver tus dudas.
+  </p>
 
-  <app-section-right title="Sobre GesThor" text="GesThor es una plataforma de gestión de gastos que combina tecnología de OCR, IA y análisis financiero para ayudarte a controlar y optimizar tu economía personal o empresarial." img="img/_f4356c0e-54a2-407d-8d46-1d1e642a162f.jpg" ></app-section-right>
+  <!-- Componente personalizado app-section-right:
+       - Muestra información sobre GesThor con título, texto descriptivo e imagen asociada -->
+  <app-section-right
+    title="Sobre GesThor"
+    text="GesThor es una plataforma de gestión de gastos que combina tecnología de OCR, IA y análisis financiero para ayudarte a controlar y optimizar tu economía personal o empresarial."
+    img="img/_f4356c0e-54a2-407d-8d46-1d1e642a162f.jpg" >
+  </app-section-right>
 
-
-
+  <!-- Separador visual personalizado para dividir secciones -->
   <app-separator></app-separator>
 
-  <!-- Sección: Ubicación -->
+  <!-- Sección Ubicación: contenedor centrado con ancho máximo, con título y datos de ubicación -->
   <div class="text-center mb-4" style="max-width: 800px; margin: auto;">
     <h4>Ubicación</h4>
-    <p>GesThor Solutions S.L.<br>Calle Macedoniense 123,<br>28000 Ourense, España</p>
+    <p>
+      GesThor Solutions S.L.<br>
+      Calle Macedoniense 123,<br>
+      28000 Ourense, España
+    </p>
+    <!-- Horario de atención destacado en negrita -->
     <p><strong>Horario:</strong> Lunes a Viernes de 9:00 a 9:01</p>
   </div>
 
+  <!-- Separador visual para continuar estructura de secciones -->
   <app-separator></app-separator>
 
-  <!-- Sección: Contacto directo -->
+  <!-- Sección Contacto directo: contenedor centrado con información de contacto clave -->
   <div class="text-center mb-4" style="max-width: 800px; margin: auto;">
     <h4>Contacto directo</h4>
+    <!-- Email de soporte con etiqueta en negrita -->
     <p><strong>Email:</strong> soporte&commat;gesthor.com</p>
+    <!-- Número telefónico -->
     <p><strong>Teléfono:</strong> +34 912 345 678</p>
+    <!-- Identificador de redes sociales -->
     <p><strong>Redes sociales:</strong> gesthorapp</p>
   </div>
 
+  <!-- Separador visual para orden y claridad -->
   <app-separator></app-separator>
 
+  <!-- Componente acordeón personalizado para mostrar información expandible -->
   <app-acordion></app-acordion>
 
+  <!-- Separador visual para mantener consistencia en la estructura -->
   <app-separator></app-separator>
 
+  <!-- Componente formulario personalizado para contacto o soporte -->
   <app-form></app-form>
 
+  <!-- Texto adicional con espacio superior y centrado para contacto directo y redes sociales -->
   <div class="mt-5 text-center">
     <p>También puedes escribirnos directamente a: <strong>soporte&commat;gesthor.com</strong></p>
     <p>Síguenos en redes sociales para más actualizaciones y soporte.</p>

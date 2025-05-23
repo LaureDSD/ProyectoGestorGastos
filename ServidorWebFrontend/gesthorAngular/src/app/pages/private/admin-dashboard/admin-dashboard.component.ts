@@ -8,23 +8,23 @@ import { ChartOptions } from 'chart.js';
   selector: 'app-admin-dashboard',
   standalone: false,
   templateUrl: './admin-dashboard.component.html',
-  styleUrl: './admin-dashboard.component.css'
+  styleUrls: ['./admin-dashboard.component.css']  // corregido a styleUrls (plural y array)
 })
 export class AdminDashboardComponent {
   serverInfo!: ServerInfoDto;
   load: boolean = false;
 
-  // Historial dinámico
+  // Histórico dinámico de métricas para gráficos
   cpuHistory: number[] = [];
   ramUsedHistory: number[] = [];
   ramFreeHistory: number[] = [];
   timestamps: string[] = [];
-  maxPoints = 10;
+  maxPoints = 10;  // límite de puntos en el historial para gráficos
 
-  // Métricas principales
+  // Métricas principales mostradas en cards u otro UI
   metrics: any[] = [];
 
-  // Almacenamiento (solo carga inicial)
+  // Datos para gráfico de almacenamiento (donut)
   storageValue = 0;
   donutData: any = {
     labels: ['Usado', 'Libre'],
@@ -32,14 +32,14 @@ export class AdminDashboardComponent {
   };
   donutOptions: ChartOptions = { responsive: true };
 
-  // Gráfico CPU (línea dinámica)
+  // Datos y opciones para gráfico de CPU (línea)
   lineData: any = {};
   lineOptions: ChartOptions = {
     responsive: true,
     plugins: { legend: { display: true } }
   };
 
-  // Gráfico RAM (línea dinámica)
+  // Datos y opciones para gráfico de RAM (línea)
   barData: any = {};
   barOptions: ChartOptions = {
     responsive: true,
@@ -52,6 +52,7 @@ export class AdminDashboardComponent {
   ngOnInit() {
     this.load = true;
 
+    // Carga inicial de datos
     this.serverStatsService.getServerInfo().subscribe(info => {
       this.serverInfo = info;
       this.updateMetrics();
@@ -60,11 +61,16 @@ export class AdminDashboardComponent {
       this.load = false;
     });
 
+    // Actualización periódica cada 2.5 segundos (2500 ms)
     interval(2500).subscribe(() => {
       this.fetchStats(false);
     });
   }
 
+  /**
+   * Solicita info del servidor y actualiza los gráficos y métricas.
+   * @param updateDonut boolean para decidir si actualizar gráfico donut de disco
+   */
   fetchStats(updateDonut = true) {
     this.serverStatsService.getServerInfo().subscribe(info => {
       this.serverInfo = info;
@@ -75,8 +81,11 @@ export class AdminDashboardComponent {
     });
   }
 
+  /**
+   * Actualiza las métricas principales visibles (Gastos, Usuarios, APIs)
+   */
   updateMetrics() {
-  this.metrics = [
+    this.metrics = [
       {
         label: 'Gastos',
         value: this.serverInfo.spenses ?? 0,
@@ -100,6 +109,10 @@ export class AdminDashboardComponent {
     ];
   }
 
+  /**
+   * Actualiza el gráfico donut con datos de uso y espacio libre en disco
+   * @param info Datos actuales del servidor
+   */
   updateDonut(info: ServerInfoDto) {
     const usedGB = this.bytesToGB(info.usedDisk);
     const totalGB = this.bytesToGB(info.totalDisk);
@@ -115,6 +128,10 @@ export class AdminDashboardComponent {
     this.storageValue = usedGB;
   }
 
+  /**
+   * Actualiza la historia temporal para los gráficos de CPU y RAM
+   * @param info Datos actuales del servidor
+   */
   updateHistory(info: ServerInfoDto) {
     const now = new Date();
     const label = now.toLocaleTimeString();
@@ -122,6 +139,7 @@ export class AdminDashboardComponent {
     const usedGB = this.bytesToGB(info.usedMemory);
     const totalGB = this.bytesToGB(info.totalMemory);
 
+    // Mantener el tamaño máximo del historial
     if (this.cpuHistory.length >= this.maxPoints) {
       this.cpuHistory.shift();
       this.ramUsedHistory.shift();
@@ -129,12 +147,13 @@ export class AdminDashboardComponent {
       this.timestamps.shift();
     }
 
+    // Añadir nuevos datos al historial
     this.cpuHistory.push(Number(info.cpuLoad.toFixed(2)));
     this.ramUsedHistory.push(usedGB);
     this.ramFreeHistory.push(totalGB - usedGB);
     this.timestamps.push(label);
 
-    // CPU gráfico línea
+    // Actualizar datos para gráfico de CPU (línea)
     this.lineData = {
       labels: this.timestamps,
       datasets: [{
@@ -147,7 +166,7 @@ export class AdminDashboardComponent {
       }]
     };
 
-    // RAM gráfico línea, solo usada y total (sin barra)
+    // Actualizar datos para gráfico de RAM (línea)
     this.barData = {
       labels: this.timestamps,
       datasets: [
@@ -172,20 +191,35 @@ export class AdminDashboardComponent {
     };
   }
 
-  // Convertir bytes a GB
+  /**
+   * Convierte bytes a gigabytes, con 2 decimales
+   * @param bytes Cantidad en bytes
+   * @returns Número en GB
+   */
   bytesToGB(bytes: number): number {
     return Math.round((bytes / (1024 ** 3)) * 100) / 100;
   }
 }
 
-@Pipe({name: 'secondsToHms'})
+/**
+ * Pipe personalizado para transformar segundos en formato horas, minutos y segundos (e.g. "1h 12m 35s")
+ */
+@Pipe({ name: 'secondsToHms' })
 export class SecondsToHmsPipe implements PipeTransform {
   transform(value: number): string {
     if (!value) return '0s';
+
     const secNum = Number(value);
     const hours = Math.floor(secNum / 3600);
     const minutes = Math.floor((secNum % 3600) / 60);
     const seconds = secNum % 60;
-    return `${hours}h ${minutes}m ${seconds}s`;
+
+    // Construir string condicional para evitar mostrar "0h" o "0m"
+    let result = '';
+    if (hours > 0) result += `${hours}h `;
+    if (minutes > 0 || hours > 0) result += `${minutes}m `;
+    result += `${seconds}s`;
+
+    return result.trim();
   }
 }
