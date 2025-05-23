@@ -14,7 +14,6 @@ import java.time.Instant;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class LoginAttempt {
 
     @Id
@@ -47,4 +46,9 @@ public class LoginAttempt {
     @Column(nullable = false)
     private Boolean success;
 
+    public LoginAttempt(String username, Instant attemptTime, Boolean success) {
+        this.username = username;
+        this.attemptTime = attemptTime;
+        this.success = success;
+    }
 }

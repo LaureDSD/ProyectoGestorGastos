@@ -134,18 +134,30 @@ public class DatabaseInitializer implements CommandLineRunner {
      * Cada categoría tiene un nombre y una descripción breve.
      */
     private static final List<CategoryExpense> CATEGORIAS = Arrays.asList(
-            new CategoryExpense("Alimentos", "Productos destinados a la nutrición y el consumo."),
-            new CategoryExpense("Bebidas", "Refrescos, jugos, agua, bebidas alcohólicas, etc."),
-            new CategoryExpense("Hogar", "Artículos para la casa y el bienestar del hogar."),
-            new CategoryExpense("Ropa", "Prendas de vestir y accesorios."),
-            new CategoryExpense("Salud y Belleza", "Productos para el cuidado personal, higiene y bienestar."),
-            new CategoryExpense("Electrónica", "Dispositivos electrónicos, gadgets y electrodomésticos."),
-            new CategoryExpense("Entretenimiento", "Artículos relacionados con el ocio, juegos y películas."),
-            new CategoryExpense("Deportes", "Equipos y accesorios deportivos."),
-            new CategoryExpense("Educación", "Material educativo, cursos y libros."),
-            new CategoryExpense("Transporte", "Gastos relacionados con el transporte personal o público."),
-            new CategoryExpense("Viajes", "Gastos relacionados con viajes y turismo."),
-            new CategoryExpense("Varios", "Productos que no encajan en otras categorías.")
+            new CategoryExpense("Alimentos", "Productos destinados a la nutrición y el consumo.", 4),
+            new CategoryExpense("Bebidas", "Refrescos, jugos, agua, bebidas alcohólicas, etc.", 10),
+            new CategoryExpense("Hogar", "Artículos para la casa y el bienestar del hogar.", 21),
+            new CategoryExpense("Ropa", "Prendas de vestir y accesorios.", 21),
+            new CategoryExpense("Salud y Belleza", "Productos para el cuidado personal, higiene y bienestar.", 21),
+            new CategoryExpense("Electrónica", "Dispositivos electrónicos, gadgets y electrodomésticos.", 21),
+            new CategoryExpense("Entretenimiento", "Artículos relacionados con el ocio, juegos y películas.", 21),
+            new CategoryExpense("Deportes", "Equipos y accesorios deportivos.", 21),
+            new CategoryExpense("Educación", "Material educativo, cursos y libros.", 4),
+            new CategoryExpense("Transporte", "Gastos relacionados con el transporte personal o público.", 10),
+            new CategoryExpense("Viajes", "Gastos relacionados con viajes y turismo.", 21),
+            new CategoryExpense("Varios", "Productos que no encajan en otras categorías.", 21),
+
+// Categorías adicionales recomendadas:
+            new CategoryExpense("Restaurantes y Bares", "Comidas y bebidas consumidas fuera de casa.", 10),
+            new CategoryExpense("Servicios", "Servicios contratados como peluquería, fontanería, etc.", 21),
+            new CategoryExpense("Mascotas", "Productos y servicios para animales domésticos.", 21),
+            new CategoryExpense("Impuestos y Tasas", "Pagos de impuestos, tasas gubernamentales, etc.", 0),
+            new CategoryExpense("Donaciones", "Aportaciones a ONGs u organizaciones sin fines de lucro.", 0),
+            new CategoryExpense("Mantenimiento Vehículo", "Reparaciones, revisiones y repuestos de automóviles.", 21),
+            new CategoryExpense("Alquiler", "Pagos de alquiler de vivienda o local.", 10),
+            new CategoryExpense("Teléfono e Internet", "Servicios de telecomunicaciones.", 21),
+            new CategoryExpense("Seguros", "Seguros de salud, vida, coche, hogar, etc.", 21),
+            new CategoryExpense("Finanzas", "Comisiones bancarias, intereses, servicios financieros.", 21)
     );
 
     /**
