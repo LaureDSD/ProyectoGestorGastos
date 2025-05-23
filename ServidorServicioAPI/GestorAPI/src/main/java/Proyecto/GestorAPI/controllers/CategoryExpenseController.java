@@ -8,6 +8,11 @@ import Proyecto.GestorAPI.config.security.RoleServer;
 import Proyecto.GestorAPI.services.CategoryExpenseService;
 import Proyecto.GestorAPI.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -31,16 +36,19 @@ public class CategoryExpenseController {
     private final CategoryExpenseService categoryExpenseService;
     private final UserService userService;
 
-    /**
-     * Obtener todas las categorías de gasto.
-     *
-     * @return Lista de categorías de gasto.
-     */
     @GetMapping("")
     @Operation(
-            security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
-            summary = "Obtener todas las categorías de gasto"
+            summary = "Obtener todas las categorías de gasto",
+            description = "Devuelve una lista de todas las categorías disponibles para el usuario autenticado.",
+            security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de categorías de gasto",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CategoryExpenseDto.class))),
+            @ApiResponse(responseCode = "204", description = "No hay categorías disponibles"),
+            @ApiResponse(responseCode = "401", description = "No autenticado")
+    })
     public ResponseEntity<List<CategoryExpenseDto>> getAllCategories(
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
@@ -55,23 +63,28 @@ public class CategoryExpenseController {
                 .collect(Collectors.toList()));
     }
 
-    /**
-     * Crear una nueva categoría de gasto.
-     *
-     * @param request La categoría de gasto a crear.
-     * @return La categoría de gasto creada.
-     */
     @PostMapping("/")
     @Operation(
-            security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
-            summary = "Crear una nueva categoría de gasto"
+            summary = "Crear una nueva categoría de gasto",
+            description = "Solo administradores pueden crear nuevas categorías de gasto.",
+            security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Categoría creada exitosamente",
+                    content = @Content(schema = @Schema(implementation = CategoryExpenseDto.class))),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado: solo administradores"),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos")
+    })
     public ResponseEntity<CategoryExpenseDto> createCategory(
-            @Valid @RequestBody CategoryExpenseDto request,
+            @Valid
+            @RequestBody(
+                    required = true,
+                    description = "Datos de la nueva categoría de gasto"
+            ) CategoryExpenseDto request,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
+
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
 
-        // Solo los admins pueden crear categorías de gasto.
         if (user.getRole() != RoleServer.ADMIN) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -86,25 +99,25 @@ public class CategoryExpenseController {
         return ResponseEntity.status(HttpStatus.CREATED).body(CategoryExpenseDto.from(createdCategory));
     }
 
-    /**
-     * Actualizar una categoría de gasto por ID.
-     *
-     * @param categoryId El ID de la categoría a actualizar.
-     * @param request Los datos de la categoría de gasto a actualizar.
-     * @return La categoría de gasto actualizada.
-     */
     @PutMapping("/{categoryId}")
     @Operation(
-            security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
-            summary = "Actualizar una categoría de gasto"
+            summary = "Actualizar una categoría de gasto",
+            description = "Solo administradores pueden actualizar las categorías existentes.",
+            security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Categoría actualizada correctamente",
+                    content = @Content(schema = @Schema(implementation = CategoryExpenseDto.class))),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado"),
+            @ApiResponse(responseCode = "404", description = "Categoría no encontrada")
+    })
     public ResponseEntity<CategoryExpenseDto> updateCategory(
             @PathVariable Long categoryId,
             @Valid @RequestBody CategoryExpenseDto request,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
+
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
 
-        // Solo los admins pueden actualizar categorías de gasto.
         if (user.getRole() != RoleServer.ADMIN) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -125,23 +138,23 @@ public class CategoryExpenseController {
         return ResponseEntity.ok(CategoryExpenseDto.from(updatedCategory));
     }
 
-    /**
-     * Eliminar una categoría de gasto por ID.
-     *
-     * @param categoryId El ID de la categoría de gasto a eliminar.
-     * @return Respuesta sin contenido si la eliminación fue exitosa.
-     */
     @DeleteMapping("/{categoryId}")
     @Operation(
-            security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
-            summary = "Eliminar una categoría de gasto"
+            summary = "Eliminar una categoría de gasto",
+            description = "Elimina una categoría por ID. Solo accesible por administradores.",
+            security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)
     )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Categoría eliminada exitosamente"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado"),
+            @ApiResponse(responseCode = "404", description = "Categoría no encontrada")
+    })
     public ResponseEntity<Void> deleteCategory(
             @PathVariable Long categoryId,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
+
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
 
-        // Solo los admins pueden eliminar categorías de gasto.
         if (user.getRole() != RoleServer.ADMIN) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -154,7 +167,6 @@ public class CategoryExpenseController {
         }
 
         categoryExpenseService.deleteByID(categoryId);
-
         return ResponseEntity.noContent().build();
     }
 }

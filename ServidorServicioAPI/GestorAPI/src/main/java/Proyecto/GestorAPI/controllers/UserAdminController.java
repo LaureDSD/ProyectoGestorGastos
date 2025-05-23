@@ -21,26 +21,50 @@ import java.util.Map;
 import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME;
 
 /**
- * Controlador encargado de gestionar las operaciones relacionadas con los usuarios.
- * Permite obtener información del usuario actual, obtener la lista de usuarios,
- * obtener información de un usuario específico y eliminar un usuario.
- * Todas las operaciones están protegidas mediante autenticación y autorización basada en JWT.
+ * Controlador REST para la gestión de usuarios en la aplicación.
+ *
+ * <p>
+ * Proporciona endpoints para obtener la lista de usuarios, obtener detalles de un usuario específico,
+ * actualizar información, eliminar usuarios, y obtener datos protegidos para el administrador.
+ * Todas las operaciones requieren autenticación y autorización mediante JWT con esquema Bearer Token.
+ * </p>
+ *
+ * <p><b>Ruta base:</b> /api/users</p>
+ *
+ * <p><b>Seguridad:</b> Se requiere token JWT en el header de autorización para acceder a todos los endpoints.</p>
  */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/users")
-@Tag(name = "User Management (Admin only) ", description = "Gestion de usuarios")
+@Tag(name = "User Management (Admin only)", description = "Gestión de usuarios")
 public class UserAdminController {
 
     private final UserService userService;
 
-    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
+    /**
+     * Obtiene la lista completa de usuarios registrados en el sistema.
+     *
+     * @return ResponseEntity con la lista de usuarios. Código 200 OK con lista, o vacía si no hay usuarios.
+     */
+    @Operation(
+            security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)},
+            summary = "Obtener lista de todos los usuarios"
+    )
     @GetMapping
     public ResponseEntity<List<User>> getUsers() {
         return ResponseEntity.ok(new ArrayList<>(userService.getUsers()));
     }
 
-    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
+    /**
+     * Obtiene los detalles de un usuario específico identificado por su ID.
+     *
+     * @param clienteId ID del usuario a buscar.
+     * @return ResponseEntity con el usuario encontrado (200 OK), o 404 Not Found si no existe.
+     */
+    @Operation(
+            security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)},
+            summary = "Obtener un usuario por ID"
+    )
     @GetMapping("/{clienteId}")
     public ResponseEntity<User> getUser(
             @PathVariable Long clienteId) {
@@ -51,8 +75,17 @@ public class UserAdminController {
         return ResponseEntity.ok(findUser);
     }
 
-    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
-    @DeleteMapping("/{ClienteId}")
+    /**
+     * Elimina un usuario del sistema por su ID.
+     *
+     * @param clienteId ID del usuario a eliminar.
+     * @return ResponseEntity con el usuario eliminado (200 OK), o 404 Not Found si no existe.
+     */
+    @Operation(
+            security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)},
+            summary = "Eliminar un usuario por ID"
+    )
+    @DeleteMapping("/{clienteId}")
     public ResponseEntity<User> deleteUser(
             @PathVariable Long clienteId) {
         User findUser = userService.getUserById(clienteId).orElse(null);
@@ -63,22 +96,42 @@ public class UserAdminController {
         return ResponseEntity.ok(findUser);
     }
 
-    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
-    @PutMapping("/{ClienteId}")
+    /**
+     * Actualiza la información de un usuario existente.
+     *
+     * @param clienteId ID del usuario a actualizar.
+     * @param request   Objeto User con los nuevos datos para actualizar.
+     * @return ResponseEntity con el usuario actualizado (200 OK), o 404 Not Found si el usuario no existe.
+     */
+    @Operation(
+            security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)},
+            summary = "Actualizar un usuario por ID"
+    )
+    @PutMapping("/{clienteId}")
     public ResponseEntity<UserDto> updateUser(
             @PathVariable Long clienteId,
             @Valid @RequestBody User request) {
         User findUser = userService.getUserById(clienteId).orElse(null);
-        //Validacoin existencia
+        // Validación de existencia
         if(findUser == null){
             return ResponseEntity.notFound().build();
         }
-        //Guardado
+        // Guardar usuario con los nuevos datos
         userService.saveUser(request);
         return ResponseEntity.ok(UserDto.from(findUser));
     }
 
-    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
+    /**
+     * Obtiene información protegida para administradores basada en el usuario autenticado.
+     * Incluye el nombre de usuario, roles y un mensaje de autorización.
+     *
+     * @param userDetails Detalles del usuario autenticado obtenidos del contexto de seguridad.
+     * @return ResponseEntity con un mapa de datos protegidos (200 OK).
+     */
+    @Operation(
+            security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)},
+            summary = "Obtener datos protegidos del dashboard para el usuario autenticado"
+    )
     @GetMapping("/data")
     public ResponseEntity<?> getAdminData(@AuthenticationPrincipal UserDetails userDetails) {
         Map<String, Object> data = new HashMap<>();
@@ -87,6 +140,5 @@ public class UserAdminController {
         data.put("message", "Acceso autorizado a datos protegidos del dashboard.");
         return ResponseEntity.ok(data);
     }
-
 
 }

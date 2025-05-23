@@ -33,7 +33,7 @@ import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/user")
-@Tag(name = "User Management (User Only)", description = "Gestion de usuarios")
+@Tag(name = "User Management (User Only)", description = "Gestión de usuarios - operaciones para el usuario autenticado")
 public class UserController {
 
     private final UserService userService;
@@ -48,14 +48,20 @@ public class UserController {
 
     private static final String STORAGE_BASE_PATH = "perfiles/";
 
-    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
+    @Operation(
+            summary = "Obtener información del usuario autenticado",
+            security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)}
+    )
     @GetMapping("/me")
     public UserMeOutDto getCurrentUser(@AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
         return UserMeOutDto.from(user);
     }
 
-    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
+    @Operation(
+            summary = "Desactivar el usuario autenticado",
+            security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)}
+    )
     @DeleteMapping("/me")
     public ResponseEntity<UserDto> deleteUser(@AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
@@ -64,10 +70,13 @@ public class UserController {
         return ResponseEntity.ok(UserDto.from(user));
     }
 
-    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
+    @Operation(
+            summary = "Subir o actualizar la imagen de perfil del usuario autenticado",
+            security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)}
+    )
     @PutMapping("/me/uploadProfile")
     public ResponseEntity<?> uploadProfile(
-            @RequestParam(value = "image") MultipartFile file,
+            @RequestParam("image") MultipartFile file,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
 
         if (file == null || file.isEmpty()) {
@@ -77,10 +86,16 @@ public class UserController {
         try {
             User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
             String oldUrl = user.getImageUrl();
-            String newUrl = storageService.saveImageData(STORAGE_BASE_PATH, file);
-            storageService.deleteImageData(oldUrl);
 
-            //Actualizar usuario
+            // Guardar nueva imagen
+            String newUrl = storageService.saveImageData(STORAGE_BASE_PATH, file);
+
+            // Eliminar imagen anterior si existe
+            if (oldUrl != null && !oldUrl.isEmpty()) {
+                storageService.deleteImageData(oldUrl);
+            }
+
+            // Actualizar usuario con nueva URL de imagen
             user.setImageUrl(newUrl);
             userService.saveUser(user);
 
@@ -92,6 +107,10 @@ public class UserController {
         }
     }
 
+    @Operation(
+            summary = "Actualizar datos del usuario autenticado",
+            security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)}
+    )
     @PutMapping("/me")
     public ResponseEntity<UserMeOutDto> updateUser(
             @Valid @RequestBody UserMeInDto request,
@@ -102,20 +121,26 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
 
+        // Asegurar que el usuario está actualizando su propio perfil
         if (!user.getId().equals(request.getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
+        // Validar username duplicado si cambia
         if (!user.getUsername().equals(request.getUsername()) &&
                 userService.hasUserWithUsername(request.getUsername())) {
-            throw new DuplicatedUserInfoException("Username %s already been used".formatted(request.getUsername()));
+            throw new DuplicatedUserInfoException(
+                    "Username %s already been used".formatted(request.getUsername()));
         }
 
+        // Validar email duplicado si cambia
         if (!user.getEmail().equals(request.getEmail()) &&
                 userService.hasUserWithEmail(request.getEmail())) {
-            throw new DuplicatedUserInfoException("Email %s already been used".formatted(request.getEmail()));
+            throw new DuplicatedUserInfoException(
+                    "Email %s already been used".formatted(request.getEmail()));
         }
 
+        // Actualizar campos permitidos
         user.setName(request.getName());
         user.setUsername(request.getUsername());
         user.setImageUrl(request.getImageUrl());
@@ -128,29 +153,40 @@ public class UserController {
         return ResponseEntity.ok(UserMeOutDto.from(user));
     }
 
+    @Operation(
+            summary = "Cambiar contraseña del usuario autenticado",
+            security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)}
+    )
     @PutMapping("/me/changePassword")
-    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
-    public ResponseEntity<?> changePassword(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                            @RequestBody Map<String, String> passwords) {
+    public ResponseEntity<?> changePassword(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody Map<String, String> passwords) {
+
         String currentPassword = passwords.get("current");
         String newPassword = passwords.get("newPassword");
 
         User user = userService.validateAndGetUserByUsername(userDetails.getUsername());
+
+        // Validar contraseña actual
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Contraseña actual incorrecta.");
         }
 
+        // Actualizar con nueva contraseña encriptada
         user.setPassword(passwordEncoder.encode(newPassword));
         userService.saveUser(user);
+
         return ResponseEntity.ok().body("Contraseña actualizada.");
     }
 
     @Operation(
-            summary = "Obtener logs de acceso del usuario actual",
-            security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME))
+            summary = "Obtener logs de intentos de acceso del usuario autenticado",
+            security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)}
+    )
     @GetMapping("/me/logs")
     public ResponseEntity<List<LoginAttempt>> getUserLoginAttempts(
             @AuthenticationPrincipal CustomUserDetails currentUser) {
+
         List<LoginAttempt> attempts = loginAttemptService.getByUsernameOrEamil(currentUser.getUsername());
         if (attempts.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -158,10 +194,12 @@ public class UserController {
         return ResponseEntity.ok(attempts);
     }
 
+    @Operation(
+            summary = "Contar el número total de gastos registrados por el usuario autenticado",
+            security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)}
+    )
     @GetMapping("/me/count")
-    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     public ResponseEntity<Long> countMySpents(@AuthenticationPrincipal CustomUserDetails currentUser) {
-        //Puedo optimizarlo , si, pero no funciona con otras bd si lo hago
         Long userId = userService.validateAndGetUserByUsername(currentUser.getUsername()).getId();
         long count = spentService.countSpentsByUserId(userId);
         return ResponseEntity.ok(count);

@@ -37,25 +37,44 @@ import java.util.stream.Collectors;
 
 import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME;
 
+/**
+ * Controlador REST para la gestión de gastos ("Spent").
+ * Permite realizar operaciones CRUD sobre gastos registrados,
+ * incluyendo carga de imágenes asociadas.
+ *
+ * La seguridad se maneja mediante autenticación JWT con Bearer Token,
+ * y el acceso se controla por roles de usuario (ADMIN y USER).
+ */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/gastos")
-@Tag(name = "Spent Management (Verify control) ", description = "Operaciones sobre los gastos registrados")
+@Tag(name = "Spent Management (Verify control)", description = "Operaciones sobre los gastos registrados")
 public class SpentController {
 
     @Autowired
-    private  SpentService spentService;
+    private SpentService spentService;
 
     @Autowired
-    private  UserService userService;
+    private UserService userService;
 
     @Autowired
-    private  CategoryExpenseService categoriaService;
+    private CategoryExpenseService categoriaService;
 
     @Autowired
     private StorageServiceImpl storageService;
+
     private static final String STORAGE_BASE_PATH = "gastos/";
 
+    /**
+     * Obtiene todos los gastos filtrados opcionalmente por clienteId.
+     *
+     * - Si el usuario es ADMIN puede obtener todos los gastos o los de un cliente específico.
+     * - Si el usuario no es ADMIN solo puede obtener sus propios gastos.
+     *
+     * @param clienteId Id del cliente para filtrar gastos (opcional).
+     * @param currentUser Usuario autenticado actual.
+     * @return Lista de gastos en formato DTO, o 204 si no existen gastos.
+     */
     @GetMapping("")
     @Operation(
             security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
@@ -67,55 +86,71 @@ public class SpentController {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
         List<Spent> spents = new ArrayList<>();
 
-        if(user.getRole() != RoleServer.ADMIN){
-            //si no es admin
-           spents = spentService.getSpentsByUserId(user.getId());
-        }else{
-            //si es admin
+        if (user.getRole() != RoleServer.ADMIN) {
+            // No admin: obtener gastos del usuario autenticado
+            spents = spentService.getSpentsByUserId(user.getId());
+        } else {
+            // Admin: obtener gastos del clienteId si se provee, o todos si no
             spents = (clienteId != null)
                     ? spentService.getSpentsByUserId(clienteId)
                     : spentService.getAll();
         }
-        //Verificacion de existencia
+
+        // Verificación de existencia
         if (spents.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        //Devolucion
+
+        // Mapear a DTO y devolver lista
         return ResponseEntity.ok(spents.stream()
                 .map(SpentDto::from)
                 .collect(Collectors.toList()));
     }
 
+    /**
+     * Obtiene todos los gastos con información completa,
+     * opcionalmente filtrados por clienteId.
+     *
+     * Similar a getSpents pero devuelve DTO con detalles extendidos.
+     *
+     * @param clienteId Id del cliente para filtrar gastos (opcional).
+     * @param currentUser Usuario autenticado actual.
+     * @return Lista de gastos con detalles completos, o 204 si no hay gastos.
+     */
     @GetMapping("/fullspents")
     @Operation(
             security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
-            summary = "Obtener todos los gastos )"
+            summary = "Obtener todos los gastos"
     )
     public ResponseEntity<List<SpentFullDto>> getAllSpents(
-               @RequestParam(value = "clienteId", required = false) Long clienteId,
-               @AuthenticationPrincipal CustomUserDetails currentUser) {
+            @RequestParam(value = "clienteId", required = false) Long clienteId,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
         List<Spent> spents = new ArrayList<>();
 
-        if(user.getRole() != RoleServer.ADMIN){
-            //si no es admin
+        if (user.getRole() != RoleServer.ADMIN) {
             spents = spentService.getSpentsByUserId(user.getId());
-        }else{
-            //si es admin
+        } else {
             spents = (clienteId != null)
                     ? spentService.getSpentsByUserId(clienteId)
                     : spentService.getAll();
         }
-        //Verificacion de existencia
+
         if (spents.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 
+        // Mapear la lista de gastos a lista de DTOs completos
         List<SpentFullDto> result = mappingSpentFullDtosList(spents);
 
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * Método auxiliar para mapear una lista de entidades Spent a DTOs completos.
+     * @param spents Lista de gastos
+     * @return Lista de DTOs completos
+     */
     private static List<SpentFullDto> mappingSpentFullDtosList(List<Spent> spents) {
         List<SpentFullDto> result = new ArrayList<>();
         for (Spent gasto : spents) {
@@ -124,11 +159,18 @@ public class SpentController {
         return result;
     }
 
+    /**
+     * Método auxiliar para mapear una entidad Spent a DTO completo.
+     * Incluye detalles específicos según el tipo de gasto (Ticket o Subscription).
+     *
+     * @param gasto Entidad gasto
+     * @return DTO completo con todos los campos relevantes
+     */
     private static SpentFullDto mappingSpentFullDto(Spent gasto) {
         SpentFullDto dto = new SpentFullDto();
         dto.setSpentId(gasto.getSpentId());
         dto.setUserId(gasto.getUser().getId());
-        dto.setCategoriaId(gasto.getCategory().getId() );
+        dto.setCategoriaId(gasto.getCategory().getId());
         dto.setName(gasto.getName());
         dto.setDescription(gasto.getDescription());
         dto.setIcon(gasto.getIcon());
@@ -137,11 +179,13 @@ public class SpentController {
         dto.setIva(gasto.getIva());
         dto.setTypeExpense(gasto.getTypeExpense());
 
+        // Si es Ticket, agregar campos específicos
         if (gasto instanceof Ticket ticket) {
             dto.setStore(ticket.getStore());
             dto.setProductsJSON(ticket.getProductsJSON());
         }
 
+        // Si es Subscription, agregar campos específicos
         if (gasto instanceof Subscription sub) {
             dto.setStart(sub.getStart());
             dto.setEnd(sub.getEnd());
@@ -153,7 +197,15 @@ public class SpentController {
         return dto;
     }
 
-
+    /**
+     * Obtiene un gasto por su ID.
+     *
+     * Solo puede acceder el ADMIN o el dueño del gasto.
+     *
+     * @param spentId ID del gasto a obtener
+     * @param currentUser Usuario autenticado actual
+     * @return DTO del gasto si existe y tiene permiso, 404 o 403 si no
+     */
     @GetMapping("/{spentId}")
     @Operation(
             security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
@@ -170,7 +222,7 @@ public class SpentController {
             return ResponseEntity.notFound().build();
         }
 
-        // Verificación de propiedad (solo admin o dueño puede ver)
+        // Verificación de propiedad o rol ADMIN
         if (user.getRole() != RoleServer.ADMIN && !spent.getUser().getId().equals(user.getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -178,7 +230,17 @@ public class SpentController {
         return ResponseEntity.ok(SpentDto.from(spent));
     }
 
-
+    /**
+     * Crea un nuevo gasto.
+     *
+     * Si el usuario es ADMIN puede asignar gasto a otro cliente mediante clienteId.
+     * Si no es ADMIN, el gasto se asigna automáticamente al usuario autenticado.
+     *
+     * @param clienteId Id del cliente para asignar gasto (opcional)
+     * @param request Datos para crear el gasto
+     * @param currentUser Usuario autenticado actual
+     * @return DTO del gasto creado con código 201 CREATED
+     */
     @PostMapping("")
     @Operation(
             security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
@@ -191,19 +253,26 @@ public class SpentController {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
         Spent spent;
 
-        if(user.getRole() != RoleServer.ADMIN){
-            //si no es admin
+        if (user.getRole() != RoleServer.ADMIN) {
             spent = mappingSpent(request, user.getId());
-        }else{
-            //si es admin
-            spent = mappingSpent(request,(clienteId != null) ? clienteId : user.getId());
+        } else {
+            spent = mappingSpent(request, (clienteId != null) ? clienteId : user.getId());
         }
-        //Creacion
+
         Spent createdSpent = spentService.setItem(spent);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(SpentDto.from(createdSpent));
     }
 
+    /**
+     * Elimina un gasto por ID.
+     *
+     * Solo el ADMIN o el dueño del gasto pueden eliminarlo.
+     *
+     * @param spentId ID del gasto a eliminar
+     * @param currentUser Usuario autenticado actual
+     * @return 204 No Content si eliminado, 404 si no existe, 403 si sin permiso
+     */
     @DeleteMapping("/{spentId}")
     @Operation(
             security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)},
@@ -214,19 +283,29 @@ public class SpentController {
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
         Spent spent = spentService.getByID(spentId).orElse(null);
-        //Veriificacion
+
         if (spent == null) {
             return ResponseEntity.notFound().build();
         }
-        //Verificacion de propiedad
-        if(user.getRole() != RoleServer.ADMIN && !spent.getUser().getId().equals(user.getId())){
-            return ResponseEntity.badRequest().build();
+
+        if (user.getRole() != RoleServer.ADMIN && !spent.getUser().getId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        //Eliminacion
+
         spentService.deleteByID(spentId);
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Actualiza un gasto por ID.
+     *
+     * Solo el ADMIN o el dueño del gasto pueden actualizarlo.
+     *
+     * @param spentId ID del gasto a actualizar
+     * @param request Datos para actualizar el gasto
+     * @param currentUser Usuario autenticado actual
+     * @return DTO del gasto actualizado o errores 404/403
+     */
     @PutMapping("/{spentId}")
     @Operation(
             security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)},
@@ -237,26 +316,30 @@ public class SpentController {
             @Valid @RequestBody UpdateSpentRequest request,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
-        Spent spent = spentService.getByID(spentId).orElse(null);;
+        Spent spent = spentService.getByID(spentId).orElse(null);
 
-        System.out.println("dhvkdsfkdsbfkdfdsahdsh " + request.spentId());
-        //Veriificacion existencia
+        // Verificación existencia
         if (spent == null) {
             return ResponseEntity.notFound().build();
         }
 
-        //verificacion de propiedad
-        if(user.getRole() != RoleServer.ADMIN && !request.userId().equals(user.getId())){
-            return ResponseEntity.badRequest().build();
+        // Verificación de propiedad o rol ADMIN
+        if (user.getRole() != RoleServer.ADMIN && !spent.getUser().getId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        //Actualizacion
         Spent updatedSpent = spentService.setItem(mappingUpdateSpent(request, spent.getUser().getId()));
         return ResponseEntity.ok(SpentDto.from(updatedSpent));
     }
 
-    private Spent mappingUpdateSpent (UpdateSpentRequest request , Long clienteId){
-        // Crear el gasto con referencias por ID
+    /**
+     * Mapea los datos de la petición de actualización a entidad Spent.
+     *
+     * @param request Datos de actualización
+     * @param clienteId Id del cliente propietario
+     * @return Entidad Spent con datos actualizados
+     */
+    private Spent mappingUpdateSpent(UpdateSpentRequest request, Long clienteId) {
         Spent spent = new Spent();
         spent.setSpentId(request.spentId());
         spent.setUser(userService.getUserById(clienteId).orElse(new User()));
@@ -269,11 +352,17 @@ public class SpentController {
         spent.setDescription(request.description());
         spent.setIcon(request.icon());
         spent.setCreatedAt(LocalDateTime.now());
-        return  spent;
+        return spent;
     }
 
-    private Spent mappingSpent (CreateSpentRequest request , Long clienteId){
-        // Crear el gasto con referencias por ID
+    /**
+     * Mapea los datos de la petición de creación a entidad Spent.
+     *
+     * @param request Datos para crear el gasto
+     * @param clienteId Id del cliente propietario
+     * @return Entidad Spent creada
+     */
+    private Spent mappingSpent(CreateSpentRequest request, Long clienteId) {
         Spent spent = new Spent();
         spent.setUser(userService.getUserById(clienteId).orElse(new User()));
         spent.setCategory(categoriaService.getByID(request.categoriaId()).orElse(null));
@@ -285,11 +374,27 @@ public class SpentController {
         spent.setDescription(request.description());
         spent.setIcon(request.icon());
         spent.setCreatedAt(LocalDateTime.now());
-        return  spent;
+        return spent;
     }
 
-    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
-    @PutMapping(value = "/me/uploadSpenseImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    /**
+     * Endpoint para subir una imagen asociada a un gasto.
+     *
+     * - Recibe una imagen multipart y el ID del gasto.
+     * - Valida la imagen y actualiza la URL del icono en el gasto.
+     * - El archivo se guarda en directorio /gastos/{spentId}/
+     *
+     * @param spentId ID del gasto
+     * @param file Imagen a subir
+     * @param currentUser Usuario autenticado
+     * @return DTO actualizado con la URL del icono, o errores 404/400/403
+     * @throws IOException si falla la subida
+     */
+    @PostMapping(value = "/uploadimg/{spentId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(
+            security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
+            summary = "Subir imagen para un gasto"
+    )
     public ResponseEntity<?> uploadSpenseImageWithData(
             @RequestPart("image") MultipartFile file,
             @RequestParam("spentId") Long spentId,
