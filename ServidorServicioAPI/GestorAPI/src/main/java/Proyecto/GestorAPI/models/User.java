@@ -4,6 +4,8 @@ import Proyecto.GestorAPI.config.security.RoleServer;
 import Proyecto.GestorAPI.config.security.oauth2.OAuth2Provider;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -46,20 +48,25 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Size(max = 100)
     private String server;
 
+    @Size(max = 255)
     private String address;
 
+    @Size(max = 20)
     private String phone;
 
     private boolean fv2;
 
     /** Rol del usuario dentro del sistema (admin, user). */
+    @NotNull(message = "El rol es obligatorio")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RoleServer role;
 
     /** URL de la imagen de perfil del usuario. */
+    @Size(max = 255)
     private String imageUrl;
 
     /** Indica si la cuenta del usuario está activa. */
@@ -78,12 +85,15 @@ public class User {
     private OAuth2Provider provider;
 
     /** ID único proporcionado por el proveedor externo (OAuth2). */
+    @Size(max = 100)
     private String providerId;
 
     /** Fecha de creación del usuario. */
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     /** Fecha de la última modificación del usuario. */
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     /**

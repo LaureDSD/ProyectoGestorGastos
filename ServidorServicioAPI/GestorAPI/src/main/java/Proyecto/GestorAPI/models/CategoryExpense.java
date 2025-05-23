@@ -2,100 +2,90 @@ package Proyecto.GestorAPI.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import jakarta.validation.constraints.*;
+import lombok.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Representa una categoría de gasto dentro del sistema.
- *
- * Cada categoría contiene información básica como nombre, descripción y porcentaje de IVA aplicado.
- * Además, está relacionada con una lista de gastos individuales asociados a dicha categoría.
- *
- * Esta clase se encuentra mapeada a la tabla "categorias" en la base de datos.
- */
 @Entity
+@Table(name = "categorias")
 @Data
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "categorias")
+@AllArgsConstructor
 public class CategoryExpense implements Serializable {
 
-    /**
-     * Identificador único de la categoría.
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * Nombre identificativo de la categoría.
+     * Nombre de la categoría.
+     * Obligatorio, no vacío, máximo 100 caracteres.
      */
+    @NotBlank(message = "El nombre es obligatorio")
+    @Size(max = 100, message = "El nombre no puede superar 100 caracteres")
+    @Column(nullable = false, length = 100, unique = true)
     private String name;
 
     /**
-     * Descripción detallada de la categoría, útil para dar contexto o ejemplos de uso.
+     * Descripción de la categoría.
+     * Opcional, máximo 500 caracteres.
      */
+    @Size(max = 500, message = "La descripción no puede superar 500 caracteres")
+    @Column(length = 500)
     private String description;
 
     /**
-     * Porcentaje de IVA que se aplica por defecto a los gastos de esta categoría.
+     * Porcentaje de IVA aplicado a esta categoría.
+     * Valor entre 0 y 100.
      */
+    @DecimalMin(value = "0.0", inclusive = true, message = "El IVA mínimo es 0")
+    @DecimalMax(value = "100.0", inclusive = true, message = "El IVA máximo es 100")
+    @Column(nullable = true)
     private double iva;
 
     /**
-     * Fecha y hora en la que se creó el registro por primera vez.
-     * Se asigna automáticamente al persistir.
+     * Fecha y hora de creación.
      */
+    @NotNull
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     /**
-     * Fecha y hora de la última modificación del registro.
-     * Se actualiza automáticamente antes de cada cambio.
+     * Fecha y hora de última actualización.
      */
+    @NotNull
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     /**
-     * Lista de gastos asociados a esta categoría.
-     * Se ignora en la serialización JSON para evitar referencias cíclicas.
+     * Lista de gastos asociados.
+     * Ignorado en JSON para evitar ciclos infinitos.
      */
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Spent> spentList;
 
-    /**
-     * Método de ciclo de vida que se ejecuta antes de insertar un nuevo registro en la base de datos.
-     * Establece los campos de creación y actualización al momento actual.
-     */
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 
-    /**
-     * Método de ciclo de vida que se ejecuta antes de actualizar un registro existente.
-     * Actualiza el campo de modificación con la fecha y hora actual.
-     */
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
 
     /**
-     * Constructor personalizado para inicializar una categoría con su nombre y descripción.
-     *
-     * @param nombre      Nombre de la categoría.
-     * @param descripcion Descripción de la categoría.
+     * Constructor parcial para facilitar creación.
      */
-    public CategoryExpense(String nombre, String descripcion) {
-        this.name = nombre;
-        this.description = descripcion;
+    public CategoryExpense(String name, String description, double iva) {
+        this.name = name;
+        this.description = description;
+        this.iva = iva;
     }
 }

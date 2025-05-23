@@ -2,82 +2,86 @@ package Proyecto.GestorAPI.models;
 
 import Proyecto.GestorAPI.models.enums.ExpenseClass;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
-/**
- * Representa un gasto del tipo subscripción.
- *
- * Extiende la clase base {@link Spent} e incluye atributos específicos
- * como fecha de inicio, renovación, estado de actividad y cálculo de acumulado.
- */
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "subscripciones")
 @Data
-@Getter
-@Setter
 @NoArgsConstructor
 public class Subscription extends Spent {
 
     /**
-     * Fecha de inicio de la subscripción. Campo obligatorio.
+     * Fecha de inicio de la subscripción. Obligatoria.
      */
+    @NotNull(message = "La fecha de inicio es obligatoria")
     @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime start;
 
     /**
-     * Fecha de finalización de la subscripción.
-     * Si es null, se considera una subscripción indefinida.
+     * Fecha de finalización. Nullable (indefinida si null).
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime end;
 
     /**
-     * Monto acumulado calculado desde el inicio según el intervalo y frecuencia de renovación.
+     * Monto acumulado. No negativo.
      */
-    private double accumulate;
+    @DecimalMin(value = "0.0", inclusive = true, message = "El acumulado no puede ser negativo")
+    @Column(nullable = false)
+    private double accumulate = 0;
 
     /**
-     * Día del mes en el que se renueva la subscripción.
-     * Por ejemplo: 1 = día 1 de cada mes.
+     * Día de renovación, entre 1 y 31.
      */
+    @Min(value = 1, message = "El día de reinicio debe ser mínimo 1")
+    @Max(value = 31, message = "El día de reinicio debe ser máximo 31")
+    @Column(nullable = false)
     private int restartDay;
 
     /**
-     * Intervalo de tiempo (en días, semanas o meses según lógica externa)
-     * que define la frecuencia de renovación.
+     * Intervalo de tiempo (en días, semanas o meses, según lógica externa).
+     * Debe ser positivo.
      */
+    @Min(value = 1, message = "El intervalo de tiempo debe ser al menos 1")
+    @Column(nullable = false)
     private int intervalTime;
 
     /**
-     * Indica si la subscripción está actualmente activa.
+     * Estado de la subscripción (activa o no).
      */
+    @Column(nullable = false)
     private boolean activa;
 
-    public Subscription(String name, String description, String icon,
-                        LocalDateTime expenseDate, double total, double iva,
-                        User user, CategoryExpense category,
-                        LocalDateTime createdAt, LocalDateTime updatedAt,
-                        ExpenseClass typeExpense,
-                        LocalDateTime startDate, LocalDateTime endDate,
-                        int restartDay, int intervalTime, boolean active)
-{
-
+    public Subscription(
+            @NotBlank(message = "El nombre no puede estar vacío") String name,
+            String description,
+            String icon,
+            @NotNull(message = "La fecha del gasto es obligatoria") LocalDateTime expenseDate,
+            @DecimalMin(value = "0.0", inclusive = false, message = "El total debe ser mayor que cero") double total,
+            @DecimalMin(value = "0.0", message = "El IVA no puede ser negativo") double iva,
+            @NotNull(message = "El usuario es obligatorio") User user,
+            @NotNull(message = "La categoría es obligatoria") CategoryExpense category,
+            @NotNull(message = "La fecha de creación es obligatoria") LocalDateTime createdAt,
+            LocalDateTime updatedAt,
+            @NotNull(message = "El tipo de gasto es obligatorio") ExpenseClass typeExpense,
+            @NotNull(message = "La fecha de inicio es obligatoria") LocalDateTime startDate,
+            LocalDateTime endDate,
+            @Min(1) @Max(31) int restartDay,
+            @Min(1) int intervalTime,
+            boolean active
+    ) {
         super(name, description, icon, expenseDate, total, iva, user, category, createdAt, updatedAt, typeExpense);
-
         this.start = startDate;
         this.end = endDate;
-        this.accumulate = accumulate;
+        this.accumulate = 0;  // inicializamos en 0 al crear, no desde parámetro
         this.restartDay = restartDay;
         this.intervalTime = intervalTime;
         this.activa = active;
     }
-
-
-
-
 }

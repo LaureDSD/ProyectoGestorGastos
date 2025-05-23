@@ -2,21 +2,12 @@ package Proyecto.GestorAPI.models;
 
 import Proyecto.GestorAPI.models.enums.ExpenseClass;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.*;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
-/**
- * Entidad que representa un gasto registrado por un usuario.
- *
- * Los gastos pueden pertenecer a diferentes tipos como tickets, facturas, suscripciones o transferencias.
- * Cada gasto está relacionado con un usuario y opcionalmente con una categoría.
- * Se permite la herencia para extender tipos de gasto especializados.
- */
 @Entity
 @Table(name = "gastos")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -26,101 +17,116 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Spent {
 
-    /**
-     * Identificador único del gasto.
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long spentId;
 
     /**
      * Nombre o título del gasto.
+     * No nulo ni vacío, máximo 150 caracteres.
      */
+    @NotBlank(message = "El nombre es obligatorio")
+    @Size(max = 150, message = "El nombre no puede superar 150 caracteres")
+    @Column(nullable = false, length = 150)
     private String name;
 
     /**
      * Descripción adicional del gasto.
+     * Opcional, máximo 500 caracteres.
      */
+    @Size(max = 500, message = "La descripción no puede superar 500 caracteres")
+    @Column(length = 500)
     private String description;
 
     /**
-     * Icono representativo del gasto (puede ser una clase CSS, nombre de imagen, etc.).
+     * Icono representativo (ej. nombre de clase CSS).
+     * Opcional, máximo 50 caracteres.
      */
+    @Size(max = 50, message = "El icono no puede superar 50 caracteres")
+    @Column(length = 50)
     private String icon;
 
     /**
      * Fecha en la que se realizó el gasto.
+     * Obligatoria.
      */
+    @NotNull(message = "La fecha del gasto es obligatoria")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    @Column(nullable = false)
     private LocalDateTime expenseDate;
 
     /**
-     * Importe total del gasto (sin IVA incluido).
+     * Importe total (sin IVA).
+     * Obligatorio, mayor que 0.
      */
+    @DecimalMin(value = "0.01", message = "El total debe ser mayor que 0")
+    @Column(nullable = false)
     private double total;
 
     /**
-     * Porcentaje de IVA aplicado al gasto.
-     * Si no se especifica, se puede tomar el valor por defecto o el de la categoría asignada.
+     * Porcentaje de IVA aplicado.
+     * Opcional, mínimo 0, máximo 100.
      */
+    @DecimalMin(value = "0.0", message = "El IVA no puede ser negativo")
+    @DecimalMax(value = "100.0", message = "El IVA no puede superar 100")
+    @Column(nullable = false)
     private double iva;
 
     /**
-     * Usuario al que pertenece este gasto.
+     * Usuario dueño del gasto.
+     * Obligatorio.
      */
-    @ManyToOne
+    @NotNull(message = "El usuario es obligatorio")
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     /**
-     * Categoría opcional a la que pertenece el gasto.
+     * Categoría opcional.
      */
-    @ManyToOne
-    @JoinColumn(name = "categoria_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoria_id", nullable = true)
     private CategoryExpense category;
 
     /**
-     * Fecha y hora en que se creó el registro.
-     * Se establece automáticamente al persistir.
+     * Fecha y hora de creación.
      */
+    @NotNull
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     /**
-     * Fecha y hora de la última modificación del registro.
-     * Se actualiza automáticamente antes de cada modificación.
+     * Fecha y hora de última modificación.
      */
+    @NotNull
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     /**
-     * Tipo de gasto: puede ser un gasto genérico o una subclase especializada como Ticket, Factura, etc.
+     * Tipo de gasto.
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo", nullable = false)
+    @NotNull(message = "El tipo de gasto es obligatorio")
     private ExpenseClass typeExpense = ExpenseClass.GASTO_GENERICO;
 
-
-    /**
-     * Callback de JPA que se ejecuta automáticamente antes de insertar un nuevo gasto.
-     * Establece las fechas de creación y modificación.
-     */
     @PrePersist
     public void prePersist() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+        if (createdAt == null) createdAt = LocalDateTime.now();
+        if (updatedAt == null) updatedAt = LocalDateTime.now();
     }
 
-    /**
-     * Callback de JPA que se ejecuta automáticamente antes de actualizar un gasto existente.
-     * Actualiza la fecha de modificación.
-     */
     @PreUpdate
     public void preUpdate() {
         updatedAt = LocalDateTime.now();
     }
 
+    public Spent(String name, String description, String icon,
+                 LocalDateTime expenseDate, double total, double iva,
+                 User user, CategoryExpense category,
+                 LocalDateTime createdAt, LocalDateTime updatedAt,
+                 ExpenseClass typeExpense) {
 
-
-    public Spent(String name, String description, String icon, LocalDateTime expenseDate, double total, double iva, User user, CategoryExpense category, LocalDateTime createdAt, LocalDateTime updatedAt, ExpenseClass typeExpense) {
         this.name = name;
         this.description = description;
         this.icon = icon;
@@ -133,7 +139,5 @@ public class Spent {
         this.updatedAt = updatedAt != null ? updatedAt : LocalDateTime.now();
         this.typeExpense = typeExpense != null ? typeExpense : ExpenseClass.GASTO_GENERICO;
     }
-
-
 
 }
