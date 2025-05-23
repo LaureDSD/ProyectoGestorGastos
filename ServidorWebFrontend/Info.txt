@@ -1,4 +1,0 @@
-Aún no iniciado
-
-
-npm install chart.js@^4.4.0 ng2-charts@^4.0.0

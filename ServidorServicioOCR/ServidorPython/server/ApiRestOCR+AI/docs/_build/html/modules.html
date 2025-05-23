@@ -1,0 +1,194 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ApiRestOCR+AI &mdash; documentación de ApiRestOCR+AI - 3.0.1</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=b32d57a0"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=f85f4cfb"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ApiRestOCR+AI
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenido</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="OcrAiServerOriginal.html">Módulo OcrAiServerOriginal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="apiController.html">apiController module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">models module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="services.html">services module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">utils module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">config module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ApiRestOCR+AI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">ApiRestOCR+AI</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modules.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="apirestocr-ai">
+<h1>ApiRestOCR+AI<a class="headerlink" href="#apirestocr-ai" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="OcrAiServerOriginal.html">Módulo OcrAiServerOriginal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="apiController.html">apiController module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="apiController.html#apiController.ApiController"><code class="docutils literal notranslate"><span class="pre">ApiController</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apiController.html#apiController.ApiController.endpoint_chat_service"><code class="docutils literal notranslate"><span class="pre">ApiController.endpoint_chat_service()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apiController.html#apiController.ApiController.endpoint_ocr_archivo"><code class="docutils literal notranslate"><span class="pre">ApiController.endpoint_ocr_archivo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apiController.html#apiController.ApiController.endpoint_ocr_image"><code class="docutils literal notranslate"><span class="pre">ApiController.endpoint_ocr_image()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apiController.html#apiController.ApiController.endpoint_status_server"><code class="docutils literal notranslate"><span class="pre">ApiController.endpoint_status_server()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">config module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="config.html#config.Config"><code class="docutils literal notranslate"><span class="pre">Config</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="config.html#config.Config.load_from_env"><code class="docutils literal notranslate"><span class="pre">Config.load_from_env()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="main.html#main.configure_app"><code class="docutils literal notranslate"><span class="pre">configure_app()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html#main.create_api_controller"><code class="docutils literal notranslate"><span class="pre">create_api_controller()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html#main.initialize_services"><code class="docutils literal notranslate"><span class="pre">initialize_services()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html#main.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html#main.setup_logging"><code class="docutils literal notranslate"><span class="pre">setup_logging()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">models module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="models.html#models.Producto"><code class="docutils literal notranslate"><span class="pre">Producto</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.html#models.Producto.cantidad"><code class="docutils literal notranslate"><span class="pre">Producto.cantidad</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#models.Producto.model_config"><code class="docutils literal notranslate"><span class="pre">Producto.model_config</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#models.Producto.nombre"><code class="docutils literal notranslate"><span class="pre">Producto.nombre</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#models.Producto.precio"><code class="docutils literal notranslate"><span class="pre">Producto.precio</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#models.Producto.subtotal"><code class="docutils literal notranslate"><span class="pre">Producto.subtotal</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="models.html#models.StatusResponse"><code class="docutils literal notranslate"><span class="pre">StatusResponse</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.html#models.StatusResponse.demo"><code class="docutils literal notranslate"><span class="pre">StatusResponse.demo</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#models.StatusResponse.model_config"><code class="docutils literal notranslate"><span class="pre">StatusResponse.model_config</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#models.StatusResponse.ocrLocal"><code class="docutils literal notranslate"><span class="pre">StatusResponse.ocrLocal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#models.StatusResponse.statusServer"><code class="docutils literal notranslate"><span class="pre">StatusResponse.statusServer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="models.html#models.TicketResponse"><code class="docutils literal notranslate"><span class="pre">TicketResponse</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.html#models.TicketResponse.articulos"><code class="docutils literal notranslate"><span class="pre">TicketResponse.articulos</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#models.TicketResponse.categoria"><code class="docutils literal notranslate"><span class="pre">TicketResponse.categoria</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#models.TicketResponse.confianza"><code class="docutils literal notranslate"><span class="pre">TicketResponse.confianza</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#models.TicketResponse.establecimiento"><code class="docutils literal notranslate"><span class="pre">TicketResponse.establecimiento</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#models.TicketResponse.fecha"><code class="docutils literal notranslate"><span class="pre">TicketResponse.fecha</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#models.TicketResponse.hora"><code class="docutils literal notranslate"><span class="pre">TicketResponse.hora</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#models.TicketResponse.iva"><code class="docutils literal notranslate"><span class="pre">TicketResponse.iva</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#models.TicketResponse.model_config"><code class="docutils literal notranslate"><span class="pre">TicketResponse.model_config</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#models.TicketResponse.total"><code class="docutils literal notranslate"><span class="pre">TicketResponse.total</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="services.html">services module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="services.html#services.ChatService"><code class="docutils literal notranslate"><span class="pre">ChatService</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#services.ChatService.responder_chat"><code class="docutils literal notranslate"><span class="pre">ChatService.responder_chat()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="services.html#services.OcrService"><code class="docutils literal notranslate"><span class="pre">OcrService</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="services.html#services.OcrService.procesar_ocr_archivo"><code class="docutils literal notranslate"><span class="pre">OcrService.procesar_ocr_archivo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="services.html#services.OcrService.procesar_ocr_imagen_local"><code class="docutils literal notranslate"><span class="pre">OcrService.procesar_ocr_imagen_local()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="services.html#services.OcrService.procesar_ocr_imagen_openai"><code class="docutils literal notranslate"><span class="pre">OcrService.procesar_ocr_imagen_openai()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">utils module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#utils.Utils"><code class="docutils literal notranslate"><span class="pre">Utils</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="utils.html#utils.Utils.allowed_file"><code class="docutils literal notranslate"><span class="pre">Utils.allowed_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html#utils.Utils.require_api_key"><code class="docutils literal notranslate"><span class="pre">Utils.require_api_key()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html#utils.Utils.simulador_respuesta_demo"><code class="docutils literal notranslate"><span class="pre">Utils.simulador_respuesta_demo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html#utils.Utils.simulador_respuesta_json"><code class="docutils literal notranslate"><span class="pre">Utils.simulador_respuesta_json()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, LaureanoDeSousaDias.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

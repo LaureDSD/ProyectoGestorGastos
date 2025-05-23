@@ -1,3 +1,0 @@
-Integración e Oauth2 incompleta
-No funciona aún.
-Falta decisión de tipo de BD, MySQL o Postgress

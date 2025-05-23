@@ -1,0 +1,237 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>apiController &mdash; documentación de ApiRestOCR+AI - 3.0.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=b32d57a0"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ApiRestOCR+AI
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenido</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../OcrAiServerOriginal.html">Módulo OcrAiServerOriginal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../apiController.html">apiController module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models.html">models module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services.html">services module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils.html">utils module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config.html">config module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ApiRestOCR+AI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Código de módulo</a></li>
+      <li class="breadcrumb-item active">apiController</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Código fuente para apiController</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">werkzeug.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">RequestEntityTooLarge</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<div class="viewcode-block" id="ApiController">
+<a class="viewcode-back" href="../apiController.html#apiController.ApiController">[documentos]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ApiController</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ocr_service</span><span class="p">,</span> <span class="n">chat_service</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span> <span class="n">demo_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ocr_local</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Controlador para los endpoints de la API.</span>
+<span class="sd">        </span>
+<span class="sd">        :param ocr_service: Instancia de OcrService</span>
+<span class="sd">        :param chat_service: Instancia de ChatService</span>
+<span class="sd">        :param utils: Instancia de Utils</span>
+<span class="sd">        :param demo_mode: Modo demo activo/inactivo</span>
+<span class="sd">        :param ocr_local: Usar OCR local (True) o de OpenAI (False)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ocr_service</span> <span class="o">=</span> <span class="n">ocr_service</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chat_service</span> <span class="o">=</span> <span class="n">chat_service</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">utils</span> <span class="o">=</span> <span class="n">utils</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">DEMO_MODE</span> <span class="o">=</span> <span class="n">demo_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">OCR_LOCAL</span> <span class="o">=</span> <span class="n">ocr_local</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blueprint</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s1">&#39;api&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_register_error_handlers</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_register_routes</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_register_error_handlers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Registra manejadores de errores.&quot;&quot;&quot;</span>
+        
+        <span class="nd">@self</span><span class="o">.</span><span class="n">blueprint</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="n">RequestEntityTooLarge</span><span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">handle_file_too_large</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Archivo demasiado grande rechazado&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Archivo demasiado grande. Máximo permitido: 10MB&quot;</span><span class="p">}),</span> <span class="mi">413</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_register_routes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Registra todos los endpoints.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blueprint</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/ocr&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])(</span><span class="bp">self</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">require_api_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endpoint_ocr_image</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blueprint</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/ocr-file&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])(</span><span class="bp">self</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">require_api_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endpoint_ocr_archivo</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blueprint</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/aichat&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])(</span><span class="bp">self</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">require_api_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endpoint_chat_service</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blueprint</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/status&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">])(</span><span class="bp">self</span><span class="o">.</span><span class="n">endpoint_status_server</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ApiController.endpoint_ocr_image">
+<a class="viewcode-back" href="../apiController.html#apiController.ApiController.endpoint_ocr_image">[documentos]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">endpoint_ocr_image</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Endpoint para procesar imágenes con OCR.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;file&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">file</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">allowed_file</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">filename</span><span class="p">):</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Tipo de archivo no permitido&quot;</span><span class="p">},</span> <span class="mi">400</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEMO_MODE</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">simulador_respuesta_demo</span><span class="p">(),</span> <span class="mi">200</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">OCR_LOCAL</span><span class="p">:</span>
+                <span class="n">resultado</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ocr_service</span><span class="o">.</span><span class="n">procesar_ocr_imagen_local</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">resultado</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ocr_service</span><span class="o">.</span><span class="n">procesar_ocr_imagen_openai</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="n">resultado</span><span class="p">,</span> <span class="mi">200</span>
+            
+        <span class="k">except</span> <span class="ne">ConnectionError</span> <span class="k">as</span> <span class="n">ce</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">ce</span><span class="p">)},</span> <span class="mi">503</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error en /ocr&quot;</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Error interno al procesar imagen OCR&quot;</span><span class="p">},</span> <span class="mi">500</span></div>
+
+
+<div class="viewcode-block" id="ApiController.endpoint_ocr_archivo">
+<a class="viewcode-back" href="../apiController.html#apiController.ApiController.endpoint_ocr_archivo">[documentos]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">endpoint_ocr_archivo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Endpoint para procesar archivos (PDF/texto).&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;file&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">file</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">allowed_file</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">filename</span><span class="p">):</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Tipo de archivo no permitido&quot;</span><span class="p">},</span> <span class="mi">400</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEMO_MODE</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">simulador_respuesta_demo</span><span class="p">(),</span> <span class="mi">200</span>
+            
+            <span class="n">resultado</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ocr_service</span><span class="o">.</span><span class="n">procesar_ocr_archivo</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">resultado</span><span class="p">,</span> <span class="mi">200</span>
+            
+        <span class="k">except</span> <span class="ne">ConnectionError</span> <span class="k">as</span> <span class="n">ce</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">ce</span><span class="p">)},</span> <span class="mi">503</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error en /ocr-file&quot;</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Error interno al procesar archivo OCR&quot;</span><span class="p">},</span> <span class="mi">500</span></div>
+
+
+<div class="viewcode-block" id="ApiController.endpoint_chat_service">
+<a class="viewcode-back" href="../apiController.html#apiController.ApiController.endpoint_chat_service">[documentos]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">endpoint_chat_service</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">silent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;JSON inválido o no enviado&quot;</span><span class="p">},</span> <span class="mi">400</span>
+            
+            <span class="n">mensaje</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mensaje&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">mensaje</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Debe enviar un campo &#39;mensaje&#39; en JSON&quot;</span><span class="p">},</span> <span class="mi">400</span>
+            
+            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEMO_MODE</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;respuesta&quot;</span><span class="p">:</span> <span class="s2">&quot;Bienvenido a Gesthor, Modo demo activado&quot;</span><span class="p">},</span> <span class="mi">200</span>
+            
+            <span class="n">resultado</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chat_service</span><span class="o">.</span><span class="n">responder_chat</span><span class="p">(</span><span class="n">mensaje</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">resultado</span><span class="p">,</span> <span class="mi">200</span>
+        
+        <span class="k">except</span> <span class="ne">ConnectionError</span> <span class="k">as</span> <span class="n">ce</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">ce</span><span class="p">)},</span> <span class="mi">503</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error en /aichat&quot;</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Error interno al generar respuesta&quot;</span><span class="p">},</span> <span class="mi">500</span></div>
+
+
+
+<div class="viewcode-block" id="ApiController.endpoint_status_server">
+<a class="viewcode-back" href="../apiController.html#apiController.ApiController.endpoint_status_server">[documentos]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">endpoint_status_server</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Endpoint de estado del servicio.&quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;statusServer&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;demo&quot;</span><span class="p">:</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEMO_MODE</span><span class="p">,</span>
+            <span class="s2">&quot;ocrLocal&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">OCR_LOCAL</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">response</span><span class="p">,</span> <span class="mi">200</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, LaureanoDeSousaDias.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

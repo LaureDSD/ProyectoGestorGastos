@@ -1,0 +1,35 @@
+En la carpeta del sevidor entraras , la version anterior, en carpeta old.
+Ademas de el isntalador de teseract utilizadopara windows, ajsuta la carpeta si no usas carpeta default.
+
+Ejecuta el requirements.txt para instalar todas las librerias, no confundir con el requirementes de flash, ya que es una api para test
+
+En la carpeta servidorApiOcr , ejecutar el main. 
+* En casod e fallo, esa la versiondel servidor en solo un archivo, con el nombre de la carpeta.
+
+Dara fallo al no tener clave de OPENAI en el fichero env.
+
+Para probar que responde pone el modo demo.
+
+Para usar la ia, usa modo local con modo demo desactivado.
+
+IMPORTANTE: GPT3.5 no permite archivos, es necesario tener activo ocr local,cob gpt mas modernos si permite usar sin OCR local yes cuando si fincionala carga directa de imagenes y archivos..
+
+ATENCION: Carga de tickets digitales no esta fucnional del todo. La carga de tickets por foto tiene tasa de fallo, prueba mas de 1 vez...
+
+
+https://github.com/UB-Mannheim/tesseract/wiki #En casod e probelams con tesseract.
+
+PARA ACTUALIZAR SERVIDOR, ACCEDE AL ENV (Desde carpeta ApiRestOCR+AI):
+
+# venv\Scripts\activate
+
+LUEGO ACCEDE A DOCS (Carpeta docs):
+
+# sphinx-build -b html source/ _build/html
+
+NO OLVIDES:
+
+# pip install --no-cache-dir -r requirements.txt
+
+PARA USAR EL SERVIDOR, LANZA EL SERVER DESDE LA CARPETA CON PYTHON (NO OBLIGATORIO ESTAR EN EL VENV).
+
