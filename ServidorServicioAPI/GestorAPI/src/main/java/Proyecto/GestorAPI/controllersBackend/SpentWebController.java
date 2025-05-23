@@ -14,10 +14,25 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controlador web para la gestión de gastos (expenses).
+ *
+ * <p>
+ * Proporciona endpoints para listar, editar, guardar y eliminar gastos,
+ * junto con datos auxiliares como usuarios, categorías y tipos de gasto.
+ * </p>
+ *
+ * <p>
+ * La ruta base para este controlador es <code>/admin/expenses</code>.
+ * </p>
+ */
 @Controller
 @RequestMapping("/admin/expenses")
 public class SpentWebController {
 
+    /**
+     * Ruta base para la plantilla HTML correspondiente a la gestión de gastos.
+     */
     private final String rutaHTML = "/admin/expenses";
 
     @Autowired
@@ -33,13 +48,27 @@ public class SpentWebController {
     private List<CategoryExpense> categorias;
     private List<ExpenseClass> tiposGasto;
 
+    /**
+     * Inicializa los datos compartidos necesarios para los formularios y vistas,
+     * como lista de usuarios, categorías y tipos de gasto.
+     */
     private void initDatosCompartidos() {
         usuarios = userService.getUsers();
         categorias = categoryService.getAll();
         tiposGasto = List.of(ExpenseClass.values());
     }
 
-    // Listar todos los gastos
+    /**
+     * Endpoint GET para listar todos los gastos registrados.
+     *
+     * <p>
+     * Añade al modelo la lista de gastos, un objeto gasto vacío para el formulario,
+     * y los datos auxiliares (usuarios, categorías, tipos de gasto).
+     * </p>
+     *
+     * @param model Modelo para pasar atributos a la vista.
+     * @return Nombre de la plantilla Thymeleaf para mostrar gastos.
+     */
     @GetMapping
     public String listarGastos(Model model) {
         try {
@@ -59,7 +88,18 @@ public class SpentWebController {
         }
     }
 
-    // Formulario de edición
+    /**
+     * Endpoint GET para cargar el formulario de edición de un gasto específico.
+     *
+     * <p>
+     * Obtiene el gasto por ID o crea uno nuevo si el ID es nulo o no existe,
+     * y añade los datos auxiliares para el formulario.
+     * </p>
+     *
+     * @param id ID del gasto a editar.
+     * @param model Modelo para pasar atributos a la vista.
+     * @return Nombre de la plantilla Thymeleaf para editar gasto.
+     */
     @GetMapping("/edit/{id}")
     public String editarGasto(@PathVariable("id") Long id, Model model) {
         try {
@@ -78,7 +118,18 @@ public class SpentWebController {
         }
     }
 
-    // Guardar gasto
+    /**
+     * Endpoint POST para guardar un gasto, ya sea nuevo o actualizado.
+     *
+     * <p>
+     * Realiza la asociación completa del usuario y categoría si sus IDs están presentes,
+     * luego delega el guardado al servicio correspondiente.
+     * </p>
+     *
+     * @param gasto Objeto {@link Spent} que contiene los datos del gasto a guardar.
+     * @param model Modelo para pasar atributos a la vista en caso de error.
+     * @return Redirección a la lista de gastos si es exitoso, o la vista con error.
+     */
     @PostMapping("/save")
     public String guardarGasto(@ModelAttribute Spent gasto, Model model) {
         try {
@@ -103,7 +154,18 @@ public class SpentWebController {
         }
     }
 
-    // Eliminar gasto
+    /**
+     * Endpoint GET para eliminar un gasto por su ID.
+     *
+     * <p>
+     * Verifica que el gasto exista antes de eliminarlo. Si no se encuentra,
+     * se añade un mensaje de error al modelo.
+     * </p>
+     *
+     * @param id ID del gasto a eliminar.
+     * @param model Modelo para pasar atributos a la vista en caso de error.
+     * @return Redirección a la lista de gastos o vista con error.
+     */
     @GetMapping("/delete/{id}")
     public String eliminarGasto(@PathVariable("id") Long id, Model model) {
         try {

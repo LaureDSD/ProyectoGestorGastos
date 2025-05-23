@@ -14,10 +14,21 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controlador web para la gestión de suscripciones dentro del área administrativa.
+ *
+ * Define endpoints para listar, crear, editar y eliminar suscripciones.
+ *
+ * La clase maneja el mapeo de URLs bajo "/admin/subscriptions" y utiliza Thymeleaf
+ * para la representación de vistas HTML.
+ */
 @Controller
 @RequestMapping("/admin/subscriptions")
 public class SubscriptionWebController {
 
+    /**
+     * Ruta común para las vistas HTML relacionadas con suscripciones.
+     */
     private final String rutaHTML = "/admin/subscriptions";
 
     @Autowired
@@ -29,17 +40,38 @@ public class SubscriptionWebController {
     @Autowired
     private CategoryExpenseServiceImpl categoryService;
 
+    /**
+     * Listado en memoria de usuarios disponibles, para carga en formularios.
+     */
     private List<User> usuarios;
+
+    /**
+     * Listado en memoria de categorías de gasto, para carga en formularios.
+     */
     private List<CategoryExpense> categorias;
+
+    /**
+     * Listado en memoria de tipos de gasto (enumeración ExpenseClass), para carga en formularios.
+     */
     private List<ExpenseClass> tiposGasto;
 
+    /**
+     * Inicializa datos comunes que se comparten entre diferentes vistas:
+     * usuarios, categorías y tipos de gasto.
+     */
     private void initDatosCompartidos() {
         usuarios = userService.getUsers();
         categorias = categoryService.getAll();
         tiposGasto = List.of(ExpenseClass.values());
     }
 
-    // Listar todas las suscripciones
+    /**
+     * Endpoint GET que lista todas las suscripciones.
+     * Carga los datos necesarios y los añade al modelo para la vista.
+     *
+     * @param model Modelo para pasar atributos a la vista.
+     * @return Nombre de la plantilla HTML para mostrar las suscripciones.
+     */
     @GetMapping
     public String showSubscriptionsList(Model model) {
         try {
@@ -59,12 +91,21 @@ public class SubscriptionWebController {
         }
     }
 
-    // Formulario para crear o editar una suscripción
+    /**
+     * Endpoint GET para mostrar el formulario de creación o edición de una suscripción.
+     * Si se proporciona un id válido, carga la suscripción existente; si no, crea una nueva.
+     *
+     * @param id Identificador de la suscripción a editar.
+     * @param model Modelo para pasar atributos a la vista.
+     * @return Nombre de la plantilla HTML para crear o editar una suscripción.
+     */
     @GetMapping("/edit/{id}")
     public String editarSubscription(@PathVariable("id") Long id, Model model) {
         try {
             initDatosCompartidos();
-            Subscription subscription = (id != null) ? subscriptionService.getByID(id).orElse(new Subscription()) : new Subscription();
+            Subscription subscription = (id != null)
+                    ? subscriptionService.getByID(id).orElse(new Subscription())
+                    : new Subscription();
 
             model.addAttribute("subscription", subscription);
             model.addAttribute("users", usuarios);
@@ -78,17 +119,24 @@ public class SubscriptionWebController {
         }
     }
 
-    // Guardar una suscripción (creación o actualización)
+    /**
+     * Endpoint POST para guardar una suscripción, tanto para crear una nueva
+     * como para actualizar una existente.
+     *
+     * @param subscription Objeto Subscription recibido desde el formulario.
+     * @param model Modelo para pasar atributos a la vista.
+     * @return Redirección a la lista de suscripciones o recarga del formulario en caso de error.
+     */
     @PostMapping("/save")
     public String saveSubscription(@ModelAttribute Subscription subscription, Model model) {
         try {
-            // Obtener y establecer el usuario completo si hay un ID
+            // Establece el usuario completo si el ID está presente
             if (subscription.getUser() != null && subscription.getUser().getId() != null) {
                 User fullUser = userService.getUserById(subscription.getUser().getId()).orElse(null);
                 subscription.setUser(fullUser);
             }
 
-            // Obtener y establecer la categoría completa si hay un ID
+            // Establece la categoría completa si el ID está presente
             if (subscription.getCategory() != null && subscription.getCategory().getId() != null) {
                 CategoryExpense fullCategory = categoryService.getByID(subscription.getCategory().getId()).orElse(null);
                 subscription.setCategory(fullCategory);
@@ -104,7 +152,14 @@ public class SubscriptionWebController {
         }
     }
 
-    // Eliminar suscripción
+    /**
+     * Endpoint GET para eliminar una suscripción según su id.
+     * En caso de éxito, redirige a la lista; si no, muestra error.
+     *
+     * @param id Identificador de la suscripción a eliminar.
+     * @param model Modelo para pasar atributos a la vista.
+     * @return Redirección a la lista de suscripciones o recarga con mensaje de error.
+     */
     @GetMapping("/delete/{id}")
     public String eliminarSubscription(@PathVariable("id") Long id, Model model) {
         try {
