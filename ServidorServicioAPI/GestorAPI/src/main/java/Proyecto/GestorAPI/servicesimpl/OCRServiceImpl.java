@@ -112,7 +112,7 @@ public class OCRServiceImpl implements OCRService {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
         // Enviar solicitud al servidor Python
-        String url = imagen ? pythonServerUrl + "/ocr" : pythonServerUrl + "/ocr-file";
+        String url = imagen ? pythonServerUrl + "/api/ocr" : pythonServerUrl + "/api/ocr-file";
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(
@@ -133,7 +133,7 @@ public class OCRServiceImpl implements OCRService {
     public StatusServerResponse getStatus() {
         StatusServerResponse health = new StatusServerResponse(false,false,false);
         try {
-            String url = pythonServerUrl + "/status";
+            String url = pythonServerUrl + "/api/status";
             ResponseEntity<StatusServerResponse> response = restTemplate.getForEntity(url, StatusServerResponse.class);
             health = response.getBody();
         } catch (Exception e) {

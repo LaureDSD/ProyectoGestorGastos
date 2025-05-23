@@ -1,0 +1,249 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>main &mdash; documentación de ApiRestOCR+AI - 3.0.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=b32d57a0"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ApiRestOCR+AI
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenido</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../OcrAiServerOriginal.html">Módulo OcrAiServerOriginal</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ApiRestOCR+AI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Código de módulo</a></li>
+      <li class="breadcrumb-item active">main</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Código fuente para main</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Módulo principal del servidor de procesamiento de tickets con OCR e IA.</span>
+
+<span class="sd">Este servidor Flask proporciona endpoints para:</span>
+
+<span class="sd">- Procesamiento de imágenes de tickets usando OCR (local o con OpenAI)</span>
+<span class="sd">- Procesamiento de archivos de texto/PDF de tickets</span>
+<span class="sd">- Interacción con modelos de IA para análisis de tickets</span>
+<span class="sd">- Chat asistido por IA</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">logging.handlers</span><span class="w"> </span><span class="kn">import</span> <span class="n">RotatingFileHandler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">dotenv_values</span><span class="p">,</span> <span class="n">load_dotenv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask_cors</span><span class="w"> </span><span class="kn">import</span> <span class="n">CORS</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytesseract</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openai</span>
+
+
+
+<span class="c1"># Importaciones de clases propias</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">services</span><span class="w"> </span><span class="kn">import</span> <span class="n">OcrService</span><span class="p">,</span> <span class="n">ChatService</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">apiController</span><span class="w"> </span><span class="kn">import</span> <span class="n">ApiController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+
+
+<div class="viewcode-block" id="configure_app">
+<a class="viewcode-back" href="../main.html#main.configure_app">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">configure_app</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Flask</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configura y retorna la aplicación Flask.&quot;&quot;&quot;</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="n">CORS</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    
+    <span class="c1"># Configuración básica de Flask</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;ALLOWED_EXTENSIONS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">EXTENSIONS</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;MAX_CONTENT_LENGTH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">MAX_CONTENT_LENGTH_MB</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>
+
+    
+    
+    <span class="k">return</span> <span class="n">app</span></div>
+
+
+<div class="viewcode-block" id="setup_logging">
+<a class="viewcode-back" href="../main.html#main.setup_logging">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_logging</span><span class="p">(</span><span class="n">app</span><span class="p">:</span> <span class="n">Flask</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configura el sistema de logging.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;logs&#39;</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;logs&#39;</span><span class="p">)</span>
+    
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">RotatingFileHandler</span><span class="p">(</span><span class="s1">&#39;logs/server.log&#39;</span><span class="p">,</span> <span class="n">maxBytes</span><span class="o">=</span><span class="mi">10</span><span class="o">*</span><span class="mi">1024</span><span class="o">*</span><span class="mi">1024</span><span class="p">,</span> <span class="n">backupCount</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span>
+        <span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span>
+    <span class="p">))</span>
+    
+    <span class="n">app</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="initialize_services">
+<a class="viewcode-back" href="../main.html#main.initialize_services">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">initialize_services</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Inicializa y retorna los servicios principales.&quot;&quot;&quot;</span>
+    
+   
+    
+    <span class="n">utils</span> <span class="o">=</span> <span class="n">Utils</span><span class="p">(</span>
+        <span class="n">allowed_extensions</span><span class="o">=</span><span class="n">Config</span><span class="o">.</span><span class="n">EXTENSIONS</span><span class="p">,</span>
+        <span class="n">api_key</span><span class="o">=</span><span class="n">Config</span><span class="o">.</span><span class="n">LOCAL_API_KEY</span><span class="p">,</span>
+        <span class="n">log_file</span><span class="o">=</span><span class="s1">&#39;logs/utils.log&#39;</span>
+    <span class="p">)</span>
+    
+    <span class="n">ocr_service</span> <span class="o">=</span> <span class="n">OcrService</span><span class="p">(</span>
+        <span class="n">openai_api_key</span><span class="o">=</span><span class="n">Config</span><span class="o">.</span><span class="n">OPENAI_API_KEY</span><span class="p">,</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">Config</span><span class="o">.</span><span class="n">MODEL</span><span class="p">,</span>
+        <span class="n">logger</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">logger</span>
+    <span class="p">)</span>
+    
+    <span class="n">chat_service</span> <span class="o">=</span> <span class="n">ChatService</span><span class="p">(</span>
+        <span class="n">openai_api_key</span><span class="o">=</span><span class="n">Config</span><span class="o">.</span><span class="n">OPENAI_API_KEY</span><span class="p">,</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">Config</span><span class="o">.</span><span class="n">MODEL</span><span class="p">,</span>
+        <span class="n">logger</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">logger</span>
+    <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">utils</span><span class="p">,</span> <span class="n">ocr_service</span><span class="p">,</span> <span class="n">chat_service</span></div>
+
+
+<div class="viewcode-block" id="create_api_controller">
+<a class="viewcode-back" href="../main.html#main.create_api_controller">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_api_controller</span><span class="p">(</span><span class="n">utils</span><span class="p">,</span> <span class="n">ocr_service</span><span class="p">,</span> <span class="n">chat_service</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ApiController</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Crea y configura el controlador de API.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">ApiController</span><span class="p">(</span>
+        <span class="n">ocr_service</span><span class="o">=</span><span class="n">ocr_service</span><span class="p">,</span>
+        <span class="n">chat_service</span><span class="o">=</span><span class="n">chat_service</span><span class="p">,</span>
+        <span class="n">utils</span><span class="o">=</span><span class="n">utils</span><span class="p">,</span>
+        <span class="n">demo_mode</span><span class="o">=</span><span class="n">Config</span><span class="o">.</span><span class="n">DEMO_MODE</span><span class="p">,</span>
+        <span class="n">ocr_local</span><span class="o">=</span><span class="n">Config</span><span class="o">.</span><span class="n">OCR_LOCAL</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../main.html#main.main">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Función principal de entrada.&quot;&quot;&quot;</span>
+    <span class="c1"># Cargar configuración</span>
+    <span class="n">load_dotenv</span><span class="p">()</span>
+    <span class="n">Config</span><span class="o">.</span><span class="n">load_from_env</span><span class="p">()</span>
+    
+    <span class="c1"># Configurar aplicación Flask</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">configure_app</span><span class="p">()</span>
+    <span class="n">setup_logging</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    
+    <span class="c1"># Configurar Tesseract</span>
+    <span class="n">pytesseract</span><span class="o">.</span><span class="n">pytesseract</span><span class="o">.</span><span class="n">tesseract_cmd</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">TESSERACT_CMD</span>
+    
+    <span class="c1"># Configurar OpenAI</span>
+    <span class="n">openai</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">OPENAI_API_KEY</span>
+    
+    <span class="c1"># Inicializar servicios</span>
+    <span class="n">utils</span><span class="p">,</span> <span class="n">ocr_service</span><span class="p">,</span> <span class="n">chat_service</span> <span class="o">=</span> <span class="n">initialize_services</span><span class="p">()</span>
+    
+    <span class="c1"># Crear controlador API</span>
+    <span class="n">api_controller</span> <span class="o">=</span> <span class="n">create_api_controller</span><span class="p">(</span><span class="n">utils</span><span class="p">,</span> <span class="n">ocr_service</span><span class="p">,</span> <span class="n">chat_service</span><span class="p">)</span>
+    
+    <span class="c1"># Registrar blueprints</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">api_controller</span><span class="o">.</span><span class="n">blueprint</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s1">&#39;/api&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Mostrar información de configuración</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Iniciando servidor en modo </span><span class="si">{</span><span class="s1">&#39;DEMO&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">Config</span><span class="o">.</span><span class="n">DEMO_MODE</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;PRODUCCIÓN&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Usando OCR </span><span class="si">{</span><span class="s1">&#39;LOCAL&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">Config</span><span class="o">.</span><span class="n">OCR_LOCAL</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;OPENAI VISION&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Modelo OpenAI: </span><span class="si">{</span><span class="n">Config</span><span class="o">.</span><span class="n">MODEL</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">app</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">main</span><span class="p">()</span>
+
+    
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="n">host</span><span class="o">=</span><span class="n">Config</span><span class="o">.</span><span class="n">HOST</span><span class="p">,</span>
+        <span class="n">port</span><span class="o">=</span><span class="n">Config</span><span class="o">.</span><span class="n">PORT</span><span class="p">,</span>
+        <span class="n">debug</span><span class="o">=</span><span class="n">Config</span><span class="o">.</span><span class="n">DEBUG_MODE</span><span class="p">,</span>
+        <span class="n">threaded</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, LaureanoDeSousaDias.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

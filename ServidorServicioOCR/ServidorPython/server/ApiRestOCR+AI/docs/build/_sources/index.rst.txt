@@ -10,7 +10,13 @@ Esta documentación cubre todos los endpoints, modelos y funciones clave de la A
    :maxdepth: 2
    :caption: Contenido
 
-   OcrAiServer
+   OcrAiServerOriginal
+   main
+   apiController
+   models
+   services
+   utils
+   config
 
 
 

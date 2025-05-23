@@ -1,0 +1,622 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Módulo OcrAiServerOriginal &mdash; documentación de ApiRestOCR+AI - 3.0.1</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=b32d57a0"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=f85f4cfb"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="prev" title="Bienvenido a la documentación de ApiRestOCR+AI" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ApiRestOCR+AI
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenido</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Módulo OcrAiServerOriginal</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.LOCAL_API_KEY"><code class="docutils literal notranslate"><span class="pre">LOCAL_API_KEY</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.MODEL"><code class="docutils literal notranslate"><span class="pre">MODEL</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.OCR_LOCAL"><code class="docutils literal notranslate"><span class="pre">OCR_LOCAL</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.Producto"><code class="docutils literal notranslate"><span class="pre">Producto</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#OcrAiServerOriginal.Producto.cantidad"><code class="docutils literal notranslate"><span class="pre">Producto.cantidad</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#OcrAiServerOriginal.Producto.model_config"><code class="docutils literal notranslate"><span class="pre">Producto.model_config</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#OcrAiServerOriginal.Producto.nombre"><code class="docutils literal notranslate"><span class="pre">Producto.nombre</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#OcrAiServerOriginal.Producto.precio"><code class="docutils literal notranslate"><span class="pre">Producto.precio</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#OcrAiServerOriginal.Producto.subtotal"><code class="docutils literal notranslate"><span class="pre">Producto.subtotal</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.StatusResponse"><code class="docutils literal notranslate"><span class="pre">StatusResponse</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#OcrAiServerOriginal.StatusResponse.demo"><code class="docutils literal notranslate"><span class="pre">StatusResponse.demo</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#OcrAiServerOriginal.StatusResponse.model_config"><code class="docutils literal notranslate"><span class="pre">StatusResponse.model_config</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#OcrAiServerOriginal.StatusResponse.ocrLocal"><code class="docutils literal notranslate"><span class="pre">StatusResponse.ocrLocal</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#OcrAiServerOriginal.StatusResponse.statusServer"><code class="docutils literal notranslate"><span class="pre">StatusResponse.statusServer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.TESSERACT_CMD"><code class="docutils literal notranslate"><span class="pre">TESSERACT_CMD</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.TicketResponse"><code class="docutils literal notranslate"><span class="pre">TicketResponse</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#OcrAiServerOriginal.TicketResponse.articulos"><code class="docutils literal notranslate"><span class="pre">TicketResponse.articulos</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#OcrAiServerOriginal.TicketResponse.categoria"><code class="docutils literal notranslate"><span class="pre">TicketResponse.categoria</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#OcrAiServerOriginal.TicketResponse.confianza"><code class="docutils literal notranslate"><span class="pre">TicketResponse.confianza</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#OcrAiServerOriginal.TicketResponse.establecimiento"><code class="docutils literal notranslate"><span class="pre">TicketResponse.establecimiento</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#OcrAiServerOriginal.TicketResponse.fecha"><code class="docutils literal notranslate"><span class="pre">TicketResponse.fecha</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#OcrAiServerOriginal.TicketResponse.hora"><code class="docutils literal notranslate"><span class="pre">TicketResponse.hora</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#OcrAiServerOriginal.TicketResponse.iva"><code class="docutils literal notranslate"><span class="pre">TicketResponse.iva</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#OcrAiServerOriginal.TicketResponse.model_config"><code class="docutils literal notranslate"><span class="pre">TicketResponse.model_config</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#OcrAiServerOriginal.TicketResponse.total"><code class="docutils literal notranslate"><span class="pre">TicketResponse.total</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.allowed_file"><code class="docutils literal notranslate"><span class="pre">allowed_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.app"><code class="docutils literal notranslate"><span class="pre">app</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.endpoin_tStatus_Server"><code class="docutils literal notranslate"><span class="pre">endpoin_tStatus_Server()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.endpoint_Chat_Service"><code class="docutils literal notranslate"><span class="pre">endpoint_Chat_Service()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.endpoint_ocr_archivo"><code class="docutils literal notranslate"><span class="pre">endpoint_ocr_archivo()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.endpoint_ocr_image"><code class="docutils literal notranslate"><span class="pre">endpoint_ocr_image()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.handle_file_too_large"><code class="docutils literal notranslate"><span class="pre">handle_file_too_large()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.logger"><code class="docutils literal notranslate"><span class="pre">logger</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.procesar_ocr_archivo"><code class="docutils literal notranslate"><span class="pre">procesar_ocr_archivo()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.procesar_ocr_imagen_local"><code class="docutils literal notranslate"><span class="pre">procesar_ocr_imagen_local()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.procesar_ocr_imagen_openai"><code class="docutils literal notranslate"><span class="pre">procesar_ocr_imagen_openai()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.require_api_key"><code class="docutils literal notranslate"><span class="pre">require_api_key()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.responder_chat"><code class="docutils literal notranslate"><span class="pre">responder_chat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#OcrAiServerOriginal.simulador_respuesta"><code class="docutils literal notranslate"><span class="pre">simulador_respuesta()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ApiRestOCR+AI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Módulo OcrAiServerOriginal</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/OcrAiServerOriginal.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-OcrAiServerOriginal">
+<span id="modulo-ocraiserveroriginal"></span><h1>Módulo OcrAiServerOriginal<a class="headerlink" href="#module-OcrAiServerOriginal" title="Link to this heading"></a></h1>
+<p>Módulo principal del servidor de procesamiento de tickets con OCR e IA.</p>
+<p>Este servidor Flask proporciona endpoints para:</p>
+<ul class="simple">
+<li><p>Procesamiento de imágenes de tickets usando OCR (local o con OpenAI)</p></li>
+<li><p>Procesamiento de archivos de texto/PDF de tickets</p></li>
+<li><p>Interacción con modelos de IA para análisis de tickets</p></li>
+<li><p>Chat asistido por IA</p></li>
+</ul>
+<p>Configuración:</p>
+<ul class="simple">
+<li><p>Se utiliza dotenv para variables de entorno</p></li>
+<li><p>Soporta autenticación por API key</p></li>
+<li><p>Incluye logging y manejo de errores</p></li>
+</ul>
+<dl class="py data">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.LOCAL_API_KEY">
+<span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">LOCAL_API_KEY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'CREAR_API_KEY'</span></em><a class="headerlink" href="#OcrAiServerOriginal.LOCAL_API_KEY" title="Link to this definition"></a></dt>
+<dd><p>API key para autenticación de endpoints</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.MODEL">
+<span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">MODEL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'gpt-3.5-turbo'</span></em><a class="headerlink" href="#OcrAiServerOriginal.MODEL" title="Link to this definition"></a></dt>
+<dd><p>Modelo de OpenAI a utilizar (por defecto gpt-3.5-turbo)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.OCR_LOCAL">
+<span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">OCR_LOCAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#OcrAiServerOriginal.OCR_LOCAL" title="Link to this definition"></a></dt>
+<dd><p>Determina si se usa OCR local (Tesseract) o remoto (OpenAI Vision)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.Producto">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">Producto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OcrAiServerOriginal.html#Producto"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#OcrAiServerOriginal.Producto" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Representa un producto en un ticket de compra.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nombre</strong> (<em>str</em>) – Nombre del producto.</p></li>
+<li><p><strong>precio</strong> (<em>float</em>) – Precio unitario del producto.</p></li>
+<li><p><strong>cantidad</strong> (<em>float</em>) – Cantidad comprada del producto.</p></li>
+<li><p><strong>subtotal</strong> (<em>float</em>) – Precio total por el producto (precio * cantidad).</p></li>
+<li><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.Producto.cantidad">
+<span class="sig-name descname"><span class="pre">cantidad</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></em><a class="headerlink" href="#OcrAiServerOriginal.Producto.cantidad" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.Producto.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#OcrAiServerOriginal.Producto.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.Producto.nombre">
+<span class="sig-name descname"><span class="pre">nombre</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#OcrAiServerOriginal.Producto.nombre" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.Producto.precio">
+<span class="sig-name descname"><span class="pre">precio</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></em><a class="headerlink" href="#OcrAiServerOriginal.Producto.precio" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.Producto.subtotal">
+<span class="sig-name descname"><span class="pre">subtotal</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></em><a class="headerlink" href="#OcrAiServerOriginal.Producto.subtotal" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.StatusResponse">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">StatusResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OcrAiServerOriginal.html#StatusResponse"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#OcrAiServerOriginal.StatusResponse" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Representa la respuesta de estado del servidor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>status</strong> – Estado del servidor («true» o «false»).</p></li>
+<li><p><strong>serverMode</strong> – Estado del servidor («true» o «false»).</p></li>
+<li><p><strong>ocrMode</strong> – Estado del servidor («true» o «false»).</p></li>
+<li><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.StatusResponse.demo">
+<span class="sig-name descname"><span class="pre">demo</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></em><a class="headerlink" href="#OcrAiServerOriginal.StatusResponse.demo" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.StatusResponse.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#OcrAiServerOriginal.StatusResponse.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.StatusResponse.ocrLocal">
+<span class="sig-name descname"><span class="pre">ocrLocal</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></em><a class="headerlink" href="#OcrAiServerOriginal.StatusResponse.ocrLocal" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.StatusResponse.statusServer">
+<span class="sig-name descname"><span class="pre">statusServer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></em><a class="headerlink" href="#OcrAiServerOriginal.StatusResponse.statusServer" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.TESSERACT_CMD">
+<span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">TESSERACT_CMD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'C:\\Program</span> <span class="pre">Files\\Tesseract-OCR\\tesseract.exe'</span></em><a class="headerlink" href="#OcrAiServerOriginal.TESSERACT_CMD" title="Link to this definition"></a></dt>
+<dd><p>Ruta al ejecutable de Tesseract OCR (solo Windows)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.TicketResponse">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">TicketResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OcrAiServerOriginal.html#TicketResponse"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#OcrAiServerOriginal.TicketResponse" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Representa la respuesta estructurada para un ticket de compra.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>establecimiento</strong> (<em>str</em>) – Nombre del establecimiento donde se realizó la compra.</p></li>
+<li><p><strong>fecha</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Fecha del ticket (formato string, opcional).</p></li>
+<li><p><strong>hora</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Hora del ticket (formato string, opcional).</p></li>
+<li><p><strong>total</strong> (<em>float</em>) – Total pagado en el ticket.</p></li>
+<li><p><strong>iva</strong> (<em>float</em>) – Monto de IVA pagado.</p></li>
+<li><p><strong>categoria</strong> (<em>str</em>) – Categoría del ticket.</p></li>
+<li><p><strong>articulos</strong> (<em>List</em><em>[</em><a class="reference internal" href="#OcrAiServerOriginal.Producto" title="OcrAiServerOriginal.Producto"><em>Producto</em></a><em>]</em>) – Lista de productos comprados.</p></li>
+<li><p><strong>confianza</strong> (<em>float</em>) – Nivel de confianza en el procesamiento del ticket (entre 0 y 1).</p></li>
+<li><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.TicketResponse.articulos">
+<span class="sig-name descname"><span class="pre">articulos</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code><span class="pre">[</span><a class="reference internal" href="#OcrAiServerOriginal.Producto" title="OcrAiServerOriginal.Producto"><code class="xref py py-class docutils literal notranslate"><span class="pre">Producto</span></code></a><span class="pre">]</span></em><a class="headerlink" href="#OcrAiServerOriginal.TicketResponse.articulos" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.TicketResponse.categoria">
+<span class="sig-name descname"><span class="pre">categoria</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code><span class="pre">]</span></em><a class="headerlink" href="#OcrAiServerOriginal.TicketResponse.categoria" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.TicketResponse.confianza">
+<span class="sig-name descname"><span class="pre">confianza</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></em><a class="headerlink" href="#OcrAiServerOriginal.TicketResponse.confianza" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.TicketResponse.establecimiento">
+<span class="sig-name descname"><span class="pre">establecimiento</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#OcrAiServerOriginal.TicketResponse.establecimiento" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.TicketResponse.fecha">
+<span class="sig-name descname"><span class="pre">fecha</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><a class="headerlink" href="#OcrAiServerOriginal.TicketResponse.fecha" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.TicketResponse.hora">
+<span class="sig-name descname"><span class="pre">hora</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><a class="headerlink" href="#OcrAiServerOriginal.TicketResponse.hora" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.TicketResponse.iva">
+<span class="sig-name descname"><span class="pre">iva</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></em><a class="headerlink" href="#OcrAiServerOriginal.TicketResponse.iva" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.TicketResponse.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#OcrAiServerOriginal.TicketResponse.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.TicketResponse.total">
+<span class="sig-name descname"><span class="pre">total</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></em><a class="headerlink" href="#OcrAiServerOriginal.TicketResponse.total" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.allowed_file">
+<span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">allowed_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OcrAiServerOriginal.html#allowed_file"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#OcrAiServerOriginal.allowed_file" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.app">
+<span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">app</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">environ</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_response</span></span></em><span class="sig-paren">)</span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Flask</span> <span class="pre">'OcrAiServerOriginal'&gt;</span></em><a class="headerlink" href="#OcrAiServerOriginal.app" title="Link to this definition"></a></dt>
+<dd><p>Aplicación principal del servidor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Flask</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.endpoin_tStatus_Server">
+<span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">endpoin_tStatus_Server</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/OcrAiServerOriginal.html#endpoin_tStatus_Server"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#OcrAiServerOriginal.endpoin_tStatus_Server" title="Link to this definition"></a></dt>
+<dd><p>Endpoint de estado del servicio.</p>
+<p>Devuelve un JSON con el estado actual del servicio para verificar que está activo.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Estado del servicio en formato JSON.</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-even"><p>Response (JSON con clave «status»)</p>
+</dd>
+<dt class="field-odd">Statuscode 200<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Servicio activo y funcionando correctamente.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.endpoint_Chat_Service">
+<span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">endpoint_Chat_Service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/OcrAiServerOriginal.html#endpoint_Chat_Service"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#OcrAiServerOriginal.endpoint_Chat_Service" title="Link to this definition"></a></dt>
+<dd><p>Endpoint para interactuar con el asistente de IA.</p>
+<p>Recibe un JSON con un campo “mensaje” y devuelve una respuesta generada
+por el asistente de inteligencia artificial.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve<span class="colon">:</span></dt>
+<dd class="field-odd"><p>JSON con la respuesta del asistente o mensaje de error.</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-even"><p>Response (JSON)</p>
+</dd>
+<dt class="field-odd">Muestra<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>400</strong> – Si no se proporciona el campo “mensaje” en el JSON.</p></li>
+<li><p><strong>401</strong> – Si no se proporciona una API key válida.</p></li>
+<li><p><strong>500</strong> – Error interno del servidor.</p></li>
+<li><p><strong>503</strong> – Servicio no disponible por fallo de conexión con OpenAI.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.endpoint_ocr_archivo">
+<span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">endpoint_ocr_archivo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/OcrAiServerOriginal.html#endpoint_ocr_archivo"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#OcrAiServerOriginal.endpoint_ocr_archivo" title="Link to this definition"></a></dt>
+<dd><p>Endpoint para procesamiento de archivos de tickets (PDF o texto).</p>
+<p>Procesa un archivo enviado en el campo “file” y extrae la información
+del ticket en formato estructurado.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve<span class="colon">:</span></dt>
+<dd class="field-odd"><p>JSON con los datos del ticket o un mensaje de error.</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-even"><p>Response (JSON)</p>
+</dd>
+<dt class="field-odd">Muestra<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>400</strong> – Si no se envía un archivo válido.</p></li>
+<li><p><strong>401</strong> – Si no se proporciona una API key válida.</p></li>
+<li><p><strong>413</strong> – Si el archivo excede el tamaño máximo permitido.</p></li>
+<li><p><strong>500</strong> – Error interno del servidor.</p></li>
+<li><p><strong>503</strong> – Servicio no disponible por fallo de conexión con OpenAI.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.endpoint_ocr_image">
+<span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">endpoint_ocr_image</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/OcrAiServerOriginal.html#endpoint_ocr_image"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#OcrAiServerOriginal.endpoint_ocr_image" title="Link to this definition"></a></dt>
+<dd><p>Endpoint para procesar imágenes de tickets mediante OCR.</p>
+<p>Procesa una imagen enviada en el campo “file” y devuelve la información
+extraída del ticket en formato estructurado.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve<span class="colon">:</span></dt>
+<dd class="field-odd"><p>JSON con los datos del ticket o un mensaje de error.</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-even"><p>Response (JSON)</p>
+</dd>
+<dt class="field-odd">Muestra<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>400</strong> – Si no se envía un archivo válido.</p></li>
+<li><p><strong>401</strong> – Si no se proporciona una API key válida.</p></li>
+<li><p><strong>413</strong> – Si el archivo excede el tamaño máximo permitido.</p></li>
+<li><p><strong>500</strong> – Error interno del servidor.</p></li>
+<li><p><strong>503</strong> – Servicio no disponible por fallo de conexión con OpenAI.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.handle_file_too_large">
+<span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">handle_file_too_large</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OcrAiServerOriginal.html#handle_file_too_large"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#OcrAiServerOriginal.handle_file_too_large" title="Link to this definition"></a></dt>
+<dd><p>Manejador para archivos que exceden el tamaño máximo permitido.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>e</strong> (<em>RequestEntityTooLarge</em>) – Excepción capturada para archivo demasiado grande.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Mensaje de error y código HTTP 413 (Payload Too Large).</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[dict, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.logger">
+<span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Logger</span> <span class="pre">app_logger</span> <span class="pre">(INFO)&gt;</span></em><a class="headerlink" href="#OcrAiServerOriginal.logger" title="Link to this definition"></a></dt>
+<dd><p>Logger principal de la aplicación</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logging.Logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.procesar_ocr_archivo">
+<span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">procesar_ocr_archivo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OcrAiServerOriginal.html#procesar_ocr_archivo"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#OcrAiServerOriginal.procesar_ocr_archivo" title="Link to this definition"></a></dt>
+<dd><p>Procesa un archivo de texto o PDF de ticket utilizando la API de OpenAI.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong> (<em>FileStorage o similar</em>) – Archivo a procesar (PDF o texto).</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Ticket estructurado según TicketResponse.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Muestra<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ConnectionError</strong> – Si falla la conexión con OpenAI.</p></li>
+<li><p><strong>RuntimeError</strong> – Si falla el procesamiento o la conversión del resultado.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.procesar_ocr_imagen_local">
+<span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">procesar_ocr_imagen_local</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OcrAiServerOriginal.html#procesar_ocr_imagen_local"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#OcrAiServerOriginal.procesar_ocr_imagen_local" title="Link to this definition"></a></dt>
+<dd><p>Procesa una imagen de ticket usando OCR local (Tesseract).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong> (<em>FileStorage o similar</em>) – Archivo de imagen a procesar.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Ticket estructurado según TicketResponse.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Muestra<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>RuntimeError</strong> – Si falla el procesamiento OCR.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.procesar_ocr_imagen_openai">
+<span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">procesar_ocr_imagen_openai</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OcrAiServerOriginal.html#procesar_ocr_imagen_openai"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#OcrAiServerOriginal.procesar_ocr_imagen_openai" title="Link to this definition"></a></dt>
+<dd><p>Procesa una imagen de ticket usando la API de OpenAI Vision.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong> (<em>FileStorage o similar</em>) – Archivo de imagen a procesar.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Ticket estructurado según TicketResponse.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Muestra<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ConnectionError</strong> – Si falla la conexión con OpenAI.</p></li>
+<li><p><strong>RuntimeError</strong> – Si falla el procesamiento del OCR o la conversión del resultado.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.require_api_key">
+<span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">require_api_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OcrAiServerOriginal.html#require_api_key"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#OcrAiServerOriginal.require_api_key" title="Link to this definition"></a></dt>
+<dd><p>Decorador para requerir autenticación mediante API key en el header Authorization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>func</strong> (<em>function</em>) – Función a decorar.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Función decorada que verifica el token de autorización antes de llamar a la función original.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>function</p>
+</dd>
+<dt class="field-even">Muestra<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>werkzeug.exceptions.Unauthorized</strong> – Retorna una respuesta 401 si no se proporciona un token válido.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.responder_chat">
+<span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">responder_chat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mensaje</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OcrAiServerOriginal.html#responder_chat"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#OcrAiServerOriginal.responder_chat" title="Link to this definition"></a></dt>
+<dd><p>Genera una respuesta de chat usando IA.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mensaje</strong> (<em>str</em>) – Mensaje del usuario.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Respuesta generada con clave «respuesta».</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Muestra<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ConnectionError</strong> – Si falla la conexión con OpenAI.</p></li>
+<li><p><strong>RuntimeError</strong> – Si ocurre un error durante el procesamiento.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="OcrAiServerOriginal.simulador_respuesta">
+<span class="sig-prename descclassname"><span class="pre">OcrAiServerOriginal.</span></span><span class="sig-name descname"><span class="pre">simulador_respuesta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/OcrAiServerOriginal.html#simulador_respuesta"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#OcrAiServerOriginal.simulador_respuesta" title="Link to this definition"></a></dt>
+<dd><p>Genera una respuesta simulada de ticket para pruebas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Diccionario con la estructura de un ticket de ejemplo.</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="index.html" class="btn btn-neutral float-left" title="Bienvenido a la documentación de ApiRestOCR+AI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, LaureanoDeSousaDias.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

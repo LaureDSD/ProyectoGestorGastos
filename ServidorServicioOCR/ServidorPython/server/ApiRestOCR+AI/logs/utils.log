@@ -1,0 +1,243 @@
+2025-05-23 13:43:04,407 - ERROR - Error al generar respuesta de chat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 199, in responder_chat
+    response = openai.ChatCompletion.create(
+               ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+2025-05-23 13:43:04,409 - ERROR - Error en /aichat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 199, in responder_chat
+    response = openai.ChatCompletion.create(
+               ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\api.py", line 94, in endpoint_chat_service
+    resultado = self.chat_service.responder_chat(mensaje)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 224, in responder_chat
+    raise RuntimeError(f"Error al generar respuesta de chat: {e}") from e
+RuntimeError: Error al generar respuesta de chat: name 'openai' is not defined
+2025-05-23 13:43:43,345 - ERROR - Error al generar respuesta de chat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 199, in responder_chat
+    response = openai.ChatCompletion.create(
+               ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+2025-05-23 13:43:43,347 - ERROR - Error en /aichat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 199, in responder_chat
+    response = openai.ChatCompletion.create(
+               ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\api.py", line 94, in endpoint_chat_service
+    resultado = self.chat_service.responder_chat(mensaje)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 224, in responder_chat
+    raise RuntimeError(f"Error al generar respuesta de chat: {e}") from e
+RuntimeError: Error al generar respuesta de chat: name 'openai' is not defined
+2025-05-23 13:44:09,858 - ERROR - Error al generar respuesta de chat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 199, in responder_chat
+    response = openai.ChatCompletion.create(
+               ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+2025-05-23 13:44:09,861 - ERROR - Error en /aichat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 199, in responder_chat
+    response = openai.ChatCompletion.create(
+               ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\api.py", line 94, in endpoint_chat_service
+    resultado = self.chat_service.responder_chat(mensaje)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 224, in responder_chat
+    raise RuntimeError(f"Error al generar respuesta de chat: {e}") from e
+RuntimeError: Error al generar respuesta de chat: name 'openai' is not defined
+2025-05-23 13:57:55,107 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-23 13:57:55,107 - ERROR - Error al procesar OCR imagen
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 79, in procesar_ocr_imagen_local
+    parsed = self._procesar_texto_con_openai(texto)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 40, in _procesar_texto_con_openai
+    response = openai.ChatCompletion.create(
+               ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+2025-05-23 13:57:55,109 - ERROR - Error en /ocr
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 79, in procesar_ocr_imagen_local
+    parsed = self._procesar_texto_con_openai(texto)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 40, in _procesar_texto_con_openai
+    response = openai.ChatCompletion.create(
+               ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\api.py", line 52, in endpoint_ocr_image
+    resultado = self.ocr_service.procesar_ocr_imagen_local(file)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 87, in procesar_ocr_imagen_local
+    raise RuntimeError(f"Error al procesar OCR imagen: {e}") from e
+RuntimeError: Error al procesar OCR imagen: name 'openai' is not defined
+2025-05-23 14:00:22,892 - ERROR - Error al generar respuesta de chat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 199, in responder_chat
+    response = openai.ChatCompletion.create(
+               ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+2025-05-23 14:00:22,894 - ERROR - Error en /aichat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 199, in responder_chat
+    response = openai.ChatCompletion.create(
+               ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\api.py", line 94, in endpoint_chat_service
+    resultado = self.chat_service.responder_chat(mensaje)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 224, in responder_chat
+    raise RuntimeError(f"Error al generar respuesta de chat: {e}") from e
+RuntimeError: Error al generar respuesta de chat: name 'openai' is not defined
+2025-05-23 14:01:57,582 - ERROR - Error al generar respuesta de chat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 199, in responder_chat
+    response = openai.ChatCompletion.create(
+               ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+2025-05-23 14:01:57,584 - ERROR - Error en /aichat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 199, in responder_chat
+    response = openai.ChatCompletion.create(
+               ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\api.py", line 94, in endpoint_chat_service
+    resultado = self.chat_service.responder_chat(mensaje)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 224, in responder_chat
+    raise RuntimeError(f"Error al generar respuesta de chat: {e}") from e
+RuntimeError: Error al generar respuesta de chat: name 'openai' is not defined
+2025-05-23 14:05:53,703 - ERROR - Error al generar respuesta de chat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 199, in responder_chat
+    response = openai.ChatCompletion.create(
+               ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+2025-05-23 14:05:53,705 - ERROR - Error en /aichat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 199, in responder_chat
+    response = openai.ChatCompletion.create(
+               ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\apiController.py", line 96, in endpoint_chat_service
+    resultado = self.chat_service.responder_chat(mensaje)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 224, in responder_chat
+    raise RuntimeError(f"Error al generar respuesta de chat: {e}") from e
+RuntimeError: Error al generar respuesta de chat: name 'openai' is not defined
+2025-05-23 14:08:01,516 - ERROR - Error al generar respuesta de chat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 201, in responder_chat
+    response = openai.ChatCompletion.create(
+               ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+2025-05-23 14:08:01,519 - ERROR - Error en /aichat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 201, in responder_chat
+    response = openai.ChatCompletion.create(
+               ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\apiController.py", line 98, in endpoint_chat_service
+    resultado = self.chat_service.responder_chat(mensaje)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 226, in responder_chat
+    raise RuntimeError(f"Error al generar respuesta de chat: {e}") from e
+RuntimeError: Error al generar respuesta de chat: name 'openai' is not defined
+2025-05-23 14:08:43,427 - ERROR - Error al generar respuesta de chat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 201, in responder_chat
+    response = openai.ChatCompletion.create(
+               ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+2025-05-23 14:08:43,429 - ERROR - Error en /aichat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 201, in responder_chat
+    response = openai.ChatCompletion.create(
+               ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\apiController.py", line 98, in endpoint_chat_service
+    resultado = self.chat_service.responder_chat(mensaje)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 227, in responder_chat
+    raise RuntimeError(f"Error al generar respuesta de chat: {e}") from e
+RuntimeError: Error al generar respuesta de chat: name 'openai' is not defined
+2025-05-23 14:11:27,306 - ERROR - Error en /aichat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\apiController.py", line 98, in endpoint_chat_service
+    resultado = self.chat_service.responder_chat(mensaje)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 201, in responder_chat
+    print("API Key:", openai.api_key)
+                      ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+2025-05-23 14:13:36,663 - ERROR - Error en /aichat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\apiController.py", line 98, in endpoint_chat_service
+    resultado = self.chat_service.responder_chat(mensaje)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 203, in responder_chat
+    print("API Key:", openai.api_key)
+                      ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+2025-05-23 14:14:06,975 - ERROR - Error en /aichat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\apiController.py", line 98, in endpoint_chat_service
+    resultado = self.chat_service.responder_chat(mensaje)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 202, in responder_chat
+    print("API Key:", openai.api_key)
+                      ^^^^^^
+NameError: name 'openai' is not defined. Did you mean: 'open'?
+2025-05-23 14:20:27,981 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-23 14:21:22,732 - ERROR - Error en /aichat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\apiController.py", line 89, in endpoint_chat_service
+    if not mensaje:
+           ^^^^^^^
+NameError: name 'mensaje' is not defined
+2025-05-23 14:22:28,105 - ERROR - Error en /aichat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\apiController.py", line 89, in endpoint_chat_service
+    if not mensaje:
+           ^^^^^^^
+NameError: name 'mensaje' is not defined
+2025-05-23 14:22:59,221 - ERROR - Error en /aichat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\apiController.py", line 89, in endpoint_chat_service
+    if not mensaje:
+           ^^^^^^^
+NameError: name 'mensaje' is not defined
+2025-05-23 14:23:01,972 - ERROR - Error en /aichat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\apiController.py", line 89, in endpoint_chat_service
+    if not mensaje:
+           ^^^^^^^
+NameError: name 'mensaje' is not defined

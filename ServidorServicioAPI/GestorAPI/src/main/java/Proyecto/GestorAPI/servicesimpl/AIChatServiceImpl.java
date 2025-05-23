@@ -26,7 +26,7 @@ public class AIChatServiceImpl implements AIChatService {
 
     @Override
     public String enviarMensaje(String mensaje) {
-        String endpoint = aiApiUrl + "/aichat";
+        String endpoint = aiApiUrl + "/api/aichat";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

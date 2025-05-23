@@ -71,11 +71,11 @@ max_mb = int(env.get("MAX_CONTENT_LENGTH_MB", 10))
 app.config['MAX_CONTENT_LENGTH'] = max_mb * 1024 * 1024
 
 # Llamar a la API para listar los modelos
-models = openai.Model.list()
+#models = openai.Model.list()
 
 # Imprimir los modelos disponibles
-for model in models['data']:
-    print(model['id'])
+#for model in models['data']:
+#    print(model['id'])
 
 EXTENSIONS = env.get("EXTENSIONS") 
 
@@ -417,7 +417,7 @@ def handle_file_too_large(e):
     logger.warning("Archivo demasiado grande rechazado")
     return jsonify({"error": "Archivo demasiado grande. Máximo permitido: 10MB"}), 413
 
-@app.route("/ocr", methods=["POST"])
+@app.route("/api/ocr", methods=["POST"])
 @require_api_key
 def endpoint_ocr_image():
     """
@@ -455,7 +455,7 @@ def endpoint_ocr_image():
         logger.error("Error en /ocr", exc_info=True)
         return jsonify({"error": "Error interno al procesar imagen OCR"}), 500
 
-@app.route("/ocr-file", methods=["POST"])
+@app.route("/api/ocr-file", methods=["POST"])
 @require_api_key
 def endpoint_ocr_archivo():
     """
@@ -489,7 +489,7 @@ def endpoint_ocr_archivo():
         logger.error("Error en /ocr-file", exc_info=True)
         return jsonify({"error": "Error interno al procesar archivo OCR"}), 500
 
-@app.route("/aichat", methods=["POST"])
+@app.route("/api/aichat", methods=["POST"])
 @require_api_key
 def endpoint_Chat_Service():
     """
