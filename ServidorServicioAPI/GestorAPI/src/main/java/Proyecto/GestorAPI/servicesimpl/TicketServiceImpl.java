@@ -119,9 +119,16 @@ public class TicketServiceImpl implements TicketService {
         return repository.findByUserId(id);
     }
 
+    /**
+     * Mapea y crea un nuevo objeto Ticket a partir de los datos recibidos en la solicitud CreateTicketRequest.
+     * Establece las referencias a usuario y categoría, junto con otros campos relevantes.
+     *
+     * @param request Objeto que contiene los datos para crear el ticket.
+     * @param clienteId Identificador del usuario propietario del ticket.
+     * @return Objeto Ticket creado y configurado con los datos recibidos.
+     */
     @Override
     public Ticket mappingCreateTicket(CreateTicketRequest request, Long clienteId) {
-        // Crear el ticket con referencias por ID
         Ticket ticket = new Ticket();
 
         ticket.setUser(userService.getUserById(clienteId).orElse(new User()));
@@ -138,9 +145,15 @@ public class TicketServiceImpl implements TicketService {
         return  ticket;
     }
 
+    /**
+     * Actualiza un objeto Ticket existente con los datos proporcionados en la solicitud UpdateTicketRequest.
+     *
+     * @param request Objeto que contiene los datos para actualizar el ticket.
+     * @param ticket Objeto Ticket existente que será actualizado.
+     * @return El mismo objeto Ticket actualizado con los nuevos valores.
+     */
     @Override
     public Ticket mappingUpdateTicket(UpdateTicketRequest request, Ticket ticket) {
-        // Actualización
         ticket.setCategory(categoriaService.getByID(request.getCategoriaId()).orElse(null));
         ticket.setStore(request.getStore());
         ticket.setExpenseDate(request.getFechaCompra());
@@ -149,11 +162,19 @@ public class TicketServiceImpl implements TicketService {
         ticket.setTotal(request.getTotal());
         ticket.setIva(request.getIva());
         ticket.setIcon(request.getIcon());
-        ticket.setIcon(request.getIcon());
         ticket.setProductsJSON(request.getProductsJSON());
         return ticket;
     }
 
+    /**
+     * Mapea y crea un objeto Ticket a partir del resultado OCR en formato JSON recibido desde el servidor Python.
+     * Realiza parsing del JSON y asigna los valores al Ticket, aplicando valores por defecto si es necesario.
+     *
+     * @param ocrResult Resultado OCR en formato JSON como cadena.
+     * @param user Usuario asociado al ticket.
+     * @return Objeto Ticket creado a partir de los datos OCR.
+     * @throws ErrorPharseJsonException Si ocurre un error al parsear el JSON recibido.
+     */
     @Override
     public Ticket mappingCreateTicketbyOCR(String ocrResult, User user) throws ErrorPharseJsonException {
         ObjectMapper mapper = new ObjectMapper();
@@ -179,7 +200,6 @@ public class TicketServiceImpl implements TicketService {
         Ticket ticket = new Ticket();
         ticket.setUser(user);
 
-        // Establecimiento
         try {
             ticket.setStore(ticketOCR.getEstablecimiento() != null ? ticketOCR.getEstablecimiento() : "Desconocido");
         } catch (Exception e) {
@@ -188,21 +208,18 @@ public class TicketServiceImpl implements TicketService {
 
         ticket.setProductsJSON(articulosJson);
 
-        // Total
         try {
             ticket.setTotal(ticketOCR.getTotal() != null ? ticketOCR.getTotal() : 0.0);
         } catch (Exception e) {
             ticket.setTotal(0.0);
         }
 
-        // IVA
         try {
             ticket.setIva(ticketOCR.getIva() != null ? ticketOCR.getIva() : 0.0);
         } catch (Exception e) {
             ticket.setIva(0.0);
         }
 
-        // Nombre
         try {
             ticket.setName(ticketOCR.getEstablecimiento() != null ? ticketOCR.getEstablecimiento() : "Ticket");
         } catch (Exception e) {
@@ -211,14 +228,12 @@ public class TicketServiceImpl implements TicketService {
 
         ticket.setDescription("Sin descripción..");
 
-        // Categoría (por defecto ID = 1)
         try {
             ticket.setCategory(categoriaService.getByID(1L).orElse(null));
         } catch (Exception e) {
             ticket.setCategory(null);
         }
 
-        // Fecha y hora
         LocalDate fecha = LocalDate.now();
         LocalTime hora = LocalTime.now();
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -246,5 +261,6 @@ public class TicketServiceImpl implements TicketService {
         System.out.println("Mappear3");
         return ticket;
     }
+
 
 }

@@ -27,6 +27,7 @@ import java.nio.file.StandardCopyOption;
 @Service
 public class OCRServiceImpl implements OCRService {
 
+    // Carpeta base donde se almacenan imágenes de tickets
     private static final String STORAGE_BASE_PATH = "gastos/";
 
     @Value("${python.server.url}")
@@ -43,75 +44,88 @@ public class OCRServiceImpl implements OCRService {
 
     private final RestTemplate restTemplate;
 
+    // Constructor inyecta RestTemplate
     public OCRServiceImpl(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
+    /**
+     * Procesa una imagen de ticket:
+     * - Guarda temporalmente el archivo recibido
+     * - Envía el archivo al servidor Python para OCR
+     * - Mapea el resultado JSON a objeto Ticket
+     * - Guarda imagen y ticket en base de datos
+     */
     @Override
     public Ticket processImageTicket(MultipartFile file, User user)  {
         Ticket ticket = new Ticket();
         try {
             System.out.println("Imagen0");
-            // 1. Guardar archivo temporalmente
+            // 1. Guardar archivo temporalmente para enviar a OCR
             Path tempFilePath = Files.createTempFile("ticket_", "_" + file.getOriginalFilename());
             Files.copy(file.getInputStream(), tempFilePath, StandardCopyOption.REPLACE_EXISTING);
 
             System.out.println("Imagen1");
-            // 2. Procesar el archivo con OCR
-            String ocrResult = sendFileForOCR(tempFilePath.toFile(),true);
+            // 2. Llamar al servicio OCR enviando el archivo temporal
+            String ocrResult = sendFileForOCR(tempFilePath.toFile(), true);
 
             System.out.println("Imagen2");
-            // 3. Crear y guardar el ticket
-
+            // 3. Convertir el resultado OCR en un Ticket usando TicketService
             ticket = ticketService.mappingCreateTicketbyOCR(ocrResult, user);
 
             System.out.println("Imagen3");
-            // 3.1 Agregar imagen del ticket al ticket y guardarla
+            // 3.1 Guardar la imagen en almacenamiento y asignar ruta al ticket
             ticket.setIcon(storageService.saveImageData(STORAGE_BASE_PATH, file));
 
             System.out.println("Imagen4");
-            // 4. Guardar el ticket en la base de datos y devolverlo
+            // 4. Guardar el ticket en base de datos
             ticket = ticketService.setItem(ticket);
 
             return ticket;
 
         } catch (Exception | ErrorPharseJsonException e) {
+            // En caso de error eliminar imagen guardada para evitar basura
             storageService.deleteImageData(ticket.getIcon());
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Procesa ticket digital (texto o PDF):
+     * - Guarda archivo temporalmente
+     * - Envía al OCR para archivo digital
+     * - Retorna ticket con JSON de productos asignado
+     */
     @Override
     public Ticket proccessDigitalTicket(MultipartFile file, User user) throws IOException {
-        // Guardar archivo temporalmente
         Path tempFilePath = Files.createTempFile("TicketDigital" + "_", "_" + file.getOriginalFilename());
         Files.copy(file.getInputStream(), tempFilePath, StandardCopyOption.REPLACE_EXISTING);
 
         System.out.println("Digital");
-        // Procesar con OCR
-        String ocrResult = sendFileForOCR(tempFilePath.toFile(),false);
+        String ocrResult = sendFileForOCR(tempFilePath.toFile(), false);
 
-        // Crear y guardar ticket
         Ticket ticket = new Ticket();
         ticket.setProductsJSON(ocrResult);
         return ticket;
     }
 
+    /**
+     * Envía archivo al servidor OCR en Python:
+     * - Usa multipart/form-data con autenticación Bearer
+     * - Decide endpoint según si es imagen o archivo digital
+     * - Maneja errores HTTP y los convierte en IOException
+     */
     @Override
     public String sendFileForOCR(File file, boolean imagen) throws IOException {
-        // Crear multipart
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("file", new FileSystemResource(file));
 
-        // Crear headers con API Key
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         headers.set("Authorization", "Bearer " + pythonServerApiKey);
 
-        // Armar entidad HTTP
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-        // Enviar solicitud al servidor Python
         String url = imagen ? pythonServerUrl + "/api/ocr" : pythonServerUrl + "/api/ocr-file";
 
         try {
@@ -130,6 +144,11 @@ public class OCRServiceImpl implements OCRService {
         }
     }
 
+    /**
+     * Consulta estado del servidor OCR Python.
+     * Retorna un objeto con estados booleanos.
+     * Si falla, retorna un objeto con todos false.
+     */
     public StatusServerResponse getStatus() {
         StatusServerResponse health = new StatusServerResponse(false,false,false);
         try {
@@ -142,5 +161,4 @@ public class OCRServiceImpl implements OCRService {
 
         return health;
     }
-
 }

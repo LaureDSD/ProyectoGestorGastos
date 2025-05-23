@@ -74,9 +74,35 @@ public interface TicketService {
      */
     List<Ticket> getTicketsByUserId(Long clienteId);
 
+    /**
+     * Mapea y crea un objeto `Ticket` a partir de una solicitud de creación de ticket.
+     *
+     * @param request   El objeto `CreateTicketRequest` que contiene los datos para crear el ticket.
+     * @param clienteId El ID del usuario al que se asignará el ticket.
+     * @return El objeto `Ticket` creado a partir de la solicitud y el ID de usuario.
+     */
     Ticket mappingCreateTicket(CreateTicketRequest request, Long clienteId);
 
+    /**
+     * Mapea y actualiza un objeto `Ticket` existente con los datos de la solicitud de actualización.
+     *
+     * @param request El objeto `UpdateTicketRequest` que contiene los nuevos datos para actualizar el ticket.
+     * @param ticket  El objeto `Ticket` existente que será actualizado.
+     * @return El objeto `Ticket` actualizado con los nuevos datos.
+     */
     Ticket mappingUpdateTicket(UpdateTicketRequest request, Ticket ticket);
 
+    /**
+     * Mapea y crea un objeto `Ticket` a partir de un resultado OCR (Reconocimiento Óptico de Caracteres).
+     *
+     * Este método procesa el resultado OCR obtenido de una imagen o documento, y crea un ticket
+     * asociado a un usuario específico.
+     *
+     * @param ocrResult El resultado en texto extraído mediante OCR.
+     * @param user      El usuario al que se asignará el ticket creado.
+     * @return El objeto `Ticket` creado a partir del resultado OCR y el usuario.
+     * @throws ErrorPharseJsonException Si ocurre un error al parsear el resultado OCR.
+     */
     Ticket mappingCreateTicketbyOCR(String ocrResult, User user) throws ErrorPharseJsonException;
+
 }

@@ -58,9 +58,26 @@ public interface SpentService {
      */
     boolean existsById(Long id);
 
+    /**
+     * Obtiene todos los gastos asociados a un usuario dado por su ID.
+     *
+     * @param clienteId El ID del usuario para obtener sus gastos.
+     * @return Lista de gastos asociados al usuario.
+     */
     List<Spent> getSpentsByUserId(Long clienteId);
 
+    /**
+     * Cuenta el número total de gastos asociados a un usuario.
+     *
+     * @param userId El ID del usuario.
+     * @return El número total de gastos del usuario.
+     */
     long countSpentsByUserId(Long userId);
 
+    /**
+     * Obtiene el conteo total de gastos en el sistema.
+     *
+     * @return Número total de gastos registrados.
+     */
     int getCountSpents();
 }

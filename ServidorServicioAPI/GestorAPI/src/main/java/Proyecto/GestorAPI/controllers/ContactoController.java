@@ -4,7 +4,7 @@ import Proyecto.GestorAPI.models.FormContacto;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.config.security.CustomUserDetails;
 import Proyecto.GestorAPI.config.security.RoleServer;
-import Proyecto.GestorAPI.services.ContactoService;
+import Proyecto.GestorAPI.services.FormContactoService;
 import Proyecto.GestorAPI.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -29,7 +29,7 @@ import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME
 public class ContactoController {
 
     @Autowired
-    private ContactoService contactoService;
+    private FormContactoService contactoService;
 
     @Autowired
     private UserService userService;

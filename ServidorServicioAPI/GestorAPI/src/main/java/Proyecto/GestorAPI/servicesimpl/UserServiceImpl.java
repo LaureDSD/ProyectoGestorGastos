@@ -177,13 +177,25 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Cuenta la cantidad de usuarios registrados que utilizan un proveedor de autenticación OAuth2 específico.
+     *
+     * @param oAuth2Provider Proveedor OAuth2 (por ejemplo, Google, Facebook) para filtrar usuarios.
+     * @return Número total de usuarios registrados con el proveedor especificado.
+     */
     @Override
     public long countByProvider(OAuth2Provider oAuth2Provider) {
         return userRepository.countByProvider(oAuth2Provider);
     }
 
+    /**
+     * Obtiene el conteo total de usuarios activos en el sistema.
+     *
+     * @return Número total de usuarios activos.
+     */
     @Override
     public int getCountUsers() {
-        return  userRepository.countActiveUsers();
+        return userRepository.countActiveUsers();
     }
+
 }

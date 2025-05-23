@@ -83,20 +83,37 @@ public class SpentServiceImpl implements SpentService {
         return repository.existsById(id);
     }
 
-    //Falta comentar
+    /**
+     * Obtiene la lista de gastos (Spents) asociados a un usuario específico.
+     *
+     * @param id Identificador único del usuario.
+     * @return Lista de objetos Spent relacionados con el usuario dado.
+     */
     @Override
     public List<Spent> getSpentsByUserId(Long id) {
-        return  repository.getByUserId(id);
+        return repository.getByUserId(id);
     }
 
+    /**
+     * Cuenta la cantidad total de gastos asociados a un usuario específico.
+     *
+     * @param userId Identificador único del usuario.
+     * @return Número total de gastos registrados para el usuario.
+     */
     @Override
     public long countSpentsByUserId(Long userId) {
         return repository.countByUserId(userId);
     }
 
+    /**
+     * Obtiene el conteo total de gastos registrados en el sistema.
+     *
+     * @return Número total de gastos (Spents) almacenados en el repositorio.
+     */
     @Override
     public int getCountSpents() {
         return repository.countGastos();
     }
+
 
 }

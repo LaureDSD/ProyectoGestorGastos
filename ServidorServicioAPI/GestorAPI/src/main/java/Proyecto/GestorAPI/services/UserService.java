@@ -127,7 +127,19 @@ public interface UserService {
      */
     Optional<User> getUserByUsernameOrEmail(String user);
 
+    /**
+     * Cuenta la cantidad de usuarios registrados con un proveedor OAuth2 específico.
+     *
+     * @param oAuth2Provider El proveedor OAuth2 (como Google, Facebook, etc.) para filtrar usuarios.
+     * @return El número total de usuarios que se registraron usando el proveedor especificado.
+     */
     long countByProvider(OAuth2Provider oAuth2Provider);
 
+    /**
+     * Obtiene el conteo total de usuarios registrados en el sistema.
+     *
+     * @return El número total de usuarios.
+     */
     int getCountUsers();
+
 }

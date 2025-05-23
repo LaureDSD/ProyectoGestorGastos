@@ -59,5 +59,11 @@ public interface SubscriptionService {
      */
     boolean existsById(Long id);
 
+    /**
+     * Obtiene la lista de suscripciones asociadas a un usuario específico.
+     *
+     * @param clienteId El ID del usuario para el cual se desean obtener las suscripciones.
+     * @return Una lista de objetos `Subscription` correspondientes al usuario especificado.
+     */
     List<Subscription> getSubscriptionsByUserId(Long clienteId);
 }

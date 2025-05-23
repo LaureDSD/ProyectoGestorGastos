@@ -94,9 +94,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return repository.existsById(id);
     }
 
-    //Falta comentar
+    /**
+     * Obtiene la lista de suscripciones asociadas a un usuario específico.
+     *
+     * @param id Identificador único del usuario.
+     * @return Lista de objetos Subscription que pertenecen al usuario indicado.
+     */
     @Override
     public List<Subscription> getSubscriptionsByUserId(Long id) {
         return repository.getByUserId(id);
     }
+
 }
