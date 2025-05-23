@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.util.List;
 
 @Controller
@@ -19,31 +18,22 @@ public class LoginAttemptWebController {
     @Autowired
     private LoginAttemptServiceImpl loginAttemptService;
 
-    // Listar todos los intentos de login
-    @GetMapping
-    public String listarIntentosLogin(Model model,
-                                      @RequestParam(required = false) String username) {
-        try {
-            List<LoginAttempt> intentos;
 
-            if (username != null ) {
-                // Búsqueda filtrada
-                intentos = loginAttemptService.getByUsernameOrEamil(username);
-            } else {
-                // Todos los registros
-                intentos = loginAttemptService.getAll();
-            }
+    private void initDatosCompartidos() {
 
-            model.addAttribute("attempts", intentos);
-            model.addAttribute("searchUsername", username);
-            return rutaHTML;
-        } catch (Exception e) {
-            model.addAttribute("error", "Error al cargar los intentos de login: " + e.getMessage());
-            return rutaHTML;
-        }
     }
 
+    @GetMapping
+    public String listarIntentosLogin(Model model) {
+        initDatosCompartidos(); // Para futuro uso
 
+        try {
+            List<LoginAttempt> intentos = loginAttemptService.getAll();
+            model.addAttribute("attempts", intentos);
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al cargar los intentos de login: " + e.getMessage());
+        }
 
-
+        return rutaHTML;
+    }
 }

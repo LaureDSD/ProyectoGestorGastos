@@ -1,0 +1,22 @@
+@startuml
+start
+
+:Usuario ingresa su nombre de usuario y contraseña;
+:Spring recibe las credenciales;
+
+partition Autenticación {
+  :Spring valida las credenciales;
+
+  if (Credenciales válidas?) then (sí)
+    :Spring genera un token de sesión;
+    :Spring almacena el token;
+    :Usuario autenticado correctamente;
+    stop
+  else (no)
+    :Spring notifica error de autenticación;
+    :Credenciales incorrectas;
+    stop
+  endif
+}
+
+@enduml

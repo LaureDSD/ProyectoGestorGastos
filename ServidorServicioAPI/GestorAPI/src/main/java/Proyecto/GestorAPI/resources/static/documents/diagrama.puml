@@ -1,0 +1,111 @@
+@startuml
+
+' Clases
+class Usuario  {
+  +long id
+  +String username
+  +String email
+  +String password
+  +String name
+  +String image_url
+  +boolean active
+  +float budget_monthly
+  +float notice_expense
+  +String provider
+  +String provider_id
+  +int role
+  +datetime created_at
+  +datetime updated_at
+  +registerUsuario(String username, String email, String password) : Usuario
+  +login(String username, String password) : boolean
+  +logout() : void
+  +verifyToken(String token) : boolean
+  +updateUsuario(Usuario usuario) : Usuario
+  +deleteUsuario(long id) : void
+  +getAllUsuarios() : List<Usuario>
+  +getUsuarioById(long id) : Usuario
+}
+
+class Categoria {
+  +long id
+  +String name
+  +String description
+  +float iva
+  +datetime created_at
+  +datetime updated_at
+  +addCategoria(Categoria categoria) : Categoria
+  +getAllCategorias() : List<Categoria>
+  +getCategoriaById(long id) : Categoria
+  +updateCategoria(Categoria categoria) : Categoria
+  +deleteCategoria(long id) : void
+}
+
+class Gasto {
+  +long spent_id
+  +String name
+  +String description
+  +float total
+  +float iva
+  +datetime expense_date
+  +String icon
+  +String tipo
+  +datetime created_at
+  +datetime updated_at
+  +addGasto(Gasto gasto) : Gasto
+  +getAllGastos() : List<Gasto>
+  +getGastoById(long spent_id) : Gasto
+  +updateGasto(Gasto gasto) : Gasto
+  +deleteGasto(long spent_id) : void
+}
+
+class Subscripcion {
+  +long spent_id
+  +float accumulate
+  +boolean activa
+  +datetime start
+  +datetime end
+  +int interval_time
+  +int restart_day
+  +addSubscripcion(Subscripcion subscripcion) : Subscripcion
+  +getAllSubscripciones() : List<Subscripcion>
+  +getSubscripcionById(long spent_id) : Subscripcion
+  +updateSubscripcion(Subscripcion subscripcion) : Subscripcion
+  +deleteSubscripcion(long spent_id) : void
+}
+
+class Ticket {
+  +long spent_id
+  +String store
+  +JSON productsjson
+  +addTicket(Ticket ticket) : Ticket
+  +getAllTickets() : List<Ticket>
+  +getTicketById(long spent_id) : Ticket
+  +updateTicket(Ticket ticket) : Ticket
+  +deleteTicket(long spent_id) : void
+}
+
+' Enum tipo en Gasto
+enum TipoGasto {
+  FACTURA
+  GASTO_GENERICO
+  SUBSCRIPCION
+  TICKET
+  TRANSFERENCIA
+}
+
+' Enum provider en Usuario
+enum Provider {
+  GITHUB
+  GOOGLE
+  LOCAL
+}
+
+' Relacións
+Usuario "1" -- "n" Gasto : tiene
+Categoria "1" -- "n" Gasto : clasifica
+Gasto "1" -- "1" Subscripcion : tiene
+Gasto "1" -- "1" Ticket : tiene
+Gasto "1" -- "1" TipoGasto : tiene
+Usuario "1" -- "1" Provider : usa
+
+@enduml

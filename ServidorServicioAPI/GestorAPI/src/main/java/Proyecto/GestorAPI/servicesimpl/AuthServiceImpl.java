@@ -2,7 +2,7 @@ package Proyecto.GestorAPI.servicesimpl;
 
 import Proyecto.GestorAPI.exceptions.UserBlockedException;
 import Proyecto.GestorAPI.exceptions.UserNotFoundException;
-import Proyecto.GestorAPI.models.Contacto;
+import Proyecto.GestorAPI.models.FormContacto;
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.modelsDTO.authDTO.SignUpRequest;
 import Proyecto.GestorAPI.config.security.RoleServer;
@@ -105,7 +105,7 @@ public class AuthServiceImpl implements AuthService {
         }*/
 
         //Por no implementar el emailservice
-        Contacto contacto = new Contacto();
+        FormContacto contacto = new FormContacto();
         contacto.setAsunto("RECUPERACION");
         contacto.setRevisado(Boolean.FALSE);
         contacto.setCorreo(email);

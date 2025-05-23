@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -30,20 +29,28 @@ public class SubscriptionWebController {
     @Autowired
     private CategoryExpenseServiceImpl categoryService;
 
+    private List<User> usuarios;
+    private List<CategoryExpense> categorias;
+    private List<ExpenseClass> tiposGasto;
+
+    private void initDatosCompartidos() {
+        usuarios = userService.getUsers();
+        categorias = categoryService.getAll();
+        tiposGasto = List.of(ExpenseClass.values());
+    }
+
     // Listar todas las suscripciones
     @GetMapping
-    public String listarSubscripciones(Model model) {
+    public String showSubscriptionsList(Model model) {
         try {
+            initDatosCompartidos();
             List<Subscription> subscriptions = subscriptionService.getAll();
-            List<User> users = userService.getUsers();
-            List<CategoryExpense> categories = categoryService.getAll();
-            List<ExpenseClass> expenseTypes = List.of(ExpenseClass.values());
 
             model.addAttribute("subscriptions", subscriptions);
             model.addAttribute("subscription", new Subscription());
-            model.addAttribute("users", users);
-            model.addAttribute("categories", categories);
-            model.addAttribute("expenseTypes", expenseTypes);
+            model.addAttribute("users", usuarios);
+            model.addAttribute("categories", categorias);
+            model.addAttribute("expenseTypes", tiposGasto);
 
             return rutaHTML;
         } catch (Exception e) {
@@ -52,19 +59,17 @@ public class SubscriptionWebController {
         }
     }
 
-    // Formulario de edición
+    // Formulario para crear o editar una suscripción
     @GetMapping("/edit/{id}")
-    public String editarSubscripcion(@PathVariable("id") Long id, Model model) {
+    public String editarSubscription(@PathVariable("id") Long id, Model model) {
         try {
-            Subscription subscription = subscriptionService.getByID(id).orElse(new Subscription());
-            List<User> users = userService.getUsers();
-            List<CategoryExpense> categories = categoryService.getAll();
-            List<ExpenseClass> expenseTypes = List.of(ExpenseClass.values());
+            initDatosCompartidos();
+            Subscription subscription = (id != null) ? subscriptionService.getByID(id).orElse(new Subscription()) : new Subscription();
 
             model.addAttribute("subscription", subscription);
-            model.addAttribute("users", users);
-            model.addAttribute("categories", categories);
-            model.addAttribute("expenseTypes", expenseTypes);
+            model.addAttribute("users", usuarios);
+            model.addAttribute("categories", categorias);
+            model.addAttribute("expenseTypes", tiposGasto);
 
             return rutaHTML;
         } catch (Exception e) {
@@ -73,51 +78,46 @@ public class SubscriptionWebController {
         }
     }
 
-    // Guardar suscripción (crear/actualizar)
+    // Guardar una suscripción (creación o actualización)
     @PostMapping("/save")
-    public String guardarSubscripcion(@ModelAttribute Subscription subscription, Model model) {
+    public String saveSubscription(@ModelAttribute Subscription subscription, Model model) {
         try {
-            // Lógica específica para suscripciones
-            if (subscription.getSpentId() == null) {
-                // Nueva suscripción
-                subscription.setCreatedAt(LocalDateTime.now());
-                subscription.setUpdatedAt(LocalDateTime.now());
-                // Calcular acumulado inicial si es necesario
-                subscription.setAccumulate(subscription.getTotal());
-            } else {
-                // Actualización de suscripción
-                subscription.setUpdatedAt(LocalDateTime.now());
-                // Aquí podrías añadir lógica para recalcular el acumulado si cambian fechas o intervalo
+            // Obtener y establecer el usuario completo si hay un ID
+            if (subscription.getUser() != null && subscription.getUser().getId() != null) {
+                User fullUser = userService.getUserById(subscription.getUser().getId()).orElse(null);
+                subscription.setUser(fullUser);
+            }
+
+            // Obtener y establecer la categoría completa si hay un ID
+            if (subscription.getCategory() != null && subscription.getCategory().getId() != null) {
+                CategoryExpense fullCategory = categoryService.getByID(subscription.getCategory().getId()).orElse(null);
+                subscription.setCategory(fullCategory);
             }
 
             subscriptionService.setItem(subscription);
-            return "redirect:/admin/subscriptions";
+            return "redirect:" + rutaHTML;
         } catch (Exception e) {
+            initDatosCompartidos();
             model.addAttribute("error", "Error al guardar la suscripción: " + e.getMessage());
-
-            // Recargar datos necesarios para la vista en caso de error
-            List<User> users = userService.getUsers();
-            List<CategoryExpense> categories = categoryService.getAll();
-            List<ExpenseClass> expenseTypes = List.of(ExpenseClass.values());
-
-            model.addAttribute("users", users);
-            model.addAttribute("categories", categories);
-            model.addAttribute("expenseTypes", expenseTypes);
-
+            model.addAttribute("subscription", subscription);
             return rutaHTML;
         }
     }
 
     // Eliminar suscripción
     @GetMapping("/delete/{id}")
-    public String eliminarSubscripcion(@PathVariable("id") Long id, Model model) {
+    public String eliminarSubscription(@PathVariable("id") Long id, Model model) {
         try {
-            subscriptionService.deleteByID(subscriptionService.getByID(id).orElse(null).getSpentId());
-            return "redirect:" + rutaHTML;
+            return subscriptionService.getByID(id).map(subscription -> {
+                subscriptionService.deleteByID(subscription.getSpentId());
+                return "redirect:" + rutaHTML;
+            }).orElseGet(() -> {
+                model.addAttribute("error", "Suscripción no encontrada.");
+                return rutaHTML;
+            });
         } catch (Exception e) {
             model.addAttribute("error", "Error al eliminar la suscripción: " + e.getMessage());
             return rutaHTML;
         }
     }
-
 }

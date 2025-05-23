@@ -1,17 +1,17 @@
 package Proyecto.GestorAPI.services;
 
-import Proyecto.GestorAPI.models.Contacto;
+import Proyecto.GestorAPI.models.FormContacto;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ContactoService {
 
-    List<Contacto> getAll();
+    List<FormContacto> getAll();
 
-    Optional<Contacto> getByID(Long id);
+    Optional<FormContacto> getByID(Long id);
 
-    Contacto setItem(Contacto contacto);
+    FormContacto setItem(FormContacto contacto);
 
     void deleteByID(Long id);
 

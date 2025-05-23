@@ -133,7 +133,7 @@ public class OCRServiceImpl implements OCRService {
     public StatusServerResponse getStatus() {
         StatusServerResponse health = new StatusServerResponse(false,false,false);
         try {
-            String url = pythonServerUrl + "/api/status";
+            String url = pythonServerUrl + "/status";
             ResponseEntity<StatusServerResponse> response = restTemplate.getForEntity(url, StatusServerResponse.class);
             health = response.getBody();
         } catch (Exception e) {

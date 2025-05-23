@@ -1,6 +1,6 @@
 package Proyecto.GestorAPI.controllers;
 
-import Proyecto.GestorAPI.models.Contacto;
+import Proyecto.GestorAPI.models.FormContacto;
 import Proyecto.GestorAPI.modelsDTO.ForgotPasswordRequest;
 import Proyecto.GestorAPI.services.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -106,7 +106,7 @@ public class PublicController {
     @Operation(
             summary = "Guardar formulario"
     )
-    public ResponseEntity<?> guardar(@RequestBody Contacto contacto) {
+    public ResponseEntity<?> guardar(@RequestBody FormContacto contacto) {
         try {
         contacto.setRevisado(false);
         return ResponseEntity.ok(contactoService.setItem(contacto));

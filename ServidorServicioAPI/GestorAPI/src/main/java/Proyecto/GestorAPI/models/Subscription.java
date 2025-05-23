@@ -3,6 +3,7 @@ package Proyecto.GestorAPI.models;
 import Proyecto.GestorAPI.models.enums.ExpenseClass;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -25,12 +26,14 @@ public class Subscription extends Spent {
      * Fecha de inicio de la subscripción. Campo obligatorio.
      */
     @Column(nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime start;
 
     /**
      * Fecha de finalización de la subscripción.
      * Si es null, se considera una subscripción indefinida.
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime end;
 
     /**

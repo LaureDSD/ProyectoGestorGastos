@@ -18,45 +18,64 @@ public class CategoryExpenseWebController {
     @Autowired
     private CategoryExpenseServiceImpl categoriaService;
 
-    // CREATE: Mostrar formulario
-    @GetMapping("/nueva")
-    public String mostrarFormulario(Model model) {
-        model.addAttribute("categoria", new CategoryExpense());
-        return rutaHTML + "-form";
-    }
+    private List<CategoryExpense> categorias;
 
-    // CREATE: Guardar nueva categoría
-    @PostMapping("/guardar")
-    public String guardarCategoria(@ModelAttribute CategoryExpense categoria) {
-        categoriaService.setItem(categoria);
-        return "redirect:" + rutaHTML;
+    private void initDatosCompartidos() {
+        categorias = categoriaService.getAll();
     }
 
     // READ: Listar todas las categorías
     @GetMapping
     public String listarCategorias(Model model) {
-        List<CategoryExpense> categorias = categoriaService.getAll();
-        model.addAttribute("categorias", categorias);
-        return rutaHTML;
+        try {
+            initDatosCompartidos();
+            model.addAttribute("categorias", categorias);
+            model.addAttribute("categoria", new CategoryExpense()); // Para formulario nuevo
+            return rutaHTML;
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al cargar categorías: " + e.getMessage());
+            return rutaHTML;
+        }
     }
 
-    // UPDATE: Mostrar formulario de edición
-    @GetMapping("/editar/{id}")
+    // CREATE / UPDATE: Guardar categoría
+    @PostMapping("/save")
+    public String guardarCategoria(@ModelAttribute CategoryExpense categoria, Model model) {
+        try {
+            categoriaService.setItem(categoria);
+            return "redirect:" + rutaHTML;
+        } catch (Exception e) {
+            initDatosCompartidos();
+            model.addAttribute("error", "Error al guardar la categoría: " + e.getMessage());
+            model.addAttribute("categorias", categorias);
+            model.addAttribute("categoria", categoria);
+            return rutaHTML;
+        }
+    }
+
+    // UPDATE: Editar categoría
+    @GetMapping("/edit/{id}")
     public String editarCategoria(@PathVariable Long id, Model model) {
-        CategoryExpense categoria = categoriaService.getByID(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
-        model.addAttribute("categoria", categoria);
-        return rutaHTML + "-form";
+        try {
+            initDatosCompartidos();
+            CategoryExpense categoria = categoriaService.getByID(id)
+                    .orElse(new CategoryExpense());
+            model.addAttribute("categoria", categoria);
+            model.addAttribute("categorias", categorias);
+            return rutaHTML;
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al editar la categoría: " + e.getMessage());
+            return rutaHTML;
+        }
     }
 
     // DELETE: Eliminar categoría
-    @GetMapping("/eliminar/{id}")
+    @GetMapping("/delete/{id}")
     public String eliminarCategoria(@PathVariable Long id, Model model) {
         try {
             categoriaService.deleteByID(id);
         } catch (Exception e) {
-            model.addAttribute("error",
-                    "No se puede eliminar la categoría porque tiene gastos asociados");
+            model.addAttribute("error", "No se puede eliminar la categoría: " + e.getMessage());
         }
         return "redirect:" + rutaHTML;
     }
