@@ -36,7 +36,7 @@ public class FormContactoWebController {
     /**
      * Ruta base para las vistas HTML relacionadas con el formulario de contacto.
      */
-    private final String rutaHTML = "/admin/formcontacto";
+    private final String rutaHTML = "admin/formcontacto";
 
     @Autowired
     private ContactoServiceImpl contactoService;

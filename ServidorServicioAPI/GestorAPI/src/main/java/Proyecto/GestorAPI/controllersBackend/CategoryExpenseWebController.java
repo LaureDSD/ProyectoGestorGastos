@@ -36,7 +36,7 @@ public class CategoryExpenseWebController {
     /**
      * Ruta base para el retorno de vistas HTML relacionadas con categorías.
      */
-    private final String rutaHTML = "/admin/categorias";
+    private final String rutaHTML = "admin/categorias";
 
     @Autowired
     private CategoryExpenseServiceImpl categoriaService;

@@ -37,7 +37,7 @@ public class User {
     private String username;
 
     /** Contraseña cifrada del usuario. */
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String password;
 
     /** Nombre completo del usuario. */

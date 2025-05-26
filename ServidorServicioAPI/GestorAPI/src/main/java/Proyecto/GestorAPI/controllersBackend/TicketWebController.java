@@ -29,7 +29,7 @@ public class TicketWebController {
     /**
      * Ruta común para las vistas HTML relacionadas con tickets.
      */
-    private final String rutaHTML = "/admin/tickets";
+    private final String rutaHTML = "admin/tickets";
 
     @Autowired
     private TicketServiceImpl ticketService;

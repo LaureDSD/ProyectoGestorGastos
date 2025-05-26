@@ -147,6 +147,13 @@ export class EditFormProfileComponent {
     private spentService: SpentService
   ) {}
 
+  getImageUrl(): string {
+  if (!this.img) {
+    return this.defaultImg;
+  }
+      return this.img.startsWith('http') ? this.img : this.server + 'uploads/' + this.img;
+    }
+
   /**
    * Método que se dispara cuando se selecciona un archivo en el input file.
    * Realiza la subida del archivo al servidor usando el servicio correspondiente según si es imagen de perfil o de gasto.

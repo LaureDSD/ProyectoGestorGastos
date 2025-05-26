@@ -29,7 +29,7 @@ public class LoginAttemptWebController {
      * Ruta base para la plantilla HTML correspondiente a la gestión
      * de intentos de login.
      */
-    private final String rutaHTML = "/admin/login-attempts";
+    private final String rutaHTML = "admin/login-attempts";
 
     @Autowired
     private LoginAttemptServiceImpl loginAttemptService;

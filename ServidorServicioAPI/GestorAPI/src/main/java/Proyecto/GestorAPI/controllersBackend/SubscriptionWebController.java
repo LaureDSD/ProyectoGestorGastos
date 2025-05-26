@@ -29,7 +29,7 @@ public class SubscriptionWebController {
     /**
      * Ruta común para las vistas HTML relacionadas con suscripciones.
      */
-    private final String rutaHTML = "/admin/subscriptions";
+    private final String rutaHTML = "admin/subscriptions";
 
     @Autowired
     private SubscriptionServiceImpl subscriptionService;

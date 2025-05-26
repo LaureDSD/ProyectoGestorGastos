@@ -33,7 +33,7 @@ public class SpentWebController {
     /**
      * Ruta base para la plantilla HTML correspondiente a la gestión de gastos.
      */
-    private final String rutaHTML = "/admin/expenses";
+    private final String rutaHTML = "admin/expenses";
 
     @Autowired
     private SpentServiceImpl spentService;

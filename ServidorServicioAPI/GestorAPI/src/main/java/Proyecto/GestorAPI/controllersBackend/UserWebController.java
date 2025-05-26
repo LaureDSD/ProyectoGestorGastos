@@ -26,7 +26,7 @@ public class UserWebController {
     /**
      * Ruta común para las vistas HTML relacionadas con usuarios.
      */
-    private final String rutaHTML = "/admin/usuarios";
+    private final String rutaHTML = "admin/usuarios";
 
     @Autowired
     private UserServiceImpl usuarioService;
