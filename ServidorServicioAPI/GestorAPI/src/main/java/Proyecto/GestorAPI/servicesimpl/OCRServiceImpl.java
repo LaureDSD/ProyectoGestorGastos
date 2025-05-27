@@ -60,24 +60,24 @@ public class OCRServiceImpl implements OCRService {
     public Ticket processImageTicket(MultipartFile file, User user)  {
         Ticket ticket = new Ticket();
         try {
-            System.out.println("Imagen0");
+            //System.out.println("Imagen0");
             // 1. Guardar archivo temporalmente para enviar a OCR
             Path tempFilePath = Files.createTempFile("ticket_", "_" + file.getOriginalFilename());
             Files.copy(file.getInputStream(), tempFilePath, StandardCopyOption.REPLACE_EXISTING);
 
-            System.out.println("Imagen1");
+            //System.out.println("Imagen1");
             // 2. Llamar al servicio OCR enviando el archivo temporal
             String ocrResult = sendFileForOCR(tempFilePath.toFile(), true);
 
-            System.out.println("Imagen2");
+            //System.out.println("Imagen2");
             // 3. Convertir el resultado OCR en un Ticket usando TicketService
             ticket = ticketService.mappingCreateTicketbyOCR(ocrResult, user);
 
-            System.out.println("Imagen3");
+            //System.out.println("Imagen3");
             // 3.1 Guardar la imagen en almacenamiento y asignar ruta al ticket
             ticket.setIcon(storageService.saveImageData(STORAGE_BASE_PATH, file));
 
-            System.out.println("Imagen4");
+            //System.out.println("Imagen4");
             // 4. Guardar el ticket en base de datos
             ticket = ticketService.setItem(ticket);
 
@@ -98,15 +98,24 @@ public class OCRServiceImpl implements OCRService {
      */
     @Override
     public Ticket proccessDigitalTicket(MultipartFile file, User user) throws IOException {
+        Ticket ticket = new Ticket();
+        try{
         Path tempFilePath = Files.createTempFile("TicketDigital" + "_", "_" + file.getOriginalFilename());
         Files.copy(file.getInputStream(), tempFilePath, StandardCopyOption.REPLACE_EXISTING);
 
         System.out.println("Digital");
         String ocrResult = sendFileForOCR(tempFilePath.toFile(), false);
 
-        Ticket ticket = new Ticket();
-        ticket.setProductsJSON(ocrResult);
+        ticket = ticketService.mappingCreateTicketbyOCR(ocrResult, user);
+
+        ticket = ticketService.setItem(ticket);
+
         return ticket;
+        } catch (Exception | ErrorPharseJsonException e) {
+            // En caso de error eliminar imagen guardada para evitar basura
+            storageService.deleteImageData(ticket.getIcon());
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -139,7 +148,7 @@ public class OCRServiceImpl implements OCRService {
             System.out.println("Status: " + response.getStatusCode() + " Body: " + response.getBody());
             return response.getBody();
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
-            System.out.println("Error Status: " + ex.getStatusCode() + " Error Body: " + ex.getResponseBodyAsString());
+            //System.out.println("Error Status: " + ex.getStatusCode() + " Error Body: " + ex.getResponseBodyAsString());
             throw new IOException("Error al procesar OCR. Código: " + ex.getStatusCode() + " - " + ex.getResponseBodyAsString());
         }
     }
@@ -152,7 +161,7 @@ public class OCRServiceImpl implements OCRService {
     public StatusServerResponse getStatus() {
         StatusServerResponse health = new StatusServerResponse(false,false,false);
         try {
-            String url = pythonServerUrl + "/status";
+            String url = pythonServerUrl + "/api/status";
             ResponseEntity<StatusServerResponse> response = restTemplate.getForEntity(url, StatusServerResponse.class);
             health = response.getBody();
         } catch (Exception e) {

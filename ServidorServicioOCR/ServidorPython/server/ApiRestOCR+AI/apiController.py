@@ -64,10 +64,11 @@ class ApiController:
     def endpoint_ocr_archivo(self) -> Tuple[Dict[str, Any], int]:
         """Endpoint para procesar archivos (PDF/texto)."""
         try:
+            print("Hola1")
             file = request.files.get('file')
             if not file or not self.utils.allowed_file(file.filename):
                 return {"error": "Tipo de archivo no permitido"}, 400
-
+            print("Hola1")
             if self.DEMO_MODE:
                 return self.utils.simulador_respuesta_demo(), 200
             
@@ -81,6 +82,7 @@ class ApiController:
             return {"error": "Error interno al procesar archivo OCR"}, 500
 
     def endpoint_chat_service(self) -> Tuple[Dict[str, Any], int]:
+        """Endpoint para procesar texto del chat."""
         try:
             data = request.get_json(silent=True)
             if not data:

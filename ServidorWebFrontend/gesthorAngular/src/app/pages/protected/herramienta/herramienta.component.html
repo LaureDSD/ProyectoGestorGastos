@@ -16,7 +16,7 @@
   Estamos trabajando en ello..
 </div>
 
-<div *ngIf="!loading" class="container py-4 mt-5 text-white">
+<div *ngIf="!loading" class="container py-4 mt-5 mb-5 pb-5 text-white">
 
   <!--
     Sección de alerta para mostrar mensajes de error si existen.
@@ -65,8 +65,9 @@
       - Deshabilitado si no hay archivo seleccionado.
       - Al hacer click ejecuta el método 'subirArchivoYEditar()'.
     -->
-    <button class="btn btn-success" (click)="subirArchivoYEditar()" [disabled]="!file">
-      Subir y Editar
-    </button>
+    <button class="btn btn-success w-100" (click)="subirArchivoYEditar()" [disabled]="!file">
+  Subir y Editar
+</button>
+
   </div>
 </div>

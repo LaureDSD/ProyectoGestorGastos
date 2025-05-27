@@ -88,6 +88,10 @@ import { Producto } from '../../models/models/models.component';
           Añadir/Editar
         </button>
       </div>
+      <!-- Botón para confirmar y emitir la lista final -->
+    <div class="text-end mt-3">
+      <button class="btn btn-primary w-100" (click)="confirmarLista()">Confirmar productos</button>
+    </div>
     </div>
 
     <!-- Lista dinámica de productos actuales -->
@@ -112,10 +116,7 @@ import { Producto } from '../../models/models/models.component';
       </li>
     </ul>
 
-    <!-- Botón para confirmar y emitir la lista final -->
-    <div class="text-end mt-3">
-      <button class="btn btn-primary" (click)="confirmarLista()">Confirmar productos</button>
-    </div>
+
   </div>
   `
 })

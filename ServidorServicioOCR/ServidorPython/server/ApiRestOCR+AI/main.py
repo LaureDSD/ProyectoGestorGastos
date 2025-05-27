@@ -27,6 +27,7 @@ from apiController import ApiController
 from config import Config
 
 
+
 def configure_app() -> Flask:
     """Configura y retorna la aplicación Flask."""
     app = Flask(__name__)

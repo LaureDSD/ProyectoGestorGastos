@@ -48,10 +48,13 @@
               <label class="form-label">Tienda</label>
               <input type="text" formControlName="store" class="form-control bg-secondary text-light border-0" />
             </div>
+
+            <!--
             <div class="mb-3">
               <label class="form-label">Productos JSON</label>
               <textarea formControlName="productsJSON" class="form-control bg-secondary text-light border-0"></textarea>
             </div>
+          -->
           </ng-container>
 
           <ng-container *ngSwitchCase="'subscripcion'">
@@ -104,10 +107,12 @@
       </div>
 
         <button type="submit" class="btn btn-primary mt-3 w-100">Guardar</button>
+        <p class="text"  *ngIf="tipo == 'ticket'" ><small>*Antes de guardar confirma los productos modificados.</small></p>
+
+
 
       </form>
 
-        <button *ngIf="id !== 0" (click)="onDelete()" class="btn btn-danger mt-3 w-100 card bg-dark text-light mb-3">Eliminar</button>
     </div>
 
 
@@ -126,7 +131,14 @@
 
     ></app-edit-form-profile>
 
+    <div class="col-md-12 ">
+    <button *ngIf="id !== 0" (click)="onDelete()" class="btn btn-danger mt-3 w-100 card bg-dark text-light mb-3">Eliminar</button>
+    </div>
+
   </div>
+
+
+
 
 
 </div>
