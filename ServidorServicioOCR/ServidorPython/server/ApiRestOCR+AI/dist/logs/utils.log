@@ -1,0 +1,47 @@
+2025-05-27 17:35:54,031 - ERROR - Error al procesar OCR archivo
+Traceback (most recent call last):
+  File "services.py", line 141, in procesar_ocr_archivo
+ModuleNotFoundError: No module named 'PyPDF2'
+2025-05-27 17:35:54,032 - ERROR - Error en /ocr-file
+Traceback (most recent call last):
+  File "services.py", line 141, in procesar_ocr_archivo
+ModuleNotFoundError: No module named 'PyPDF2'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "apiController.py", line 75, in endpoint_ocr_archivo
+  File "services.py", line 176, in procesar_ocr_archivo
+RuntimeError: Error al procesar OCR archivo: No module named 'PyPDF2'
+2025-05-27 17:35:55,669 - ERROR - Error al procesar OCR archivo
+Traceback (most recent call last):
+  File "services.py", line 141, in procesar_ocr_archivo
+ModuleNotFoundError: No module named 'PyPDF2'
+2025-05-27 17:35:55,670 - ERROR - Error en /ocr-file
+Traceback (most recent call last):
+  File "services.py", line 141, in procesar_ocr_archivo
+ModuleNotFoundError: No module named 'PyPDF2'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "apiController.py", line 75, in endpoint_ocr_archivo
+  File "services.py", line 176, in procesar_ocr_archivo
+RuntimeError: Error al procesar OCR archivo: No module named 'PyPDF2'
+2025-05-27 17:36:43,725 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-27 17:41:38,770 - ERROR - Error al procesar OCR archivo
+Traceback (most recent call last):
+  File "services.py", line 141, in procesar_ocr_archivo
+ModuleNotFoundError: No module named 'PyPDF2'
+2025-05-27 17:41:38,770 - ERROR - Error en /ocr-file
+Traceback (most recent call last):
+  File "services.py", line 141, in procesar_ocr_archivo
+ModuleNotFoundError: No module named 'PyPDF2'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "apiController.py", line 75, in endpoint_ocr_archivo
+  File "services.py", line 176, in procesar_ocr_archivo
+RuntimeError: Error al procesar OCR archivo: No module named 'PyPDF2'
+2025-05-27 17:52:17,696 - INFO - Texto extraído correctamente de imagen OCR.

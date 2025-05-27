@@ -10,6 +10,7 @@ from openai.error import RateLimitError, APIError
 from models import Producto, TicketResponse
 from typing import Optional, Dict, Any
 import openai
+from PyPDF2 import PdfReader
 
 
 class OcrService:
@@ -138,7 +139,7 @@ class OcrService:
             content_type = mimetypes.guess_type(file.filename)[0]
             
             if content_type == 'application/pdf':
-                from PyPDF2 import PdfReader
+                
                 reader = PdfReader(file)
                 contenido = "\n".join(page.extract_text() or '' for page in reader.pages)
             else:

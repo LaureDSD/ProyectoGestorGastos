@@ -64,11 +64,9 @@ class ApiController:
     def endpoint_ocr_archivo(self) -> Tuple[Dict[str, Any], int]:
         """Endpoint para procesar archivos (PDF/texto)."""
         try:
-            print("Hola1")
             file = request.files.get('file')
             if not file or not self.utils.allowed_file(file.filename):
                 return {"error": "Tipo de archivo no permitido"}, 400
-            print("Hola1")
             if self.DEMO_MODE:
                 return self.utils.simulador_respuesta_demo(), 200
             

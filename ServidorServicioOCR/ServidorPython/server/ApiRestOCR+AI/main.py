@@ -26,6 +26,8 @@ from services import OcrService, ChatService
 from apiController import ApiController
 from config import Config
 
+#Modo produccion
+from waitress import serve
 
 
 def configure_app() -> Flask:
@@ -123,9 +125,8 @@ def main():
 
 if __name__ == "__main__":
     app = main()
-    app.run(
+    serve(
+        app,
         host=Config.HOST,
-        port=Config.PORT,
-        debug=Config.DEBUG_MODE,
-        threaded=True
+        port=Config.PORT
     )
