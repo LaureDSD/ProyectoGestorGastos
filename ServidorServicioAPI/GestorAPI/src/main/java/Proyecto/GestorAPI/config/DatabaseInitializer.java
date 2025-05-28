@@ -115,7 +115,7 @@ public class DatabaseInitializer implements CommandLineRunner {
         // Inserción de registros de intentos de login.
         LOGIN_ATTEMPTS.forEach(loginAttemptService::setItem);
 
-        System.out.println("Database initialized");
+        System.out.println("Database iniciada");
     }
 
     /**

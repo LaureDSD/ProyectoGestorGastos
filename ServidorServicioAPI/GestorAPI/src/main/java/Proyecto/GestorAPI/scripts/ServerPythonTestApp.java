@@ -24,7 +24,7 @@ public class ServerPythonTestApp {
         // Simula la conexión con el servidor Python para procesar el archivo
         try {
             String response = simulateTicketOCR(file);
-            System.out.println("Respuesta del servidor Python: " + response);
+            //System.out.println("Respuesta del servidor Python: " + response);
         } catch (IOException e) {
             System.err.println("Error: " + e.getMessage());
         }

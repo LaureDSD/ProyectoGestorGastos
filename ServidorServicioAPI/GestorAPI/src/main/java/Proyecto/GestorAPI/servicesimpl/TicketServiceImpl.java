@@ -182,7 +182,7 @@ public class TicketServiceImpl implements TicketService {
         TicketResponse ticketOCR = new TicketResponse();
         String articulosJson = "[]";
 
-        System.out.println("Mappear");
+        //System.out.println("Mappear");
 
         try {
             ticketOCR = mapper.readValue(ocrResult, TicketResponse.class);
@@ -195,7 +195,7 @@ public class TicketServiceImpl implements TicketService {
             throw new ErrorPharseJsonException("Error al cargar ocr desde Python: " + e);
         }
 
-        System.out.println("Mappear2");
+        //System.out.println("Mappear2");
 
         Ticket ticket = new Ticket();
         ticket.setUser(user);
@@ -244,7 +244,7 @@ public class TicketServiceImpl implements TicketService {
                 fecha = LocalDate.parse(ticketOCR.getFecha(), dateFormatter);
             }
         } catch (Exception e) {
-            System.out.println("Fecha inválida, usando actual: " + e.getMessage());
+            //System.out.println("Fecha inválida, usando actual: " + e.getMessage());
         }
 
         try {
@@ -252,13 +252,13 @@ public class TicketServiceImpl implements TicketService {
                 hora = LocalTime.parse(ticketOCR.getHora(), timeFormatter);
             }
         } catch (Exception e) {
-            System.out.println("Hora inválida, usando actual: " + e.getMessage());
+            //System.out.println("Hora inválida, usando actual: " + e.getMessage());
         }
 
         ticket.setExpenseDate(LocalDateTime.of(fecha, hora));
         ticket.setTypeExpense(ExpenseClass.TICKET);
 
-        System.out.println("Mappear3");
+        //System.out.println("Mappear3");
         return ticket;
     }
 

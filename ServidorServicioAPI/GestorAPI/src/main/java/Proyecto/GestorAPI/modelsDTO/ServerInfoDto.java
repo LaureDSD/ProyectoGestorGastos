@@ -23,4 +23,5 @@ public class ServerInfoDto {
     private long totalDisk;           // en bytes
     private long usedDisk;            // en bytes
     private double cpuTemperature;    // en °C
+    private String info;
 }

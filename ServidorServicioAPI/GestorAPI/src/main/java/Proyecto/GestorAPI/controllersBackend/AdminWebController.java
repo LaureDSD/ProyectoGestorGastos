@@ -1,5 +1,6 @@
 package Proyecto.GestorAPI.controllersBackend;
 
+import Proyecto.GestorAPI.exceptions.ErrorConexionServidorException;
 import Proyecto.GestorAPI.modelsDTO.ServerInfoDto;
 import Proyecto.GestorAPI.servicesimpl.ServerStatsServiceImpl;
 import org.springframework.security.core.Authentication;
@@ -20,16 +21,22 @@ public class AdminWebController {
 
     @GetMapping("/dashboard")
     public String getDashboard(Model model, Authentication authentication) {
-        // Aquí puedes usar authentication para agregar info del usuario si quieres mostrar en la vista
-        ServerInfoDto serverInfo = serverStatsService.getFullServerInfo();
+        ServerInfoDto serverInfo = new ServerInfoDto();
+        try {
+            serverInfo = serverStatsService.getFullServerInfo();
+        }catch (Exception | ErrorConexionServidorException e){
+            serverInfo.setInfo(e.getMessage());
+            serverInfo.setActiveapi(false);
+            serverInfo.setActiveocr(false);
+        }
+
         model.addAttribute("serverInfo", serverInfo);
 
-        // Opcional: agregar roles o nombre del admin autenticado al modelo para usar en la vista
         if (authentication != null && authentication.isAuthenticated()) {
             model.addAttribute("username", authentication.getName());
             model.addAttribute("roles", authentication.getAuthorities());
         }
 
-        return "admin/dashboard"; // nombre de la plantilla Thymeleaf u otro motor
+        return "admin/dashboard";
     }
 }

@@ -107,7 +107,7 @@ public class AuthServiceImpl implements AuthService {
                 authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(existingUser.getUsername(), password));
 
-                System.out.println(authentication);
+                //System.out.println(authentication);
                 // Se genera y retorna el token JWT basado en la autenticación exitosa
                 return tokenProvider.generate(authentication);
             } else  {
@@ -173,6 +173,6 @@ public class AuthServiceImpl implements AuthService {
         // Guarda el formulario para su revisión posterior
         contactoService.setItem(contacto);
 
-        System.out.println("Recuperación para " + email );
+        //System.out.println("Recuperación para " + email );
     }
 }

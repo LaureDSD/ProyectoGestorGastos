@@ -138,7 +138,7 @@ public class TicketWebController {
                 CategoryExpense fullCategory = categoryService.getByID(ticket.getCategory().getId()).orElse(null);
                 ticket.setCategory(fullCategory);
             }
-            System.out.println("Tick:"+ticket);
+            //System.out.println("Tick:"+ticket);
             ticketService.setItem(ticket);
             return "redirect:/" + rutaHTML;
         } catch (Exception e) {

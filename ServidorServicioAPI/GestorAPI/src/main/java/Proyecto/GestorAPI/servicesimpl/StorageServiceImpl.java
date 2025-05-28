@@ -1,5 +1,6 @@
 package Proyecto.GestorAPI.servicesimpl;
 
+
 import Proyecto.GestorAPI.services.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,8 +42,11 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public String saveImageData(String folderPath, MultipartFile imagen) throws IOException {
         String nombreArchivo = System.currentTimeMillis() + "-" + imagen.getOriginalFilename();
+
         File carpeta = new File(STORAGE_PATH + folderPath);
+
         carpeta.mkdirs();  // Crea la carpeta si no existe
+        //System.out.println("Carpeta absoluta: " + carpeta.getAbsolutePath());
         File archivoDestino = new File(carpeta, nombreArchivo);
         imagen.transferTo(archivoDestino);  // Guarda el archivo físicamente en disco
         //System.out.println("Subido: " + folderPath + nombreArchivo);

@@ -135,10 +135,10 @@ public class AuthWebController {
     @PostMapping("/loginToken")
     public ResponseEntity<?> login(@RequestParam String correo, @RequestParam String contraseña, HttpServletRequest request) {
         try {
-            System.out.println(correo + " " + contraseña);
+            //System.out.println(correo + " " + contraseña);
             String token = authService.authenticateAndGetToken(correo, contraseña);
             loginAttemptService.registerLoginAttempt(correo, true);
-            System.out.println(Map.of("token", token));
+            //System.out.println(Map.of("token", token));
             return ResponseEntity.ok().body(Map.of("token", token));
         } catch (AuthenticationException ex) {
             loginAttemptService.registerLoginAttempt(correo, false);

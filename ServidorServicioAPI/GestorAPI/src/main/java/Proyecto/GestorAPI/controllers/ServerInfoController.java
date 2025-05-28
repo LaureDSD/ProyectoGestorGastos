@@ -1,5 +1,6 @@
 package Proyecto.GestorAPI.controllers;
 
+import Proyecto.GestorAPI.exceptions.ErrorConexionServidorException;
 import Proyecto.GestorAPI.modelsDTO.ServerInfoDto;
 import Proyecto.GestorAPI.servicesimpl.ServerStatsServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,6 +40,15 @@ public class ServerInfoController {
             summary = "Obtener Información del Servidor"
     )
     public ServerInfoDto getServerInfo() {
-        return serverStatsService.getFullServerInfo();
+        ServerInfoDto send = new ServerInfoDto();
+        try {
+            send = serverStatsService.getFullServerInfo();
+        }catch (Exception | ErrorConexionServidorException e){
+            //Trampita temporal
+            send.setInfo(e.getMessage());
+            send.setActiveapi(false);
+            send.setActiveocr(false);
+        }
+        return send;
     }
 }

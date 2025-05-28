@@ -1,5 +1,6 @@
 package Proyecto.GestorAPI.servicesimpl;
 
+import Proyecto.GestorAPI.exceptions.ErrorConexionServidorException;
 import Proyecto.GestorAPI.modelsDTO.ServerInfoDto;
 import Proyecto.GestorAPI.services.SpentService;
 import Proyecto.GestorAPI.services.UserService;
@@ -63,7 +64,7 @@ public class ServerStatsServiceImpl {
      *
      * @return ServerInfoDto con los datos completos de estado del servidor.
      */
-    public ServerInfoDto getFullServerInfo() {
+    public ServerInfoDto getFullServerInfo() throws ErrorConexionServidorException {
         // Obtiene la capa de hardware y sistema operativo
         HardwareAbstractionLayer hal = systemInfo.getHardware();
         OperatingSystem os = systemInfo.getOperatingSystem();

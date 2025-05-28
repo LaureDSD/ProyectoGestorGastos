@@ -143,7 +143,7 @@ public class SubscriptionWebController {
             }
 
             subscription.setExpenseDate(subscription.getStart());
-            System.out.println("Sub: "+subscription);
+            //System.out.println("Sub: "+subscription);
             subscriptionService.setItem(subscription);
             return "redirect:/" + rutaHTML;
         } catch (Exception e) {

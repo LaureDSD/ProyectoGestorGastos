@@ -1,5 +1,6 @@
 package Proyecto.GestorAPI.servicesimpl;
 
+import Proyecto.GestorAPI.exceptions.ErrorConexionServidorException;
 import Proyecto.GestorAPI.exceptions.ErrorPharseJsonException;
 import Proyecto.GestorAPI.models.Ticket;
 import Proyecto.GestorAPI.models.User;
@@ -77,7 +78,7 @@ public class OCRServiceImpl implements OCRService {
             // 3.1 Guardar la imagen en almacenamiento y asignar ruta al ticket
             ticket.setIcon(storageService.saveImageData(STORAGE_BASE_PATH, file));
 
-            //System.out.println("Imagen4");
+            //System.out.println("Imagen4: "+ ticket);
             // 4. Guardar el ticket en base de datos
             ticket = ticketService.setItem(ticket);
 
@@ -103,7 +104,7 @@ public class OCRServiceImpl implements OCRService {
         Path tempFilePath = Files.createTempFile("TicketDigital" + "_", "_" + file.getOriginalFilename());
         Files.copy(file.getInputStream(), tempFilePath, StandardCopyOption.REPLACE_EXISTING);
 
-        System.out.println("Digital");
+        //System.out.println("Digital");
         String ocrResult = sendFileForOCR(tempFilePath.toFile(), false);
 
         ticket = ticketService.mappingCreateTicketbyOCR(ocrResult, user);
@@ -145,7 +146,7 @@ public class OCRServiceImpl implements OCRService {
                     String.class
             );
 
-            System.out.println("Status: " + response.getStatusCode() + " Body: " + response.getBody());
+            //System.out.println("Status: " + response.getStatusCode() + " Body: " + response.getBody());
             return response.getBody();
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
             //System.out.println("Error Status: " + ex.getStatusCode() + " Error Body: " + ex.getResponseBodyAsString());
@@ -158,14 +159,15 @@ public class OCRServiceImpl implements OCRService {
      * Retorna un objeto con estados booleanos.
      * Si falla, retorna un objeto con todos false.
      */
-    public StatusServerResponse getStatus() {
+    public StatusServerResponse getStatus() throws ErrorConexionServidorException {
         StatusServerResponse health = new StatusServerResponse(false,false,false);
         try {
             String url = pythonServerUrl + "/api/status";
             ResponseEntity<StatusServerResponse> response = restTemplate.getForEntity(url, StatusServerResponse.class);
             health = response.getBody();
         } catch (Exception e) {
-            System.out.println("Servidor Python no disponible: " + e.getMessage());
+            throw new ErrorConexionServidorException(e);
+            //ystem.out.println("Servidor Python no disponible: " + e.getMessage());
         }
 
         return health;
