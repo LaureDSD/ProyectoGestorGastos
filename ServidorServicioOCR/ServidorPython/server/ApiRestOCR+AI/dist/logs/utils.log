@@ -95,3 +95,79 @@ Traceback (most recent call last):
   File "services.py", line 90, in procesar_ocr_imagen_local
 RuntimeError: Error al procesar OCR imagen: Expecting value: line 1 column 1 (char 0)
 2025-05-28 15:27:56,929 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-28 16:34:42,205 - ERROR - Error al procesar OCR archivo
+Traceback (most recent call last):
+  File "services.py", line 148, in procesar_ocr_archivo
+  File "openai\api_resources\chat_completion.py", line 25, in create
+  File "openai\api_resources\abstract\engine_api_resource.py", line 153, in create
+  File "openai\api_requestor.py", line 298, in request
+  File "openai\api_requestor.py", line 700, in _interpret_response
+  File "openai\api_requestor.py", line 765, in _interpret_response_line
+openai.error.AuthenticationError: Incorrect API key provided: API-KEY-GPT. You can find your API key at https://platform.openai.com/account/api-keys.
+2025-05-28 16:34:42,207 - ERROR - Error en /ocr-file
+Traceback (most recent call last):
+  File "services.py", line 148, in procesar_ocr_archivo
+  File "openai\api_resources\chat_completion.py", line 25, in create
+  File "openai\api_resources\abstract\engine_api_resource.py", line 153, in create
+  File "openai\api_requestor.py", line 298, in request
+  File "openai\api_requestor.py", line 700, in _interpret_response
+  File "openai\api_requestor.py", line 765, in _interpret_response_line
+openai.error.AuthenticationError: Incorrect API key provided: API-KEY-GPT. You can find your API key at https://platform.openai.com/account/api-keys.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "apiController.py", line 73, in endpoint_ocr_archivo
+  File "services.py", line 177, in procesar_ocr_archivo
+RuntimeError: Error al procesar OCR archivo: Incorrect API key provided: API-KEY-GPT. You can find your API key at https://platform.openai.com/account/api-keys.
+2025-05-28 17:28:52,733 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-28 17:29:11,001 - ERROR - Error al procesar OCR imagen
+Traceback (most recent call last):
+  File "services.py", line 82, in procesar_ocr_imagen_local
+  File "services.py", line 61, in _procesar_texto_con_openai
+  File "json\__init__.py", line 346, in loads
+  File "json\decoder.py", line 345, in decode
+  File "json\decoder.py", line 363, in raw_decode
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+2025-05-28 17:29:11,002 - ERROR - Error en /ocr
+Traceback (most recent call last):
+  File "services.py", line 82, in procesar_ocr_imagen_local
+  File "services.py", line 61, in _procesar_texto_con_openai
+  File "json\__init__.py", line 346, in loads
+  File "json\decoder.py", line 345, in decode
+  File "json\decoder.py", line 363, in raw_decode
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "apiController.py", line 52, in endpoint_ocr_image
+  File "services.py", line 90, in procesar_ocr_imagen_local
+RuntimeError: Error al procesar OCR imagen: Expecting value: line 1 column 1 (char 0)
+2025-05-28 17:29:15,062 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-28 17:39:19,157 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-28 17:39:49,766 - ERROR - Error al procesar OCR imagen
+Traceback (most recent call last):
+  File "services.py", line 82, in procesar_ocr_imagen_local
+  File "services.py", line 61, in _procesar_texto_con_openai
+  File "json\__init__.py", line 346, in loads
+  File "json\decoder.py", line 345, in decode
+  File "json\decoder.py", line 363, in raw_decode
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+2025-05-28 17:39:49,767 - ERROR - Error en /ocr
+Traceback (most recent call last):
+  File "services.py", line 82, in procesar_ocr_imagen_local
+  File "services.py", line 61, in _procesar_texto_con_openai
+  File "json\__init__.py", line 346, in loads
+  File "json\decoder.py", line 345, in decode
+  File "json\decoder.py", line 363, in raw_decode
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "apiController.py", line 52, in endpoint_ocr_image
+  File "services.py", line 90, in procesar_ocr_imagen_local
+RuntimeError: Error al procesar OCR imagen: Expecting value: line 1 column 1 (char 0)
+2025-05-28 17:39:53,397 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-28 17:40:24,059 - INFO - Texto extraído correctamente de imagen OCR.

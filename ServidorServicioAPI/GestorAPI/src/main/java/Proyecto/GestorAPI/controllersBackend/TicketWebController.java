@@ -138,9 +138,9 @@ public class TicketWebController {
                 CategoryExpense fullCategory = categoryService.getByID(ticket.getCategory().getId()).orElse(null);
                 ticket.setCategory(fullCategory);
             }
-
+            System.out.println("Tick:"+ticket);
             ticketService.setItem(ticket);
-            return "redirect:" + rutaHTML;
+            return "redirect:/" + rutaHTML;
         } catch (Exception e) {
             initDatosCompartidos();
             model.addAttribute("error", "Error al guardar el ticket: " + e.getMessage());
@@ -161,7 +161,7 @@ public class TicketWebController {
         try {
             return ticketService.getByID(id).map(ticket -> {
                 ticketService.deleteByID(ticket.getSpentId());
-                return "redirect:" + rutaHTML;
+                return "redirect:/" + rutaHTML;
             }).orElseGet(() -> {
                 model.addAttribute("error", "Ticket no encontrado.");
                 return rutaHTML;

@@ -72,7 +72,7 @@ public class CategoryExpenseWebController {
         try {
             initDatosCompartidos();
             model.addAttribute("categorias", categorias);
-            model.addAttribute("categoria", new CategoryExpense()); // Para formulario nuevo
+            model.addAttribute("categoria", new CategoryExpense());
             return rutaHTML;
         } catch (Exception e) {
             model.addAttribute("error", "Error al cargar categorías: " + e.getMessage());
@@ -99,7 +99,7 @@ public class CategoryExpenseWebController {
     public String guardarCategoria(@ModelAttribute CategoryExpense categoria, Model model) {
         try {
             categoriaService.setItem(categoria);
-            return "redirect:" + rutaHTML;
+            return "redirect:/" + rutaHTML;
         } catch (Exception e) {
             initDatosCompartidos();
             model.addAttribute("error", "Error al guardar la categoría: " + e.getMessage());
@@ -157,6 +157,6 @@ public class CategoryExpenseWebController {
         } catch (Exception e) {
             model.addAttribute("error", "No se puede eliminar la categoría: " + e.getMessage());
         }
-        return "redirect:" + rutaHTML;
+        return "redirect:/" + rutaHTML;
     }
 }

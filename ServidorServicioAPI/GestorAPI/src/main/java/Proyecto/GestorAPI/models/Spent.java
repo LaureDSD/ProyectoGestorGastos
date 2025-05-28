@@ -4,6 +4,8 @@ import Proyecto.GestorAPI.models.enums.ExpenseClass;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -91,15 +93,15 @@ public class Spent {
     /**
      * Fecha y hora de creación.
      */
-    @NotNull
-    @Column(nullable = false)
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     /**
      * Fecha y hora de última modificación.
      */
-    @NotNull
-    @Column(nullable = false)
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     /**
@@ -110,16 +112,6 @@ public class Spent {
     @NotNull(message = "El tipo de gasto es obligatorio")
     private ExpenseClass typeExpense = ExpenseClass.GASTO_GENERICO;
 
-    @PrePersist
-    public void prePersist() {
-        if (createdAt == null) createdAt = LocalDateTime.now();
-        if (updatedAt == null) updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
 
     public Spent(String name, String description, String icon,
                  LocalDateTime expenseDate, double total, double iva,

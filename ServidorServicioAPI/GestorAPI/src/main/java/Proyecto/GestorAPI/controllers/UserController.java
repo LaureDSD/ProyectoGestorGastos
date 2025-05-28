@@ -91,7 +91,8 @@ public class UserController {
             String newUrl = storageService.saveImageData(STORAGE_BASE_PATH, file);
 
             // Eliminar imagen anterior si existe
-            if (oldUrl != null && !oldUrl.isEmpty()) {
+
+            if (oldUrl != null && !oldUrl.isEmpty() && !oldUrl.startsWith("hhtp")) {
                 storageService.deleteImageData(oldUrl);
             }
 

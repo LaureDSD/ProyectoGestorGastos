@@ -22,7 +22,7 @@ public interface StorageService {
      *
      * @param filePath Ruta del archivo que se desea eliminar.
      */
-    void deleteImageData(String filePath);
+    boolean deleteImageData(String filePath);
 
     /**
      * Guarda un archivo cualquiera y devuelve la ruta donde fue guardado.

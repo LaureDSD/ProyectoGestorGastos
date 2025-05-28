@@ -136,7 +136,7 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout")
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessUrl("/logout")
                         .addLogoutHandler(new HeaderWriterLogoutHandler(
                                 new ClearSiteDataHeaderWriter(
                                         ClearSiteDataHeaderWriter.Directive.COOKIES,

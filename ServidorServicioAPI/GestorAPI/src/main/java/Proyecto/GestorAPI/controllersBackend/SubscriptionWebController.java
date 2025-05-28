@@ -142,8 +142,10 @@ public class SubscriptionWebController {
                 subscription.setCategory(fullCategory);
             }
 
+            subscription.setExpenseDate(subscription.getStart());
+            System.out.println("Sub: "+subscription);
             subscriptionService.setItem(subscription);
-            return "redirect:" + rutaHTML;
+            return "redirect:/" + rutaHTML;
         } catch (Exception e) {
             initDatosCompartidos();
             model.addAttribute("error", "Error al guardar la suscripción: " + e.getMessage());
@@ -165,7 +167,7 @@ public class SubscriptionWebController {
         try {
             return subscriptionService.getByID(id).map(subscription -> {
                 subscriptionService.deleteByID(subscription.getSpentId());
-                return "redirect:" + rutaHTML;
+                return "redirect:/" + rutaHTML;
             }).orElseGet(() -> {
                 model.addAttribute("error", "Suscripción no encontrada.");
                 return rutaHTML;

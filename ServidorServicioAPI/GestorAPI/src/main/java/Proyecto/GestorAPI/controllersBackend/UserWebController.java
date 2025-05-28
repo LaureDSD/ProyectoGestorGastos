@@ -112,7 +112,7 @@ public class UserWebController {
         }
 
         usuarioService.saveUser(usuario);
-        return "redirect:" + rutaHTML;
+        return "redirect:/" + rutaHTML;
     }
 
     /**
@@ -127,7 +127,7 @@ public class UserWebController {
     public String eliminarUsuario(@PathVariable("id") Long id, Model model) {
         try {
             usuarioService.deleteUser(usuarioService.getUserById(id).orElse(null));
-            return "redirect:" + rutaHTML;
+            return "redirect:/" + rutaHTML;
         } catch (Exception e) {
             model.addAttribute("error", "Error al eliminar el usuario: " + e.getMessage());
             return rutaHTML;

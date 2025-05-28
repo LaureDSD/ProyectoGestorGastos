@@ -145,7 +145,7 @@ public class SpentWebController {
                 gasto.setCategory(fullCategory);
             }
             spentService.setItem(gasto);
-            return "redirect:" + rutaHTML;
+            return "redirect:/" + rutaHTML;
         } catch (Exception e) {
             initDatosCompartidos();
             model.addAttribute("error", "Error al guardar el gasto: " + e.getMessage());
@@ -171,7 +171,7 @@ public class SpentWebController {
         try {
             return spentService.getByID(id).map(gasto -> {
                 spentService.deleteByID(gasto.getSpentId());
-                return "redirect:" + rutaHTML;
+                return "redirect:/" + rutaHTML;
             }).orElseGet(() -> {
                 model.addAttribute("error", "Gasto no encontrado.");
                 return rutaHTML;

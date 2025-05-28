@@ -58,9 +58,6 @@ public class SpentController {
     private UserService userService;
 
     @Autowired
-    private CategoryExpenseService categoriaService;
-
-    @Autowired
     private StorageServiceImpl storageService;
 
     private static final String STORAGE_BASE_PATH = "gastos/";
@@ -141,60 +138,9 @@ public class SpentController {
         }
 
         // Mapear la lista de gastos a lista de DTOs completos
-        List<SpentFullDto> result = mappingSpentFullDtosList(spents);
+        List<SpentFullDto> result = spentService.mappingSpentFullDtosList(spents);
 
         return ResponseEntity.ok(result);
-    }
-
-    /**
-     * Método auxiliar para mapear una lista de entidades Spent a DTOs completos.
-     * @param spents Lista de gastos
-     * @return Lista de DTOs completos
-     */
-    private static List<SpentFullDto> mappingSpentFullDtosList(List<Spent> spents) {
-        List<SpentFullDto> result = new ArrayList<>();
-        for (Spent gasto : spents) {
-            result.add(mappingSpentFullDto(gasto));
-        }
-        return result;
-    }
-
-    /**
-     * Método auxiliar para mapear una entidad Spent a DTO completo.
-     * Incluye detalles específicos según el tipo de gasto (Ticket o Subscription).
-     *
-     * @param gasto Entidad gasto
-     * @return DTO completo con todos los campos relevantes
-     */
-    private static SpentFullDto mappingSpentFullDto(Spent gasto) {
-        SpentFullDto dto = new SpentFullDto();
-        dto.setSpentId(gasto.getSpentId());
-        dto.setUserId(gasto.getUser().getId());
-        dto.setCategoriaId(gasto.getCategory().getId());
-        dto.setName(gasto.getName());
-        dto.setDescription(gasto.getDescription());
-        dto.setIcon(gasto.getIcon());
-        dto.setFechaCompra(gasto.getExpenseDate());
-        dto.setTotal(gasto.getTotal());
-        dto.setIva(gasto.getIva());
-        dto.setTypeExpense(gasto.getTypeExpense());
-
-        // Si es Ticket, agregar campos específicos
-        if (gasto instanceof Ticket ticket) {
-            dto.setStore(ticket.getStore());
-            dto.setProductsJSON(ticket.getProductsJSON());
-        }
-
-        // Si es Subscription, agregar campos específicos
-        if (gasto instanceof Subscription sub) {
-            dto.setStart(sub.getStart());
-            dto.setEnd(sub.getEnd());
-            dto.setAccumulate(sub.getAccumulate());
-            dto.setRestartDay(sub.getRestartDay());
-            dto.setIntervalTime(sub.getIntervalTime());
-            dto.setActiva(sub.isActiva());
-        }
-        return dto;
     }
 
     /**
@@ -254,9 +200,9 @@ public class SpentController {
         Spent spent;
 
         if (user.getRole() != RoleServer.ADMIN) {
-            spent = mappingSpent(request, user.getId());
+            spent = spentService.mappingSpent(request, user.getId());
         } else {
-            spent = mappingSpent(request, (clienteId != null) ? clienteId : user.getId());
+            spent = spentService.mappingSpent(request, (clienteId != null) ? clienteId : user.getId());
         }
 
         Spent createdSpent = spentService.setItem(spent);
@@ -328,54 +274,11 @@ public class SpentController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        Spent updatedSpent = spentService.setItem(mappingUpdateSpent(request, spent.getUser().getId()));
+        Spent updatedSpent = spentService.setItem(spentService.mappingUpdateSpent(request, spent.getUser().getId()));
         return ResponseEntity.ok(SpentDto.from(updatedSpent));
     }
 
-    /**
-     * Mapea los datos de la petición de actualización a entidad Spent.
-     *
-     * @param request Datos de actualización
-     * @param clienteId Id del cliente propietario
-     * @return Entidad Spent con datos actualizados
-     */
-    private Spent mappingUpdateSpent(UpdateSpentRequest request, Long clienteId) {
-        Spent spent = new Spent();
-        spent.setSpentId(request.spentId());
-        spent.setUser(userService.getUserById(clienteId).orElse(new User()));
-        spent.setCategory(categoriaService.getByID(request.categoriaId()).orElse(null));
-        spent.setExpenseDate(request.fechaCompra());
-        spent.setTypeExpense(ExpenseClass.valueOf(request.typeExpense()));
-        spent.setTotal(request.total());
-        spent.setIva(request.iva());
-        spent.setName(request.name());
-        spent.setDescription(request.description());
-        spent.setIcon(request.icon());
-        spent.setCreatedAt(LocalDateTime.now());
-        return spent;
-    }
 
-    /**
-     * Mapea los datos de la petición de creación a entidad Spent.
-     *
-     * @param request Datos para crear el gasto
-     * @param clienteId Id del cliente propietario
-     * @return Entidad Spent creada
-     */
-    private Spent mappingSpent(CreateSpentRequest request, Long clienteId) {
-        Spent spent = new Spent();
-        spent.setUser(userService.getUserById(clienteId).orElse(new User()));
-        spent.setCategory(categoriaService.getByID(request.categoriaId()).orElse(null));
-        spent.setExpenseDate(request.fechaCompra());
-        spent.setTypeExpense(ExpenseClass.valueOf(request.typeExpense()));
-        spent.setTotal(request.total());
-        spent.setIva(request.iva());
-        spent.setName(request.name());
-        spent.setDescription(request.description());
-        spent.setIcon(request.icon());
-        spent.setCreatedAt(LocalDateTime.now());
-        return spent;
-    }
 
     /**
      * Endpoint para subir una imagen asociada a un gasto.
@@ -403,11 +306,7 @@ public class SpentController {
         if (file == null || file.isEmpty()) {
             return ResponseEntity.badRequest().body("No se envió ninguna imagen.");
         }
-
         try {
-            // Aquí podrías validar o procesar el ticket
-            System.out.println("Ticket recibido: ");
-
             // Procesar el usuario
             User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
             Spent spent = spentService.getByID(Long.valueOf(spentId)).orElse(null);
@@ -417,13 +316,8 @@ public class SpentController {
             if (oldUrl != null && !oldUrl.isEmpty()) {
                 storageService.deleteImageData(oldUrl);
             }
-
             spent.setIcon( newUrl );
-
             spentService.setItem(spent);
-
-
-
             return ResponseEntity.ok(Map.of("url", newUrl));
 
         } catch (IOException e) {return ResponseEntity.internalServerError().body("Error al guardar la imagen.");

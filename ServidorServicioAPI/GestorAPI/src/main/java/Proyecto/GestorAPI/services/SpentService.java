@@ -1,6 +1,9 @@
 package Proyecto.GestorAPI.services;
 
 import Proyecto.GestorAPI.models.Spent;
+import Proyecto.GestorAPI.modelsDTO.spent.CreateSpentRequest;
+import Proyecto.GestorAPI.modelsDTO.spent.SpentFullDto;
+import Proyecto.GestorAPI.modelsDTO.spent.UpdateSpentRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -80,4 +83,12 @@ public interface SpentService {
      * @return Número total de gastos registrados.
      */
     int getCountSpents();
+
+    Spent mappingUpdateSpent(UpdateSpentRequest request, Long clienteId);
+
+    Spent mappingSpent(CreateSpentRequest request, Long clienteId);
+
+    List<SpentFullDto> mappingSpentFullDtosList(List<Spent> spents);
+
+    SpentFullDto mappingSpentFullDto(Spent gasto);
 }

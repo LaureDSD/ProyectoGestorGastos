@@ -99,7 +99,7 @@ public class FormContactoWebController {
     public String guardarContacto(@ModelAttribute FormContacto contacto, Model model) {
         try {
             contactoService.setItem(contacto);
-            return "redirect:" + rutaHTML;
+            return "redirect:/" + rutaHTML;
         } catch (Exception e) {
             initDatosCompartidos();
             model.addAttribute("error", "Error al guardar el contacto: " + e.getMessage());
@@ -154,7 +154,7 @@ public class FormContactoWebController {
     public String eliminarContacto(@PathVariable("id") Long id, Model model) {
         try {
             contactoService.deleteByID(id);
-            return "redirect:" + rutaHTML;
+            return "redirect:/" + rutaHTML;
         } catch (Exception e) {
             initDatosCompartidos();
             model.addAttribute("error", "Error al eliminar el contacto: " + e.getMessage());

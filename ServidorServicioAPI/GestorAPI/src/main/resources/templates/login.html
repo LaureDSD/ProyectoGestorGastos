@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Login</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
 </head>
 <body>
 <div class="container mt-5">
@@ -28,49 +29,7 @@
     </div>
 </div>
 
-<script>
-    document.getElementById("loginForm").addEventListener("submit", function(event) {
-        event.preventDefault(); // Previene el envío por defecto del formulario
-
-        const correo = document.getElementById("correo").value;
-        const contraseña = document.getElementById("contraseña").value;
-
-        fetch('/auth/loginToken', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({
-                correo: correo,
-                contraseña: contraseña
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.token) {
-                // Almacenar el token en el localStorage
-                localStorage.setItem('token', data.token);
-
-                // Imprimir el token almacenado en consola
-                console.log("Token almacenado:", localStorage.getItem('token'));
-
-                // Redirigir al dashboard
-                setTimeout(function() {
-                window.location.href = '/admin/dashboard';
-            }, 1000); // Redirigir después de 1 segundos
-
-
-            } else {
-                alert("Error en el login: " + (data.error || "Error desconocido"));
-            }
-        })
-        .catch(error => {
-            alert("Error al intentar iniciar sesión: " + error.message);
-        });
-    });
-
-</script>
-
+<script src="/static/js/logout.js"></script>
 
 </body>
 </html>

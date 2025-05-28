@@ -146,21 +146,5 @@ public class AuthWebController {
         }
     }
 
-    /**
-     * Endpoint POST para cerrar sesión del usuario.
-     *
-     * <p>
-     * Invoca el handler de logout de Spring Security para limpiar el contexto de seguridad y la sesión.
-     * Luego redirige al login con un parámetro que indica que se realizó el logout.
-     * </p>
-     *
-     * @param request objeto {@link HttpServletRequest} utilizado para la sesión actual.
-     * @param response objeto {@link HttpServletResponse} para manejar la respuesta HTTP.
-     * @return redirección a la página de login con parámetro logout.
-     */
-    @PostMapping("/logout")
-    public String performLogout(HttpServletRequest request, HttpServletResponse response) {
-        new SecurityContextLogoutHandler().logout(request, response, null);
-        return "redirect:/login?logout";
-    }
+
 }

@@ -2,6 +2,7 @@ package Proyecto.GestorAPI.servicesimpl;
 
 import Proyecto.GestorAPI.services.StorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +25,9 @@ public class StorageServiceImpl implements StorageService {
      * Ruta base donde se almacenan los archivos y carpetas de subida.
      * Puede configurarse o modificarse según el entorno.
      */
-    private String STORAGE_PATH = "C:/uploads/";
+    @Value("${file.upload-dir}")
+    private String STORAGE_PATH;
+
 
     /**
      * Guarda una imagen recibida en un directorio específico dentro de la ruta base.
@@ -42,7 +45,7 @@ public class StorageServiceImpl implements StorageService {
         carpeta.mkdirs();  // Crea la carpeta si no existe
         File archivoDestino = new File(carpeta, nombreArchivo);
         imagen.transferTo(archivoDestino);  // Guarda el archivo físicamente en disco
-        System.out.println("Subido: " + folderPath + nombreArchivo);
+        //System.out.println("Subido: " + folderPath + nombreArchivo);
         return folderPath + nombreArchivo;
     }
 
@@ -54,16 +57,17 @@ public class StorageServiceImpl implements StorageService {
      *                      con la ruta base para buscar el archivo en disco.
      */
     @Override
-    public void deleteImageData(String publicUrlPath) {
-        System.out.println("Borrando1: " + publicUrlPath);
+    public boolean deleteImageData(String publicUrlPath) {
         String relativePath = publicUrlPath.startsWith("/") ? publicUrlPath.substring(1) : publicUrlPath;
         File file = new File(STORAGE_PATH + relativePath);
-        System.out.println("Borrando2: " + relativePath);
+        boolean deleted = false;
         if (file.exists()) {
-            boolean deleted = file.delete();
-            System.out.println("Eliminado: " + deleted);
+            deleted = file.delete();
+            return deleted;
+            //System.out.println("Eliminado: " + deleted);
         } else {
-            System.out.println("No encontrado: " + file.getAbsolutePath());
+            //System.out.println("No encontrado: " + file.getAbsolutePath());
+            return deleted;
         }
     }
 

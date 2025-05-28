@@ -79,7 +79,7 @@ public class Subscription extends Spent {
         super(name, description, icon, expenseDate, total, iva, user, category, createdAt, updatedAt, typeExpense);
         this.start = startDate;
         this.end = endDate;
-        this.accumulate = 0;  // inicializamos en 0 al crear, no desde parámetro
+        this.accumulate = 0;
         this.restartDay = restartDay;
         this.intervalTime = intervalTime;
         this.activa = active;
