@@ -182,10 +182,25 @@ export class FormHerramientaComponent implements OnInit {
   }
 
   handleError(err: any) {
-    console.error(err);
-    this.error = 'Error cargando datos';
-    this.isLoading = false;
+  console.error(err);
+
+  if (err.error) {
+    if (typeof err.error === 'string') {
+      this.error = err.error;
+    } else if (err.error.message) {
+      this.error = err.error.message;
+    } else {
+      this.error = JSON.stringify(err.error);
+    }
+  } else if (err.message) {
+    this.error = err.message;
+  } else {
+    this.error = 'Error desconocido del servidor';
   }
+
+  this.isLoading = false;
+}
+
 
   setupAutoFields() {
     if (this.tipo !== 'subscripcion') return;
@@ -312,7 +327,13 @@ export class FormHerramientaComponent implements OnInit {
             alert(`Subscripción ${isEdit ? 'actualizada' : 'creada'}`);
             this.router.navigate(['/protected/filter/', this.tipo]);
           },
-          error: (err) => this.handleError(err)
+          error: (err) => {
+            if (err.error === "El IVA no puede superar 100") {
+              alert("Iva no valido");
+            } else {
+              this.handleError(err);
+            }
+          }
         });
       },
 
