@@ -54,33 +54,33 @@ Este proyecto proporciona un servicio REST que combina OCR (Reconocimiento Ópti
 ## Variables de entorno clave
 | Variable               | Descripción                     | Valor por defecto       |
 |-----------------------|--------------------------------|-------------------------|
-| DEMO_MODE             | Modo demostración              | false                   |
-| OCR_LOCAL             | Usar OCR local                 | true                    |
-| MODEL                 | Modelo de OpenAI a usar        | gpt-3.5-turbo           |
-| EXTENSIONS            | Formatos de archivo aceptados  | jpg,jpeg,png,pdf,txt,webp |
-| MAX_CONTENT_LENGTH_MB | Tamaño máximo de archivo (MB)  | 10                      |
-| HOST                  | Host del servidor              | 0.0.0.0                 |
-| PORT                  | Puerto del servidor            | 5000                    |
-| DEBUG_MODE            | Modo depuración                | true                    |
-| LOCAL_API_KEY         | API key para autenticación     | CREAR_API_KEY           |
-| OPENAI_API_KEY        | API key de OpenAI              | Requerida               |
+| FLASK_DEMO_MODE             | Modo demostración              | false                   |
+| FLASK_OCR_LOCAL             | Usar OCR local                 | true                    |
+| FLASK_MODEL                 | Modelo de OpenAI a usar        | gpt-3.5-turbo           |
+| FLASK_EXTENSIONS            | Formatos de archivo aceptados  | jpg,jpeg,png,pdf,txt,webp |
+| FLASK_MAX_CONTENT_LENGTH_MB | Tamaño máximo de archivo (MB)  | 10                      |
+| FLASK_HOST                  | Host del servidor              | 0.0.0.0                 |
+| FLASK_PORT                  | Puerto del servidor            | 5000                    |
+| FLASK_DEBUG_MODE            | Modo depuración                | true                    |
+| FLASK_LOCAL_API_KEY         | API key para autenticación     | CREAR_API_KEY           |
+| FLASK_OPENAI_API_KEY        | API key de OpenAI              | Requerida               |
 
 You can configure environment variables in three ways:
 
 ### Option A: Variables de sistema SETX CMD (Windows)
- - Para temporal usar set en consola antes de lanzar exe o main
+ - Para temporal usar 'set' en vez de 'setx' antes de lanzar exe o main
 
 
-    setx DEMO_MODE false
-    setx OCR_LOCAL true
-    setx MODEL "gpt-3.5-turbo"
-    setx EXTENSIONS "jpg,jpeg,png,pdf,txt,webp,jpeg"
-    setx MAX_CONTENT_LENGTH_MB 10
-    setx HOST 0.0.0.0
-    setx PORT 5000
-    setx DEBUG_MODE true
-    setx LOCAL_API_KEY "your_api_key_here"
-    setx OPENAI_API_KEY "your_openai_key_here"
+    setx FLASK_DEMO_MODE false
+    setx FLASK_OCR_LOCAL true
+    setx FLASK_MODEL "gpt-3.5-turbo"
+    setx FLASK_EXTENSIONS "jpg,jpeg,png,pdf,txt,webp,jpeg"
+    setx FLASK_MAX_CONTENT_LENGTH_MB 10
+    setx FLASK_HOST 0.0.0.0
+    setx FLASK_PORT 5000
+    setx FLASK_DEBUG_MODE true
+    setx FLASK_LOCAL_API_KEY "your_api_key_here"
+    setx FLASK_OPENAI_API_KEY "your_openai_key_here"
 
 
 ### Option B: Usar archivo .env 
@@ -88,26 +88,29 @@ You can configure environment variables in three ways:
 Crea o usa `.env` en la raiz del directorio con lo siguiente:
 
 
-    DEMO_MODE=false
-    DEBUG_MODE=true
-    OCR_LOCAL=true
-    EXTENSIONS=jpg,jpeg,png,pdf,txt,webp
-    MAX_CONTENT_LENGTH_MB=10
-    MODEL=gpt-3.5-turbo
-    HOST=0.0.0.0
-    PORT=5000
-    LOCAL_API_KEY=your_api_key_here
-    OPENAI_API_KEY=your_openai_key_here
+    FLASK_DEMO_MODE=false
+    FLASK_DEBUG_MODE=true
+    FLASK_OCR_LOCAL=true
+    FLASK_EXTENSIONS=jpg,jpeg,png,pdf,txt,webp
+    FLASK_MAX_CONTENT_LENGTH_MB=10
+    FLASK_MODEL=gpt-3.5-turbo
+    FLASK_HOST=0.0.0.0
+    FLASK_PORT=5000
+    FLASK_LOCAL_API_KEY=your_api_key_here
+    FLASK_OPENAI_API_KEY=your_openai_key_here
 
 
 # Ejecución del servidor
 ## Método 1: Usando el ejecutable
- - Navegue a la carpeta dist
- - Ejecute el archivo main.exe
+ - Navegue a la carpeta dist (Localización de los ejecutables generados)
+ - Ejecute el archivo  SOCRAI_vx.x.x.exe 
+ - Si no usas variables de sistema asegurate de agregar el .env al nivel del ejecutable.
+ - El ejecutable puedes moverlo a donde quieras mientras tenga variables de sistema o .env
 
 ## Método 2: Desde código fuente
  - (Opcional) Active el entorno virtual: .\venv\Scripts\activate
  - Ejecute el servidor: python main.py
+ 
 
 ## Documentación
  #### Para generar la documentación:

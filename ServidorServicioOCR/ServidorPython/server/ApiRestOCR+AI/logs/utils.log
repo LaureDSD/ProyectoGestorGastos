@@ -41,3 +41,90 @@ Traceback (most recent call last):
     raise RuntimeError(f"Error al procesar OCR imagen: {e}") from e
 RuntimeError: Error al procesar OCR imagen: Expecting value: line 1 column 1 (char 0)
 2025-05-27 16:54:29,005 - INFO - Texto extraído correctamente de imagen OCR.
+2025-05-28 15:12:45,109 - ERROR - Error al generar respuesta de chat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 204, in responder_chat
+    response = openai.ChatCompletion.create(
+        model=self.model,
+    ...<12 lines>...
+        max_tokens=500
+    )
+  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\openai\api_resources\chat_completion.py", line 25, in create
+    return super().create(*args, **kwargs)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\openai\api_resources\abstract\engine_api_resource.py", line 153, in create
+    response, _, api_key = requestor.request(
+                           ~~~~~~~~~~~~~~~~~^
+        "post",
+        ^^^^^^^
+    ...<5 lines>...
+        request_timeout=request_timeout,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\openai\api_requestor.py", line 298, in request
+    resp, got_stream = self._interpret_response(result, stream)
+                       ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\openai\api_requestor.py", line 700, in _interpret_response
+    self._interpret_response_line(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        result.content.decode("utf-8"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        stream=False,
+        ^^^^^^^^^^^^^
+    ),
+    ^
+  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\openai\api_requestor.py", line 765, in _interpret_response_line
+    raise self.handle_error_response(
+        rbody, rcode, resp.data, rheaders, stream_error=stream_error
+    )
+openai.error.AuthenticationError: Incorrect API key provided: API-KEY-GPT. You can find your API key at https://platform.openai.com/account/api-keys.
+2025-05-28 15:12:45,149 - ERROR - Error en /aichat
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 204, in responder_chat
+    response = openai.ChatCompletion.create(
+        model=self.model,
+    ...<12 lines>...
+        max_tokens=500
+    )
+  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\openai\api_resources\chat_completion.py", line 25, in create
+    return super().create(*args, **kwargs)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\openai\api_resources\abstract\engine_api_resource.py", line 153, in create
+    response, _, api_key = requestor.request(
+                           ~~~~~~~~~~~~~~~~~^
+        "post",
+        ^^^^^^^
+    ...<5 lines>...
+        request_timeout=request_timeout,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\openai\api_requestor.py", line 298, in request
+    resp, got_stream = self._interpret_response(result, stream)
+                       ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\openai\api_requestor.py", line 700, in _interpret_response
+    self._interpret_response_line(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        result.content.decode("utf-8"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        stream=False,
+        ^^^^^^^^^^^^^
+    ),
+    ^
+  File "C:\Users\laure\AppData\Roaming\Python\Python313\site-packages\openai\api_requestor.py", line 765, in _interpret_response_line
+    raise self.handle_error_response(
+        rbody, rcode, resp.data, rheaders, stream_error=stream_error
+    )
+openai.error.AuthenticationError: Incorrect API key provided: API-KEY-GPT. You can find your API key at https://platform.openai.com/account/api-keys.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\apiController.py", line 97, in endpoint_chat_service
+    resultado = self.chat_service.responder_chat(mensaje)
+  File "C:\Users\laure\Desktop\ProyectoGestorGastos\ServidorServicioOCR\ServidorPython\server\ApiRestOCR+AI\services.py", line 230, in responder_chat
+    raise RuntimeError(f"Error al generar respuesta de chat: {e}") from e
+RuntimeError: Error al generar respuesta de chat: Incorrect API key provided: API-KEY-GPT. You can find your API key at https://platform.openai.com/account/api-keys.

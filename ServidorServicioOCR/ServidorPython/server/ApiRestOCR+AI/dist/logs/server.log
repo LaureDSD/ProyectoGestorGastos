@@ -25,3 +25,12 @@
 2025-05-27 17:52:03,080 - main - INFO - Iniciando servidor en modo PRODUCCIÓN
 2025-05-27 17:52:03,081 - main - INFO - Usando OCR LOCAL
 2025-05-27 17:52:03,081 - main - INFO - Modelo OpenAI: gpt-3.5-turbo
+2025-05-27 19:02:33,738 - main - INFO - Iniciando servidor en modo PRODUCCIÓN
+2025-05-27 19:02:33,738 - main - INFO - Usando OCR LOCAL
+2025-05-27 19:02:33,739 - main - INFO - Modelo OpenAI: gpt-3.5-turbo
+2025-05-28 15:24:40,340 - main - INFO - Iniciando servidor en modo PRODUCCIÓN
+2025-05-28 15:24:40,341 - main - INFO - Usando OCR LOCAL
+2025-05-28 15:24:40,341 - main - INFO - Modelo OpenAI: gpt-3.5-turbo
+2025-05-28 15:26:21,455 - main - INFO - Iniciando servidor en modo PRODUCCIÓN
+2025-05-28 15:26:21,455 - main - INFO - Usando OCR LOCAL
+2025-05-28 15:26:21,456 - main - INFO - Modelo OpenAI: gpt-3.5-turbo
