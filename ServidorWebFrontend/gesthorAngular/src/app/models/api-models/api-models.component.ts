@@ -34,6 +34,7 @@ export interface UserDto {
   role: string;
   active: boolean;
   fv2: boolean;
+  provider: string;
   createdAt: string; // fecha de creación en formato ISO
   updatedAt: string; // fecha de última actualización en formato ISO
 }
@@ -83,6 +84,7 @@ export interface ServerInfoDto {
   totalDisk: number;       // espacio total en disco en bytes
   usedDisk: number;        // espacio usado en disco en bytes
   cpuTemperature: number;  // temperatura CPU en grados Celsius
+  info : string; //Informaciondel servidor python
 }
 
 

@@ -1,9 +1,11 @@
 package Proyecto.GestorAPI.modelsDTO.user;
 
+import Proyecto.GestorAPI.config.security.oauth2.OAuth2Provider;
 import Proyecto.GestorAPI.models.User;
 import lombok.Builder;
 import lombok.Data;
 
+import java.security.Provider;
 import java.time.LocalDateTime;
 
 @Data
@@ -20,6 +22,7 @@ public class UserMeOutDto {
     private String role;
     private boolean active;
     private boolean fv2;
+    private OAuth2Provider provider;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -36,6 +39,7 @@ public class UserMeOutDto {
                 .role(user.getRole().name())
                 .active(user.isActive())
                 .fv2(user.isFv2())
+                .provider(user.getProvider())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .build();

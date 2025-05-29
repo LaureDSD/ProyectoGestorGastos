@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,12 +96,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             user.setEmail(customUserDetails.getEmail());
             user.setImageUrl(customUserDetails.getAvatarUrl());
             user.setProvider(customUserDetails.getProvider());
+            user.setCreatedAt(LocalDateTime.now());
+            user.setFv2(true);
+            user.setActive(true);
+
             user.setRole(RoleServer.USER); // Asigna el rol de usuario por defecto
         } else {
             // Si el usuario ya existe, actualiza su información
             user = userOptional.get();
             user.setEmail(customUserDetails.getEmail());
-            user.setImageUrl(customUserDetails.getAvatarUrl());
+            //user.setImageUrl(customUserDetails.getAvatarUrl());
+            user.setUpdatedAt(LocalDateTime.now());
         }
 
         // Guarda el usuario en la base de datos y devuelve el objeto persistido

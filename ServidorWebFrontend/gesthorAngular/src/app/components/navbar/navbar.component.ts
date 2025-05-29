@@ -109,7 +109,7 @@ import { environment } from '../../environments/environment';
             <!-- Imagen de perfil visible si hay token y profile cargado -->
             <li *ngIf="hayToken() && profile != null">
               <img
-                [src]="profile ? (server + 'uploads/' + profile) : '/icon/icons8-cuenta-de-prueba-100.png'"
+                [src]="profile.startsWith('http') ? profile : profile=='' ?  '/icon/icons8-cuenta-de-prueba-100.png' : (server + 'uploads/' + profile) "
                 alt="Preview"
                 class="ms-2 mt-1"
                 style="border-radius: 50%; height:35px; width:35px"

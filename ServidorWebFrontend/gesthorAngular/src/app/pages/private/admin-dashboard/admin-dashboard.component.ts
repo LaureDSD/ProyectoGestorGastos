@@ -1,7 +1,7 @@
 import { Component, Pipe, PipeTransform } from '@angular/core';
 import { ServerInfoDto } from '../../../models/api-models/api-models.component';
 import { ServerStatsService } from '../../../services/server-stats.service';
-import { interval } from 'rxjs';
+import { Subscription, interval } from 'rxjs';
 import { ChartOptions } from 'chart.js';
 
 @Component({
@@ -13,6 +13,8 @@ import { ChartOptions } from 'chart.js';
 export class AdminDashboardComponent {
   serverInfo!: ServerInfoDto;
   load: boolean = false;
+  private intervalSubscription!: Subscription;
+
 
   // Histórico dinámico de métricas para gráficos
   cpuHistory: number[] = [];
@@ -62,10 +64,18 @@ export class AdminDashboardComponent {
     });
 
     // Actualización periódica cada 2.5 segundos (2500 ms)
-    interval(2500).subscribe(() => {
+    this.intervalSubscription = interval(2500).subscribe(() => {
       this.fetchStats(false);
     });
+
   }
+
+  ngOnDestroy(): void {
+  if (this.intervalSubscription) {
+    this.intervalSubscription.unsubscribe();
+    }
+  }
+
 
   /**
    * Solicita info del servidor y actualiza los gráficos y métricas.

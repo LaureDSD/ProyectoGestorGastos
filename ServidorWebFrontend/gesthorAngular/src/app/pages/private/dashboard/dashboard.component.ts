@@ -56,6 +56,7 @@ export class DashboardComponent {
     role: '',
     active: false,
     fv2: false,
+    provider: '',
     createdAt: '',
     updatedAt: ''
   };

@@ -7,11 +7,12 @@
   <!-- Fila principal que contiene las columnas izquierda (gráfico y filtros) y derecha (detalle y tabla) -->
   <div class="row">
 
-    <!-- Título principal de la sección -->
-    <h3 class="text-light">Información de gastos</h3>
 
-    <!-- Columna izquierda: contiene gráfico de barras y lista de suscripciones activas -->
-    <aside class="col-md-4 mb-4">
+    <!-- Columna derecha: contiene tabla con detalle de gastos y filtros -->
+    <section class="col-md-8 mb-4">
+
+          <!-- Título principal de la sección -->
+    <h3 class="text-light">Información de gastos</h3>
 
       <!-- Tarjeta que contiene el gráfico, con sombras, fondo oscuro y texto blanco -->
       <div class="card shadow-sm bg-dark text-white mb-4">
@@ -45,67 +46,7 @@
         </div>
       </div>
 
-      <!-- Sección para mostrar las suscripciones activas -->
-      <section class="mb-5">
-        <h4 class="mb-3 text-white">Suscripciones activas</h4>
 
-        <!-- Tarjeta para lista de suscripciones, sin borde y con sombra, fondo personalizado -->
-        <div class="card border-0 shadow mb-4" style="background-color: #1e1e1e;">
-          <div class="card-body p-0">
-
-            <!-- Mostrar lista solo si hay suscripciones activas -->
-            <div *ngIf="activeSubscriptions.length; else noSubs">
-
-              <!-- Lista Bootstrap sin borde para items -->
-              <div class="list-group list-group-flush">
-
-                <!-- Iteración sobre las suscripciones activas -->
-                <div *ngFor="let sub of activeSubscriptions"
-                    class="list-group-item bg-dark text-white d-flex justify-content-between align-items-center border-bottom border-secondary p-3 hover-effect">
-
-                  <!-- Contenedor clicable que redirige a detalles de la suscripción -->
-                  <div (click)="redirectToSubscription(sub.spentId)" class="d-flex flex-column w-100">
-
-                    <!-- Fila con nombre y total del gasto -->
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                      <h5 class="mb-0 text-info">{{ sub.name }}</h5> <!-- Nombre suscripción -->
-                      <span class="badge bg-info text-dark rounded-pill fs-6 px-3 py-1">
-                        {{  sub.total  }}€
-                      </span> <!-- Total gastado en suscripción -->
-                    </div>
-
-                    <!-- Fila con fecha de renovación formateada -->
-                    <div class="d-flex justify-content-between align-items-center">
-                      <small class="text-light">
-                        <i class="bi bi-arrow-repeat me-1 text-secondary"></i> <!-- Icono de renovación -->
-                        Renovación: {{ getFechaRenovacion(sub) | date:'mediumDate' }}
-                      </small>
-                    </div>
-
-                  </div>
-
-                </div>
-              </div>
-
-            </div>
-
-            <!-- Plantilla alternativa si no hay suscripciones activas -->
-            <ng-template #noSubs>
-              <div class="text-center p-5">
-                <i class="bi bi-calendar-x text-secondary" style="font-size: 2.5rem;"></i>
-                <p class="text-muted mt-3 mb-0 fst-italic">No hay suscripciones activas</p>
-              </div>
-            </ng-template>
-
-          </div>
-        </div>
-
-      </section>
-
-    </aside>
-
-    <!-- Columna derecha: contiene tabla con detalle de gastos y filtros -->
-    <section class="col-md-8">
       <div class="card shadow-sm bg-dark text-white">
         <div class="card-body">
 
@@ -181,6 +122,69 @@
         </div>
       </div>
     </section>
+
+    <!-- Columna izquierda: contiene gráfico de barras y lista de suscripciones activas -->
+    <aside class="col-md-4 mb-4">
+
+
+      <!-- Sección para mostrar las suscripciones activas -->
+      <section class="mb-5">
+        <h4 class="mb-3 text-white">Suscripciones activas</h4>
+
+        <!-- Tarjeta para lista de suscripciones, sin borde y con sombra, fondo personalizado -->
+        <div class="card border-0 shadow mb-4" style="background-color: #1e1e1e;">
+          <div class="card-body p-0">
+
+            <!-- Mostrar lista solo si hay suscripciones activas -->
+            <div *ngIf="activeSubscriptions.length; else noSubs">
+
+              <!-- Lista Bootstrap sin borde para items -->
+              <div class="list-group list-group-flush">
+
+                <!-- Iteración sobre las suscripciones activas -->
+                <div *ngFor="let sub of activeSubscriptions"
+                    class="list-group-item bg-dark text-white d-flex justify-content-between align-items-center border-bottom border-secondary p-3 hover-effect">
+
+                  <!-- Contenedor clicable que redirige a detalles de la suscripción -->
+                  <div (click)="redirectToSubscription(sub.spentId)" class="d-flex flex-column w-100">
+
+                    <!-- Fila con nombre y total del gasto -->
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <h5 class="mb-0 text-info">{{ sub.name }}</h5> <!-- Nombre suscripción -->
+                      <span class="badge bg-info text-dark rounded-pill fs-6 px-3 py-1">
+                        {{  sub.total  }}€
+                      </span> <!-- Total gastado en suscripción -->
+                    </div>
+
+                    <!-- Fila con fecha de renovación formateada -->
+                    <div class="d-flex justify-content-between align-items-center">
+                      <small class="text-light">
+                        <i class="bi bi-arrow-repeat me-1 text-secondary"></i> <!-- Icono de renovación -->
+                        Renovación: {{ getFechaRenovacion(sub) | date:'mediumDate' }}
+                      </small>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Plantilla alternativa si no hay suscripciones activas -->
+            <ng-template #noSubs>
+              <div class="text-center p-5">
+                <i class="bi bi-calendar-x text-secondary" style="font-size: 2.5rem;"></i>
+                <p class="text-muted mt-3 mb-0 fst-italic">No hay suscripciones activas</p>
+              </div>
+            </ng-template>
+
+          </div>
+        </div>
+
+      </section>
+
+    </aside>
 
   </div>
 </div>

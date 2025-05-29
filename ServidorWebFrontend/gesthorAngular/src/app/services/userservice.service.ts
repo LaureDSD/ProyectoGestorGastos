@@ -23,7 +23,7 @@ import {
 })
 export class UserserviceService {
   // URL base del API para las operaciones relacionadas al usuario actual
-  private readonly baseUrl = `${environment.apiUrl}/api/user/me`;
+  private readonly baseUrl = `${environment.apiUrl}/api/user/me` ;
 
   constructor(private http: HttpClient) {}
 

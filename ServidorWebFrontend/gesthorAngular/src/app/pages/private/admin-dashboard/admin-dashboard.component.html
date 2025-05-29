@@ -72,6 +72,9 @@
           <li class="list-group-item d-flex justify-content-between">
             <strong>Última actualización:</strong> <span>{{serverInfo.updatedAt}}</span>
           </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <strong>Error Log:</strong> <span> {{serverInfo.info ? serverInfo.info : "Sin errores"}}</span>
+          </li>
         </ul>
       </div>
     </div>

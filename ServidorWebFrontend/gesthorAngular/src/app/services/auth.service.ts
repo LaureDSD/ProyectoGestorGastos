@@ -121,11 +121,13 @@ export class AuthService {
     return this.user.role == "ADMIN";
   }
 
+
   /**
    * Obtiene los datos del usuario actualmente autenticado consultando la API.
    * @returns Observable con los datos del usuario.
    */
   getLoadUser(): Observable<any>{
+    //return new Observable;
     return this.http.get(`${environment.apiUrl}/api/user/me`);
   }
 

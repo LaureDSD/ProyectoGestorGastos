@@ -24,14 +24,17 @@ import autoTable, { CellInput } from 'jspdf-autotable';
     <!-- Sección específica para gastos tipo 'TICKET' con dos gráficos -->
     <div *ngIf="gasto.typeExpense === 'TICKET'">
       <div class="row">
+
         <div class="col-md-6">
           <h5>Gráfico: Producto</h5>
           <canvas baseChart [data]="chartProductos" [type]="'doughnut'"></canvas>
         </div>
-        <div class="col-md-6">
+
+        <div *ngIf="(chartCategorias?.datasets?.[0]?.data?.length ?? 0) > 0" class="col-md-6">
           <h5>Gráfico: Categoría</h5>
           <canvas baseChart [data]="chartCategorias" [type]="'pie'"></canvas>
         </div>
+
       </div>
     </div>
 
