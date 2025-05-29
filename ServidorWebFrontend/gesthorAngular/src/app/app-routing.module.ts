@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, ExtraOptions } from '@angular/router';
 
 // Importación de componentes relacionados con autenticación y seguridad
 import { LoginComponent } from './security/login/login.component';
@@ -73,9 +73,17 @@ const routes: Routes = [
   { path: '**', redirectTo: '/login' }
 ];
 
+
+
+const routerOptions: ExtraOptions = {
+  scrollPositionRestoration: 'enabled', // <-- clave
+  anchorScrolling: 'enabled',
+  scrollOffset: [0, 0]
+};
+
 // Configuración del módulo de rutas
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],  // Configura el enrutador principal con las rutas definidas
+  imports: [RouterModule.forRoot(routes,routerOptions)],  // Configura el enrutador principal con las rutas definidas
   exports: [RouterModule]                    // Exporta RouterModule para que esté disponible en toda la app
 })
 export class AppRoutingModule { }

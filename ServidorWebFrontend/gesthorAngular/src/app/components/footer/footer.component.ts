@@ -46,7 +46,7 @@ import { Component, Input } from '@angular/core';
 
       <!-- Mensaje de copyright con año dinámico y nombre de la compañía capitalizado -->
       <p style="color: #888;">
-        © {{ fecha }} {{ comania | titlecase }} · Todos los derechos reservados.
+        © {{ fecha }} {{ compania | titlecase }} S.L · Todos los derechos reservados. ·  Autor: {{author | titlecase }}
       </p>
     </footer>
   `
@@ -61,7 +61,13 @@ export class FooterComponent {
    * Nombre de la compañía que se mostrará en el pie de página.
    * Se puede modificar desde el componente padre.
    */
-  @Input() comania: string = "laureano.SL";
+  @Input() compania: string = "gESTHOR";
+
+  /**
+   * Nombre del autor que se mostrará en el pie de página.
+   * Se puede modificar desde el componente padre.
+   */
+  @Input() author: string = "Laureano De Sousa Dias";
 
   /**
    * Lista de enlaces para el menú de navegación del footer.

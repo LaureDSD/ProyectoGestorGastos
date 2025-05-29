@@ -3,6 +3,7 @@ package Proyecto.GestorAPI.modelsDTO.spent;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +15,6 @@ public record CreateSpentRequest(
         String icon,
         @NotNull LocalDateTime fechaCompra,
         @Positive double total,
-        @Positive double iva,
+        @PositiveOrZero double iva,
         @NotNull String typeExpense
 ) {}
