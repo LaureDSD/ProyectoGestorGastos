@@ -1,0 +1,3 @@
+2025-05-29 16:31:41,969 - main - INFO - Iniciando servidor en modo DEMO
+2025-05-29 16:31:41,970 - main - INFO - Usando OCR LOCAL
+2025-05-29 16:31:41,970 - main - INFO - Modelo OpenAI: gpt-3.5-turbo
