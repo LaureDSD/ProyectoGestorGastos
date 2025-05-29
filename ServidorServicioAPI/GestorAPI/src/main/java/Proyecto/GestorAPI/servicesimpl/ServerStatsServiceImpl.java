@@ -93,9 +93,17 @@ public class ServerStatsServiceImpl {
         ServerInfoDto dto = new ServerInfoDto();
         dto.setName("GESTHOR1");                                // Nombre estático del servidor
         dto.setUsers(userService.getCountUsers());              // Cantidad de usuarios registrados
-        dto.setActiveocr(ocrService.getStatus().isDemo());      // Estado demo del OCR
+
+        try {
+            dto.setActiveocr(ocrService.getStatus().isDemo());      // Estado demo del OCR
+            dto.setActiveapi(ocrService.getStatus().isStatusServer()); // Estado activo del servidor OCR
+        }catch (Exception e){
+            dto.setActiveocr(false);
+            dto.setActiveapi(false);
+        }
         dto.setSpenses(spentService.getCountSpents());          // Cantidad de gastos registrados
-        dto.setActiveapi(ocrService.getStatus().isStatusServer()); // Estado activo del servidor OCR
+
+
 
         // Conversión a gigabytes para almacenamiento
         dto.setStorage((int) (totalDisk / 1_073_741_824));

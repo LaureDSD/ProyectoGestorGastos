@@ -161,15 +161,9 @@ public class OCRServiceImpl implements OCRService {
      */
     public StatusServerResponse getStatus() throws ErrorConexionServidorException {
         StatusServerResponse health = new StatusServerResponse(false,false,false);
-        try {
             String url = pythonServerUrl + "/api/status";
             ResponseEntity<StatusServerResponse> response = restTemplate.getForEntity(url, StatusServerResponse.class);
             health = response.getBody();
-        } catch (Exception e) {
-            throw new ErrorConexionServidorException(e);
-            //ystem.out.println("Servidor Python no disponible: " + e.getMessage());
-        }
-
         return health;
     }
 }

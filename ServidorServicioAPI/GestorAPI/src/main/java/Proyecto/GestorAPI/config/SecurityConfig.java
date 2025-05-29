@@ -5,6 +5,7 @@ import Proyecto.GestorAPI.config.security.RoleServer;
 import Proyecto.GestorAPI.config.security.TokenProvider;
 import Proyecto.GestorAPI.config.security.oauth2.CustomAuthenticationSuccessHandler;
 import Proyecto.GestorAPI.config.security.oauth2.CustomOAuth2UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,9 @@ import java.util.List;
 
 @Configuration
 public class SecurityConfig {
+
+    @Value("${app.cors.allowed-origins}")
+    private String[] allowedOrigins;
 
 
     // Constantes para los roles de acceso
@@ -85,6 +89,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(authorize -> authorize
 
                         // Acceso público a recursos estáticos y ciertas rutas
@@ -186,10 +191,11 @@ public class SecurityConfig {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // Permitir Angular
+        configuration.setAllowedOrigins(List.of(allowedOrigins)); // Permitir Angular
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true); // Permitir credenciales (JWT en cookies)
