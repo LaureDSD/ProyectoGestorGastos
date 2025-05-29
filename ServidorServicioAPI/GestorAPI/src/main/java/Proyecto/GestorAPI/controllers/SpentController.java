@@ -291,22 +291,20 @@ public class SpentController {
      * @param file Imagen a subir
      * @param currentUser Usuario autenticado
      * @return DTO actualizado con la URL del icono, o errores 404/400/403
-     * @throws IOException si falla la subida
      */
-    @PostMapping(value = "/uploadimg/{spentId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(
-            security = @SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME),
-            summary = "Subir imagen para un gasto"
-    )
+    @Operation(security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
+    @PutMapping(value = "/me/uploadSpenseImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadSpenseImageWithData(
             @RequestPart("image") MultipartFile file,
             @RequestParam("spentId") Long spentId,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
-
         if (file == null || file.isEmpty()) {
             return ResponseEntity.badRequest().body("No se envió ninguna imagen.");
         }
         try {
+            // Aquí podrías validar o procesar el ticket
+            System.out.println("Ticket recibido: ");
+
             // Procesar el usuario
             User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
             Spent spent = spentService.getByID(Long.valueOf(spentId)).orElse(null);

@@ -129,6 +129,7 @@
     </div>
 
     <app-edit-form-profile
+     *ngIf="tipo === 'ticket'"
         [img]="img"
         field="imageUrl"
         icon = "icon/icons8-pencil.gif"
