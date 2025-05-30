@@ -1,5 +1,13 @@
 # **GesThor - Gestor de Gastos con OCR e IA para Recomendacións**
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/LaureDSD/ProyectoGestorGastos)
+![Java](https://img.shields.io/badge/Java-17%2B-blue)
+![SpringBoot](https://img.shields.io/badge/Spring_Boot-3.1%2B-green)
+![MySQL](https://img.shields.io/badge/MySQL-8.0%2B-orange)
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
+![Flask](https://img.shields.io/badge/Flask-2.0%2B-green)
+![Tesseract](https://img.shields.io/badge/Tesseract-OCR-orange)
+
 ## **Objetivos**
 
 - **Gestión de gastos**: Los usuarios pueden registrar, visualizar y organizar sus gastos por categorías, días, meses y años.
