@@ -108,9 +108,21 @@ public class UserWebController {
             if (usuario.getPassword() == null || usuario.getPassword().isEmpty() || usuario.getPassword().equals("*******")) {
                 usuario.setPassword(existingUsuario.getPassword());
             } else {
-                // Encripta la nueva contraseña
+                // Encripta la contraseña
                 usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
             }
+
+            //Gestionar img
+            if(usuario.getImageUrl() == null || usuario.getImageUrl().trim().isEmpty()){
+                if(existingUsuario.getImageUrl()!=null || existingUsuario.getImageUrl().trim().isEmpty()) {
+                    storageService.deleteImageData(existingUsuario.getImageUrl());
+                    usuario.setImageUrl(null);
+                }
+            } else if (!existingUsuario.getImageUrl().equals(usuario.getImageUrl())) {
+                storageService.deleteImageData(existingUsuario.getImageUrl());
+            }
+
+
         } else { // Creación
             usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         }
