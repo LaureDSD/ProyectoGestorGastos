@@ -59,7 +59,7 @@ public class AuthController {
                     @ApiResponse(responseCode = "401", description = "Credenciales incorrectas")
             })
     @PostMapping("/authenticate")
-    @CrossOrigin(origins = "http://localhost:4200")
+    //@CrossOrigin(origins = "http://localhost:4200")
     public AuthResponse login(@Valid @RequestBody LoginRequest loginRequest) {
         if (loginAttemptService.isBlocked(loginRequest.user())) {
             loginAttemptService.registerLoginAttempt(loginRequest.user(), false);
@@ -94,7 +94,7 @@ public class AuthController {
                     @ApiResponse(responseCode = "400", description = "Usuario o correo electrónico ya registrados")
             })
     @ResponseStatus(HttpStatus.CREATED)
-    @CrossOrigin(origins = "http://localhost:4200")
+    //@CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/signup")
     public AuthResponse signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         if (userService.hasUserWithUsername(signUpRequest.username())) {

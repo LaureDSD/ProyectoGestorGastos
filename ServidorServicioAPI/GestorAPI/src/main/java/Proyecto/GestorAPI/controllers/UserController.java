@@ -66,6 +66,12 @@ public class UserController {
     public ResponseEntity<UserDto> deleteUser(@AuthenticationPrincipal CustomUserDetails currentUser) {
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
         user.setActive(false);
+        try {
+            //Borra imagen si puede
+            storageService.deleteImageData(user.getImageUrl());
+        }catch (Exception e){
+            //
+        }
         userService.saveUser(user);
         return ResponseEntity.ok(UserDto.from(user));
     }

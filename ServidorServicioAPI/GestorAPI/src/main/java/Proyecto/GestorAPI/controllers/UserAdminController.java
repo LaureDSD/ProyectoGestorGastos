@@ -2,12 +2,14 @@ package Proyecto.GestorAPI.controllers;
 
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.modelsDTO.user.UserDto;
+import Proyecto.GestorAPI.services.StorageService;
 import Proyecto.GestorAPI.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,7 +41,11 @@ import static Proyecto.GestorAPI.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME
 @Tag(name = "User Management (Admin only)", description = "Gestión de usuarios")
 public class UserAdminController {
 
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private StorageService storageService;
 
     /**
      * Obtiene la lista completa de usuarios registrados en el sistema.
@@ -89,10 +95,19 @@ public class UserAdminController {
     public ResponseEntity<User> deleteUser(
             @PathVariable Long clienteId) {
         User findUser = userService.getUserById(clienteId).orElse(null);
-        if(findUser == null){
+
+        if(findUser!=null) {
+            try {
+                //Borrar imagen
+                storageService.deleteImageData(findUser.getImageUrl());
+            }catch (Exception e){
+                //
+            }
+            //Borrar usuario
+            userService.deleteUser(findUser);
+        }else{
             return ResponseEntity.notFound().build();
         }
-        userService.deleteUser(findUser);
         return ResponseEntity.ok(findUser);
     }
 

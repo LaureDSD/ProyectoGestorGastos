@@ -1,4 +1,4 @@
-/*package Proyecto.GestorAPI.config;
+package Proyecto.GestorAPI.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * The purpose is to enable cross-origin requests during development between the frontend and backend,
  * avoiding CORS errors when the frontend tries to consume the backend API.
  */
-/*@Configuration
+@Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
     @Value("${app.cors.allowed-origins}")
@@ -30,7 +30,7 @@ public class CorsConfig implements WebMvcConfigurer {
      * - Supports HTTP methods: GET, POST, PUT, DELETE, OPTIONS
      * - Allows all headers from the client
      */
-    /*
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
 
@@ -41,4 +41,3 @@ public class CorsConfig implements WebMvcConfigurer {
     }
 
 }
-*/

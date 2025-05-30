@@ -2,6 +2,7 @@ package Proyecto.GestorAPI.controllersBackend;
 
 import Proyecto.GestorAPI.models.User;
 import Proyecto.GestorAPI.config.security.RoleServer;
+import Proyecto.GestorAPI.services.StorageService;
 import Proyecto.GestorAPI.servicesimpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +34,9 @@ public class UserWebController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private StorageService storageService;
 
     /**
      * Lista de roles disponibles para asignar a usuarios.
@@ -108,7 +112,7 @@ public class UserWebController {
                 usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
             }
         } else { // Creación
-            usuario.setPassword(usuario.getPassword());
+            usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         }
 
         usuarioService.saveUser(usuario);
@@ -126,7 +130,14 @@ public class UserWebController {
     @GetMapping("/delete/{id}")
     public String eliminarUsuario(@PathVariable("id") Long id, Model model) {
         try {
-            usuarioService.deleteUser(usuarioService.getUserById(id).orElse(null));
+            User user = usuarioService.getUserById(id).orElse(null);
+            if(user!=null) {
+                storageService.deleteImageData(user.getImageUrl());
+                System.out.println(user.getImageUrl());
+                usuarioService.deleteUser(user);
+            }else{
+                model.addAttribute("error", "Error al eliminar el usuario: ");
+            }
             return "redirect:/" + rutaHTML;
         } catch (Exception e) {
             model.addAttribute("error", "Error al eliminar el usuario: " + e.getMessage());

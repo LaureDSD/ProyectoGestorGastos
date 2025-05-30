@@ -11,6 +11,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Implementación del servicio de almacenamiento de archivos e imágenes.
@@ -28,6 +31,27 @@ public class StorageServiceImpl implements StorageService {
      */
     @Value("${file.upload-dir}")
     private String STORAGE_PATH;
+
+
+    @Override
+    public List<String> listFiles(String folderPath) {
+        File carpeta = new File(STORAGE_PATH + folderPath);
+        if (!carpeta.exists() || !carpeta.isDirectory()) {
+            return List.of();
+        }
+
+        File[] archivos = carpeta.listFiles();
+        if (archivos == null) {
+            return List.of();
+        }
+
+        return Arrays.stream(archivos)
+                .filter(File::isFile)
+                //.map(File::getName)
+                .map(file -> folderPath + file.getName())
+                .collect(Collectors.toList());
+    }
+
 
 
     /**
@@ -62,6 +86,11 @@ public class StorageServiceImpl implements StorageService {
      */
     @Override
     public boolean deleteImageData(String publicUrlPath) {
+        //Apano apra rutas vacias o externas
+        if(publicUrlPath==null || publicUrlPath.startsWith("http")) {
+            return true;
+        }
+        //Rutas internas
         String relativePath = publicUrlPath.startsWith("/") ? publicUrlPath.substring(1) : publicUrlPath;
         File file = new File(STORAGE_PATH + relativePath);
         boolean deleted = false;
