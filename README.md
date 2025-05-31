@@ -14,6 +14,8 @@
 ![FontAwesome](https://img.shields.io/badge/FontAwesome-6.7.2-blue?logo=fontawesome)
 ![Chart.js](https://img.shields.io/badge/Chart.js-4.4.9-orange?logo=chartdotjs)
 
+## **Autor**
+- Laurenao De Sousa Dias
 
 ## **Objetivos**
 
@@ -22,6 +24,7 @@
 - **Chatbot integrado**: Para ofrecer recomendaciones, responder preguntas y proporcionar información adicional.
 - **Seguridad robusta**: Autenticación de usuarios mediante tokens JWT y cifrado para garantizar la privacidad y seguridad de los datos.
 - **Sincronización de datos**: Acceso a la información desde cualquier dispositivo, manteniendo los datos actualizados y sincronizados.
+
 
 ## Estructura y documentación
 - [Documentación técnica]()
@@ -65,8 +68,17 @@
 - **ChatGPT 3.5**: Bot de erespuesta autonoma y interprete de datos.
 - **Sphynx**: Documentacion de clases del servidor.
 
+### **Utiles**
+
+- Se agregaron utiles y sus documentaciones de ayuda.
+- Scripts de arranque rapido para servidores [Probar..](https://github.com/LaureDSD/ProyectoGestorGastos/tree/main/Documentacion/Utils/ScriptsInicio)
+- Manual de integracion de SSL y script automatico [Ver..](https://github.com/LaureDSD/ProyectoGestorGastos/tree/main/Documentacion/Utils/ssl)
+- Manualde lanzamiento en XAMPP u otros, archivo .htaccess. [Ver..](https://github.com/LaureDSD/ProyectoGestorGastos/tree/main/Documentacion/Utils/XamppServers)
+
 ### **Almacenamiento**:
 - **Almacenamiento interno**: Los diferenstes archivos gastos y perfiles usuarios se almacenan internamente en el servidor para su gestión y posterior acceso.
-   
-### **Control de versions**:
-  - **GitHub
+
+## Descargar Repositorio
+```bash
+git clone https://github.com/LaureDSD/ProyectoGestorGastos.git
+```
