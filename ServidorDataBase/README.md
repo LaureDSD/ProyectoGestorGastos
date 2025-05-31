@@ -44,17 +44,18 @@ mysql -u root -p
 
 3. : Crear la Base de Datos gestor_bd
 - Una vez dentro del cliente MySQL, puedes copiar y pegar el siguiente script SQL completo para crear la base de datos y todas las tablas necesarias:
-
+```
 -- Crear el esquema
 CREATE SCHEMA IF NOT EXISTS `gestor_bd` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 USE `gestor_bd`;
-
+```
 
 
 4. : Cargar tablas (Opcional) 
 - Una vez se lanza el servidor es cpaz de generar las tablas y datos de prueba de forma autonoma.
 - Para cara maunual, lanzar los siguientes sql.
 
+```
 -- Crear tablas
 CREATE TABLE IF NOT EXISTS `categorias` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
