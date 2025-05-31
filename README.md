@@ -42,7 +42,7 @@
 ### **Frontend Angular**:
   - [Acceso al servidor Angular](https://github.com/LaureDSD/ProyectoGestorGastos/tree/main/ServidorWebFrontend)
   - [Documentación técnica]()
-  - [Manual de usuario]()
+  - [Manual de usuario](https://github.com/LaureDSD/ProyectoGestorGastos/blob/main/Documentacion/Manual%20De%20Usuario%20GFA.pdf)
   - **Angular**: Framework para el desarrollo de la interfaz de usuario.
   - **Bootstrap**: Biblioteca de CSS para diseño responsivo y atractivo.
   - **TypeScript**: Lenguaje de programación para el frontend.
@@ -50,7 +50,7 @@
 ### **Backend Spring**:
 - [Acceso al servidor Spring](https://github.com/LaureDSD/ProyectoGestorGastos/tree/main/ServidorServicioAPI)
 - [Documentación técnica]()
-- [Manual de usuario]()
+- [Manual de usuario](https://github.com/LaureDSD/ProyectoGestorGastos/blob/main/Documentacion/Manual%20De%20Usuario%20SAPI.pdf)
 - **Spring Boot**: Framework para la gestión del backend, operaciones CRUD y autenticación de usuarios.
 - **Python**: Utilizado para procesar el OCR, realizar análisis de datos y ofrecer recomendaciones mediante IA.
 - **MySQL**: Base de datos relacional para almacenar los datos de los usuarios y los tickets.
@@ -60,6 +60,7 @@
 ### **OCR Flask**:
 - [Acceso al servidor Flask](https://github.com/LaureDSD/ProyectoGestorGastos/tree/main/ServidorServicioOCR)
 - [Documentación técnica]()
+- [Manual de usuario](https://github.com/LaureDSD/ProyectoGestorGastos/blob/main/Documentacion/Manual%20De%20Usuario%20SOCRAI.pdf)
 - **Tesseract OCR**: Herramienta para el reconocimiento óptico de caracteres en imágenes y documentos.
 - **ChatGPT 3.5**: Bot de erespuesta autonoma y interprete de datos.
 - **Sphynx**: Documentacion de clases del servidor.

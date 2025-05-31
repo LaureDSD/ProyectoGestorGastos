@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /gesthor-angular/
+
+  # Si el archivo o directorio existe, no hacer rewrite
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Redirige todo lo demás a index.html
+  RewriteRule ^.*$ /gesthor-angular/index.html [L]
+</IfModule>
