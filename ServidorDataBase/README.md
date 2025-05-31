@@ -45,15 +45,15 @@ mysql -u root -p
 3. : Crear la Base de Datos gestor_bd
 - Una vez dentro del cliente MySQL, puedes copiar y pegar el siguiente script SQL completo para crear la base de datos y todas las tablas necesarias:
 
-## Puedes usar MySQL Workbench o guardar este contenido en un archivo .sql y ejecutarlo con:
-
-```bash
-mysql -u root -p < gestor_bd_schema.sql
-```
-```sql
 -- Crear el esquema
 CREATE SCHEMA IF NOT EXISTS `gestor_bd` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 USE `gestor_bd`;
+
+
+
+4. : Cargar tablas (Opcional) 
+- Una vez se lanza el servidor es cpaz de generar las tablas y datos de prueba de forma autonoma.
+- Para cara maunual, lanzar los siguientes sql.
 
 -- Crear tablas
 CREATE TABLE IF NOT EXISTS `categorias` (
@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `tickets` (
 ```
 
 
-4. Verifica que las tablas se hayan creado correctamente
+5. Verifica que las tablas se hayan creado correctamente
 - Puedes listar las tablas de la base de datos con:
 
 ``` sql
@@ -140,6 +140,15 @@ SHOW TABLES;
 ```
 categorias, usuarios, gastos, subscripciones, tickets
 ```
+
+
+## Puedes usar MySQL Workbench o guardar este contenido en un archivo .sql y ejecutarlo con:
+
+```bash
+mysql -u root -p < gestor_bd_schema.sql
+```
+```sql
+
 ## Consejos adicionales
 - Usa MySQL Workbench para ver y modificar los datos fácilmente.
 - Asegúrate de que tu aplicación Spring/Python apunte a esta base de datos (gestor_bd) y tenga permisos de acceso.

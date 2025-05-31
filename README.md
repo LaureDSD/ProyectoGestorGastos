@@ -25,11 +25,19 @@
 
 ## Estructura y documentación
 - [Documentación técnica]()
-- [Memoria]()
+- [Memoria 30/05/25](https://github.com/LaureDSD/ProyectoGestorGastos/blob/main/Documentacion/Memoria%20Completa%20Laureano%20De%20Sousa%20Dias%20Gesthor.pdf)
+- [Dificultades 30/05/25](https://github.com/LaureDSD/ProyectoGestorGastos/blob/main/Documentacion/Memoria%20Dificulatdes%20Laureano%20de%20Sousa%20Dias%20.pdf)
+- [Alcance 30/05/25](https://github.com/LaureDSD/ProyectoGestorGastos/blob/main/Documentacion/Dfinici%C3%B3n%20de%20alcance%20Laureano%20De%20Sousa%20Dias.pdf)
+- [Planos PUML](https://github.com/LaureDSD/ProyectoGestorGastos/tree/main/Documentacion/Archivos%20PUML)
+- [Planos EER](https://github.com/LaureDSD/ProyectoGestorGastos/tree/main/Documentacion/Planos%20EER)
 - [Presentación]()
 - [Documentacion Tecnica Autogenerada (DeepWiki)](https://deepwiki.com/LaureDSD/ProyectoGestorGastos)
 
 ## **Tecnologías utilizadas**
+
+### **Manual MySQL**
+  - [Manual instalación](https://github.com/LaureDSD/ProyectoGestorGastos/tree/main/ServidorDataBase)
+
 
 ### **Frontend Angular**:
   - [Acceso al servidor Angular](https://github.com/LaureDSD/ProyectoGestorGastos/tree/main/ServidorWebFrontend)
@@ -40,7 +48,7 @@
   - **TypeScript**: Lenguaje de programación para el frontend.
 
 ### **Backend Spring**:
-- [Acceso al servidor Spring](https://github.com/LaureDSD/ProyectoGestorGastos/tree/main/ServidorWebFrontend)
+- [Acceso al servidor Spring](https://github.com/LaureDSD/ProyectoGestorGastos/tree/main/ServidorServicioAPI)
 - [Documentación técnica]()
 - [Manual de usuario]()
 - **Spring Boot**: Framework para la gestión del backend, operaciones CRUD y autenticación de usuarios.
@@ -50,7 +58,7 @@
 - **Swagger**: Documenatación de endpoints del servidor y pruebas.
 
 ### **OCR Flask**:
-- [Acceso al servidor Flask](https://github.com/LaureDSD/ProyectoGestorGastos/tree/main/ServidorWebFrontend)
+- [Acceso al servidor Flask](https://github.com/LaureDSD/ProyectoGestorGastos/tree/main/ServidorServicioOCR)
 - [Documentación técnica]()
 - **Tesseract OCR**: Herramienta para el reconocimiento óptico de caracteres en imágenes y documentos.
 - **ChatGPT 3.5**: Bot de erespuesta autonoma y interprete de datos.
