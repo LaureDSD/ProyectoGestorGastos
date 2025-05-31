@@ -1,0 +1,33 @@
+@startuml
+!define RECTANGLE node
+skinparam node {
+  BackgroundColor<<frontend>> #D0E1F9
+  BackgroundColor<<backend>> #F9D0D0
+  BackgroundColor<<service>> #E2F9D0
+  BackgroundColor<<db>> #F9F2D0
+}
+
+node "Cliente Web\n(Navegador)" <<frontend>> {
+}
+
+node "Servidor Web Angular\n(ng build --prod + Express)" <<frontend>> {
+  artifact "dist/app"
+}
+
+node "Servidor Java\n(Spring Boot)" <<backend>> {
+  artifact "app.jar"
+}
+
+node "Servidor Python\n(Flask)" <<service>> {
+  artifact "ocr_service.py"
+  artifact "chat_service.py"
+}
+
+database "Base de Datos\nMySQL" <<db>>
+
+"Cliente Web\n(Navegador)" --> "Servidor Web Angular\n(ng build --prod + Express)" : HTTP/HTTPS
+"Servidor Web Angular\n(ng build --prod + Express)" --> "Servidor Java\n(Spring Boot)" : REST API
+"Servidor Java\n(Spring Boot)" --> "Servidor Python\n(Flask)" : HTTP/JSON
+"Servidor Java\n(Spring Boot)" --> "Base de Datos\nMySQL" : JDBC/MySQL
+
+@enduml
