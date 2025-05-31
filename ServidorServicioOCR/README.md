@@ -1,16 +1,17 @@
-# OCR + AI Ticket Processing Service (SOCRAI)
+# OCR + AI Ticket Processing Service (SOCRAI v0.0.2)
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/LaureDSD/ProyectoGestorGastos)
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
 ![Flask](https://img.shields.io/badge/Flask-2.0%2B-green)
 ![Tesseract](https://img.shields.io/badge/Tesseract-OCR-orange)
 
 Este proyecto proporciona un servicio REST que combina OCR (Reconocimiento Óptico de Caracteres) con inteligencia artificial para procesar tickets digitales. El sistema permite cargar tickets mediante fotos o documentos, aunque actualmente la funcionalidad de carga de tickets digitales presenta algunas limitaciones.
 
-## Limitaciones
-- La carga de ticket digital esat limitada **No reconoce todos los formatos**
+## Limitaciones:
+- La carga de ticket digital esta limitada **No reconoce todos los formatos**
 - Subir fotos puede fallar - intenta almenos 3 vezes
 
-## Requisitos
+## Requisitos:
 
 - Windows OS
 - Python 3.8+
@@ -18,11 +19,13 @@ Este proyecto proporciona un servicio REST que combina OCR (Reconocimiento Ópti
   - Download from [UB-Mannheim/tesseract](https://github.com/UB-Mannheim/tesseract/wiki)
   - Incluido en la carpeta del proyecto
 
-## Instalación
+## Descargas:
+- [Descargar SOCRAI v0.0.2 .exe](https://drive.google.com/file/d/1HqVd1Lb9uN0B6H4frqGTzn98RgdsHBh-/view?usp=drive_link)
+- [Descargar SOCRAI v0.0.2 .zip](https://drive.google.com/file/d/1dg4yfwz9AY8-QUIp7C-ivSOXKJjzWI4u/view?usp=drive_link)
 
-### 1. Instalar dependdencias
+## Instalación:
 
-
+### 1. Instalar dependencias (No necesario para ejecutable)
 #### Dependencias:
 - Flask
 - python-dotenv
@@ -51,7 +54,7 @@ Este proyecto proporciona un servicio REST que combina OCR (Reconocimiento Ópti
 
 ### 2 Configuración del entorno
 
-## Variables de entorno clave
+#### Variables de entorno clave
 | Variable               | Descripción                     | Valor por defecto       |
 |-----------------------|--------------------------------|-------------------------|
 | FLASK_DEMO_MODE             | Modo demostración              | false                   |
@@ -65,9 +68,8 @@ Este proyecto proporciona un servicio REST que combina OCR (Reconocimiento Ópti
 | FLASK_LOCAL_API_KEY         | API key para autenticación     | CREAR_API_KEY           |
 | FLASK_OPENAI_API_KEY        | API key de OpenAI              | Requerida               |
 
-You can configure environment variables in three ways:
 
-### Option A: Variables de sistema SETX CMD (Windows)
+#### Option A: Variables de sistema SETX CMD (Windows , Recomendada para ejecutable)
  - Para temporal usar 'set' en vez de 'setx' antes de lanzar exe o main
 
 
@@ -83,7 +85,7 @@ You can configure environment variables in three ways:
     setx FLASK_OPENAI_API_KEY "your_openai_key_here"
 
 
-### Option B: Usar archivo .env 
+#### Option B: Usar archivo .env 
 
 Crea o usa `.env` en la raiz del directorio con lo siguiente:
 
@@ -102,7 +104,7 @@ Crea o usa `.env` en la raiz del directorio con lo siguiente:
 
 # Ejecución del servidor
 ## Método 1: Usando el ejecutable
- - Navegue a la carpeta dist (Localización de los ejecutables generados)
+ - Navegue a la carpeta dist (Localización de los ejecutables generados) o arriba en Descargas
  - Ejecute el archivo  SOCRAI_vx.x.x.exe 
  - Si no usas variables de sistema asegurate de agregar el .env al nivel del ejecutable.
  - El ejecutable puedes moverlo a donde quieras mientras tenga variables de sistema o .env
@@ -117,6 +119,96 @@ Crea o usa `.env` en la raiz del directorio con lo siguiente:
  - Acceda a la carpeta docs
  - Ejecute el comando sphinx-build -b html source/ _build/html
  - La documentación estará disponible en docs/_build/html/index.html
+
+## Endpoints
+
+### POST /ocr
+ - Descripción: Procesa una imagen (JPG, PNG, etc.) mediante OCR (local o remoto con OpenAI).
+ - Parámetros:
+```
+file: archivo de imagen en multipart/form-data.
+ ```
+ - Cabecera requerida:
+```
+  x-api-key: clave de autenticación configurada como FLASK_LOCAL_API_KEY.
+```
+- Respuesta:
+```
+200 OK: Resultado del OCR en formato JSON.
+
+400 Bad Request: Si falta el archivo o no tiene extensión permitida.
+
+503 Service Unavailable: Si falla la conexión (por ejemplo, con OpenAI).
+
+500 Internal Server Error: Si ocurre un error inesperado.
+
+Demo mode: Devuelve una respuesta simulada.
+```
+
+### POST /ocr-file
+- Descripción: Procesa un archivo PDF o de texto usando OCR.
+
+- Parámetros:
+```
+file: archivo PDF o TXT en multipart/form-data.
+```
+- Cabecera requerida:
+```
+x-api-key: clave de autenticación.
+```
+-Respuesta:
+```
+200 OK: Resultado procesado del archivo en JSON.
+
+400 Bad Request: Si falta el archivo o no está permitido.
+
+503 Service Unavailable: Si hay problemas de conexión.
+
+500 Internal Server Error: Si ocurre un error durante el procesamiento.
+
+Demo mode: Devuelve una respuesta simulada.
+```
+### POST /aichat
+-Descripción: Genera una respuesta de IA a un mensaje de texto.
+
+-Parámetros (JSON):
+```
+{
+"mensaje": "Texto que deseas enviar a la IA"
+}
+```
+- Cabecera requerida:
+```
+x-api-key: clave de autenticación.
+```
+- Respuesta:
+```
+200 OK: Devuelve la respuesta generada por la IA, ejemplo:
+{ "respuesta": "Texto de respuesta generada" }
+
+400 Bad Request: Si no se envía un JSON válido o el campo mensaje está ausente.
+
+503 Service Unavailable: Si falla la conexión con el modelo.
+
+500 Internal Server Error: Si hay un error interno.
+
+Demo mode: Devuelve una respuesta fija tipo:
+{ "respuesta": "Bienvenido a Gesthor, Modo demo activado" }
+```
+### GET /status
+- Descripción: Verifica si el servidor está funcionando.
+
+- Parámetros: Ninguno.
+
+- Respuesta:
+```
+{
+"statusServer": true,
+"demo": false,         // o true si está en modo demo
+"ocrLocal": true       // o false si usa OpenAI para OCR
+}
+Código HTTP: 200 OK.
+```
 
 ## Notas importantes
  - La carga de tickets por foto puede fallar - se recomienda intentarlo varias veces

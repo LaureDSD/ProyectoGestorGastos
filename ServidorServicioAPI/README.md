@@ -1,17 +1,11 @@
-# Spring Boot API Server (GestorAPI) - Documentación Completa
+# Spring Boot API Server (GestorAPI v1.7)
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/LaureDSD/ProyectoGestorGastos)
 ![Java](https://img.shields.io/badge/Java-17%2B-blue)
 ![SpringBoot](https://img.shields.io/badge/Spring_Boot-3.1%2B-green)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0%2B-orange)
 
 ## Configuración del Entorno
-
-### Requisitos previos
-1. **Java JDK 22 (Amazon Corretto 22.0.2.9+)** - [Descargar Amazon Corretto](https://aws.amazon.com/es/corretto/)
-2. **Maven 3.8+** - [Descargar Maven](https://maven.apache.org/)
-3. **MySQL 8.0+** - [Descargar MySQL](https://dev.mysql.com/downloads/)
-4. **WiX Toolset v3.11** (para generación de ejecutable) - [Descargar WiX](https://wixtoolset.org/releases/)
-
 
 ### Descripción
 #### GestorAPI es una aplicación Spring Boot que proporciona una API REST con autenticación JWT, integración OAuth2 (Google/GitHub), gestión de usuarios y gastos con operaciones CRUD. Incluye:
@@ -22,20 +16,19 @@
 4. Integración con servicios externos
 5. Documentación Swagger/OpenAPI
 
+### Requisitos previos
+1. **Java JDK 22 (Amazon Corretto 22.0.2.9+)** - [Descargar Amazon Corretto](https://aws.amazon.com/es/corretto/)
+2. **Maven 3.8+** - [Descargar Maven](https://maven.apache.org/)
+3. **MySQL 8.0+** - [Descargar MySQL](https://dev.mysql.com/downloads/)
+4. **WiX Toolset v3.11** (para generación de ejecutable) - [Descargar WiX](https://wixtoolset.org/releases/)
 
 
+### Descargas
+- [Servidor GestorAPI v1.7 .exe](https://drive.google.com/file/d/1T7f3toidAd0Mjr0jBmVy2YtdnSNpFF4M/view?usp=drive_link)
+- [Servidor GestorAPI v1.7 .zip](https://drive.google.com/file/d/1mc7uOl0mLF4TUfh0LuIB4_u8zjn_DpHe/view?usp=drive_link)
+- [Servidor GestorAPI v1.7 .jar](https://drive.google.com/file/d/1gG8EVKGudYv_ffAmS4XQmcnM8zKPDFvX/view?usp=drive_link) (Para ejecutar el .jar descargado, solo siga los pasos 1 y 3 )
 
 ## Configuración inicial
-#### Clonar el repositorio (si aplica):
-
-```bash
-git clone [URL_DEL_REPOSITORIO]
-```
-#### Instalar dependencias con Maven:
-
-```bash
-mvn clean install
-```
 
 #### Configuracionde la base de datos (MySQL)
 
@@ -134,7 +127,110 @@ FLUSH PRIVILEGES;
 - spring.security.oauth2.client.registration.github.client-id=TU_CLIENT_ID
 - spring.security.oauth2.client.registration.github.client-secret=TU_CLIENT_SECRET
 
-### Usar variables desde archivo poperties
+### Carga de variables de entorno permanentes (Recomendado instalador).
+- Recuerda poner tus claves, usar set para sesión y ejecución en consola.
+
+```Bash
+    @echo off
+    REM ---------- SPRING VARIABLES PERMANENTES ----------
+    setx SPRING_APP_NAME GestorAPI
+    setx SPRING_DB_URL jdbc:mysql://localhost:3306/gestor_bd
+    setx SPRING_DB_USERNAME root
+    setx SPRING_DB_PASSWORD abc123.
+    setx SPRING_HIBERNATE_DDL update
+    setx SPRING_HIBERNATE_SHOW_SQL true
+    setx SPRING_JWT_SECRET [REEMPLAZAR_CON_CLAVE]
+    setx SPRING_JWT_EXPIRATION 1440
+    setx SPRING_GOOGLE_CLIENT_ID [REEMPLAZAR_CON_ID]
+    setx SPRING_GOOGLE_CLIENT_SECRET [REEMPLAZAR_CON_SECRET]
+    setx SPRING_GOOGLE_REDIRECT_URI http://localhost:8080/login/oauth2/code/google
+    setx SPRING_GITHUB_CLIENT_ID [REEMPLAZAR_CON_ID]
+    setx SPRING_GITHUB_CLIENT_SECRET [REEMPLAZAR_CON_SECRET]
+    setx SPRING_GITHUB_REDIRECT_URI http://localhost:8080/login/oauth2/code/github
+    setx SPRING_CORS_ALLOWED_ORIGINS http://localhost:4200
+    setx SPRING_OAUTH2_REDIRECT_URI http://localhost:4200/oauth2/redirect
+    setx SPRING_PYTHON_SERVER_URL http://localhost:5000
+    setx SPRING_PYTHON_API_KEY CREAR_API_KEY
+    setx SPRING_UPLOAD_DIR C:/uploads/
+    setx SPRING_MAX_FILE_SIZE 5MB
+    setx SPRING_MAX_REQUEST_SIZE 5MB
+    setx SPRING_LOG_SECURITY_LEVEL DEBUG
+    setx SPRING_LOGIN_MAX_FAILED 5
+    setx SPRING_LOGIN_BLOCK_DURATION 30
+    setx SPRING_LOGIN_DELETE_LOG false
+    pause
+```
+
+## Instalación del ejecutable .exe (Recomendado)
+
+- Solo necesita las variables de sistema
+
+- Ejecuta el instalador generado (GestorAPI.exe)
+
+- Se instalará por defecto en:
+
+       C:\Program Files (x86)\GestorAPI\
+
+- Abre el acceso directo para iniciar el backend como servicio.
+
+- Accede a http://localhost:8080 para utilizar la app.
+
+## Clonar el repositorio:
+
+```bash
+git clone [URL_DEL_REPOSITORIO]
+```
+#### Instalar dependencias con Maven:
+
+```bash
+mvn clean install
+```
+
+## Ejecución como .Jar
+
+- Directorio de generación del .jar
+```
+    GestorAPI/
+    ├── src/
+    ├── target/
+    │   ├── GestorAPI-0.0.1-SNAPSHOT.jar #Se puede portar
+    ├── .gitignore
+    ├── pom.xml
+    └── README.md
+```
+1. Necesita tener instalado el JSK
+
+   - [Descargar Amazon Corretto](https://aws.amazon.com/es/corretto/)
+   
+
+2. Ejecutar en Desarrollo
+   ```bash
+   mvn spring-boot:run
+   ```
+2. Ejecutar JAR Compilado
+   ```bash
+   java -jar target/GestorAPI-0.0.1-SNAPSHOT.jar
+   ```
+3. Ejecutar con Perfil de Producción
+   ```bash
+   java -jar target/GestorAPI-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
+   ```
+
+
+- 
+## Rutas del servidor:
+
+- http://localhost:8080/swagger-ui/index.html
+- http://localhost:8080/ & http://localhost:8080/auth/login acceso a login de dashboard(Correo y contrasena)
+
+## Credenciales de acceso:
+
+| Rol    | Usuario               | Contraseña |
+|--------|------------------------|------------|
+| Admin  | admin@gesthor.com      | admin      |
+| Usuario| user@gesthor.com       | user       |
+
+## Variables del archivo poperties
     Al lado del .jar o ejecuable, puedes poner un .porperties con los valores que te interesa modifcar.
 
     # --------- APLICACIÓN
@@ -211,93 +307,6 @@ FLUSH PRIVILEGES;
     attemp.login.max.failed=${SPRING_LOGIN_MAX_FAILED:5}
     attemp.login.block.duration=${SPRING_LOGIN_BLOCK_DURATION:30}
     attemp.login.delete.log=${SPRING_LOGIN_DELETE_LOG:false}
-
-
-### Carga de variables de entorno permanentes.
-- Recuerda poner tus claves, usar set para sesión y ejecución en consola.
-
-```Bash
-    @echo off
-    REM ---------- SPRING VARIABLES PERMANENTES ----------
-    setx SPRING_APP_NAME GestorAPI
-    setx SPRING_DB_URL jdbc:mysql://localhost:3306/gestor_bd
-    setx SPRING_DB_USERNAME root
-    setx SPRING_DB_PASSWORD abc123.
-    setx SPRING_HIBERNATE_DDL update
-    setx SPRING_HIBERNATE_SHOW_SQL true
-    setx SPRING_JWT_SECRET [REEMPLAZAR_CON_CLAVE]
-    setx SPRING_JWT_EXPIRATION 1440
-    setx SPRING_GOOGLE_CLIENT_ID [REEMPLAZAR_CON_ID]
-    setx SPRING_GOOGLE_CLIENT_SECRET [REEMPLAZAR_CON_SECRET]
-    setx SPRING_GOOGLE_REDIRECT_URI http://localhost:8080/login/oauth2/code/google
-    setx SPRING_GITHUB_CLIENT_ID [REEMPLAZAR_CON_ID]
-    setx SPRING_GITHUB_CLIENT_SECRET [REEMPLAZAR_CON_SECRET]
-    setx SPRING_GITHUB_REDIRECT_URI http://localhost:8080/login/oauth2/code/github
-    setx SPRING_CORS_ALLOWED_ORIGINS http://localhost:4200
-    setx SPRING_OAUTH2_REDIRECT_URI http://localhost:4200/oauth2/redirect
-    setx SPRING_PYTHON_SERVER_URL http://localhost:5000
-    setx SPRING_PYTHON_API_KEY CREAR_API_KEY
-    setx SPRING_UPLOAD_DIR C:/uploads/
-    setx SPRING_MAX_FILE_SIZE 5MB
-    setx SPRING_MAX_REQUEST_SIZE 5MB
-    setx SPRING_LOG_SECURITY_LEVEL DEBUG
-    setx SPRING_LOGIN_MAX_FAILED 5
-    setx SPRING_LOGIN_BLOCK_DURATION 30
-    setx SPRING_LOGIN_DELETE_LOG false
-    pause
-```
-
-## Instalación del ejecutable .exe (Recomendado)
-
-- Solo necesita las variables de sistema
-
-- Ejecuta el instalador generado (GestorAPI.exe)
-
-- Se instalará por defecto en:
-
-       C:\Program Files (x86)\GestorAPI\
-
-- Abre el acceso directo para iniciar el backend como servicio.
-
-- Accede a http://localhost:8080 para utilizar la app.
-
-## Ejecución como .Jar
-
-    GestorAPI/
-    ├── src/
-    ├── target/
-    │   ├── GestorAPI-0.0.1-SNAPSHOT.jar #Se puede portar
-    ├── .gitignore
-    ├── pom.xml
-    └── README.md
-
-1. Necesita tener instalado el JSK
-
-   - [Descargar Amazon Corretto](https://aws.amazon.com/es/corretto/)
-
-2. Ejecutar en Desarrollo
-   ```bash
-   mvn spring-boot:run
-   ```
-2. Ejecutar JAR Compilado
-   ```bash
-   java -jar target/GestorAPI-0.0.1-SNAPSHOT.jar
-   ```
-3. Ejecutar con Perfil de Producción
-   ```bash
-   java -jar target/GestorAPI-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
-   ```
-
-
-- 
-## Rutas del servidor:
-
-- http://localhost:8080/swagger-ui/index.html
-- localhost:8080/ & localhost:8080/auth/login acceso a login de dashboard(Correo y contrasena)
-
-      "admin@gesthor.com" + "admin"
-    
-      "user@gesthor.com" + "user"
 
 
 ## Instalación de WiX Toolset
