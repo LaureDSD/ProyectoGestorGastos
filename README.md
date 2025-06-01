@@ -70,9 +70,9 @@
 ### **Utiles**
 
 - Se agregaron utiles y sus documentaciones de ayuda.
-- Scripts de arranque rapido para servidores [Probar..](https://github.com/LaureDSD/ProyectoGestorGastos/tree/main/Documentacion/Utils/ScriptsInicio)
-- Manual de integracion de SSL y script automatico [Ver..](https://github.com/LaureDSD/ProyectoGestorGastos/tree/main/Documentacion/Utils/ssl)
-- Manualde lanzamiento en XAMPP u otros, archivo .htaccess. [Ver..](https://github.com/LaureDSD/ProyectoGestorGastos/tree/main/Documentacion/Utils/XamppServers)
+- Scripts de arranque rapido para servidores [Probar..](https://github.com/LaureDSD/ProyectoGestorGastos/tree/main/Utils/ScriptsInicio)
+- Manual de integracion de SSL y script automatico [Ver..](https://github.com/LaureDSD/ProyectoGestorGastos/tree/main/Utils/ssl)
+- Manualde lanzamiento en XAMPP u otros, archivo .htaccess. [Ver..](https://github.com/LaureDSD/ProyectoGestorGastos/tree/main/Utils/WebServers)
 
 ### **Almacenamiento**:
 - **Almacenamiento interno**: Los diferenstes archivos gastos y perfiles usuarios se almacenan internamente en el servidor para su gestión y posterior acceso.
